@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Background from './pages/Background'
-import Home from "./pages/Home";
+import Home from "./components/Home";
 
 import Logo from "./assets/logoBranca.png"
 
