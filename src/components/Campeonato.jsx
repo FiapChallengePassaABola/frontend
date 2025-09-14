@@ -2,7 +2,7 @@ import TabelaPontos from "./campeonato/TabelaPontos"
 import CaroucelTimes from "./campeonato/CaroucelTimes"
 function Campeonato() {
     return(
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center m-40">
             <div className="flex items-center w-full">
 
                 <div className="flex-grow h-px bg-gray-300"></div>
