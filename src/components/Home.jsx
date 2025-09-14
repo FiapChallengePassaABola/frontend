@@ -1,6 +1,7 @@
 import Navbar from "./Navbar"
 import Caroucel from "./Caroucel"
 import Campeonato from "./Campeonato"
+import Jogar from "./Jogar"
 
 function Home() {
     return(
@@ -8,6 +9,7 @@ function Home() {
             <Navbar/>
             <Caroucel/>
             <Campeonato/>
+            <Jogar/>
         </div>
     )
 
