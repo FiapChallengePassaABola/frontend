@@ -1,23 +1,18 @@
 import VideoYT from "../assets/VideoYT.jpg"
+import Titulos from "./Titulos"
+import CardNoticias from "./CardNoticias"
+import { FaChevronCircleDown } from "react-icons/fa";
 
 function Noticias() {
   return (
+    
     <div className="flex flex-col justify-center items-center m-40">
 
-      <div className="flex items-center w-full mb-10">
-        <div className="flex-grow h-px bg-gray-300"></div>
-        <h1 className="text-6xl font-bold text-gray-200 mx-10">NOTÍCIAS</h1>
-        <div className="flex-grow h-px bg-gray-300"></div>
-      </div>
+      <Titulos titulo="NOTÍCIAS"/>
 
       <div className="flex w-full max-w-7xl gap-10">
-        
         <div className="w-2/3">
-          <img 
-            src={VideoYT} 
-            alt="VideoYt" 
-            className="w-full rounded-2xl border-[#1B4509] border-4" 
-          />
+          <img src={VideoYT} alt="VideoYt" className="w-full rounded-2xl border-[#1B4509] border-4"/>
           <h2 className="text-3xl font-bold text-white mt-4">
             COMO TEM SIDO NOSSOS PRIMEIROS MESES? - FALA, BEBÊ #39
           </h2>
@@ -27,23 +22,13 @@ function Noticias() {
         </div>
 
         <div className="w-1/2 grid grid-cols-2 gap-6">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i}>
-              <img 
-                src={VideoYT} 
-                alt="VideoYt" 
-                className="w-full rounded-2xl border-[#1B4509] border-4" 
-              />
-              <h3 className="text-sm font-bold text-white mt-2">
-                Notícias sem destaque - Área para uma notícia ou comunicado sem destaque
-              </h3>
-              <p className="text-xs text-[#B0AFAF] mt-1">
-                Breve descrição sobre a matéria ou comunicado. Também a data de quando a matéria foi postada —&gt; <span className="ml-1">30/02/2025</span>
-              </p>
-            </div>
-          ))}
+          <CardNoticias imgNoticia={VideoYT} tituloNoticia="Titulo de teste sobre a empresa passa a bola" descricaoNoticia="Descrição basica sobre a noticia"/>
+          <CardNoticias imgNoticia={VideoYT} tituloNoticia="Titulo de teste sobre a empresa passa a bola" descricaoNoticia="Descrição basica sobre a noticia"/>
+          <CardNoticias imgNoticia={VideoYT} tituloNoticia="Titulo de teste sobre a empresa passa a bola" descricaoNoticia="Descrição basica sobre a noticia"/>
+          <CardNoticias imgNoticia={VideoYT} tituloNoticia="Titulo de teste sobre a empresa passa a bola" descricaoNoticia="Descrição basica sobre a noticia"/>
         </div>
       </div>
+      <FaChevronCircleDown size={60} color="green" className="mt-6 -mb-16"/>
     </div>
   )
 }
