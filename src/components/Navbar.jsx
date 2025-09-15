@@ -7,7 +7,7 @@ function Navbar() {
         <header className="flex items-center justify-between px-8 pt-12 drop-shadow-xl drop-shadow-[#9c0528d4]" >
             <ul className="flex items-center justify-center text-lg text-white font-bold gap-6 flex-1">
                 <li>NOTICIAS</li>
-                <li>CAMPEONATO</li>
+                <li><a href="../pages/PageCampeonato">CAMPEONATO</a></li>
                 <li><img src={Logo} alt="Logo" className="w-20" /></li>
                 <li>JOGAR</li>
                 <li>
