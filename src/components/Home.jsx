@@ -10,9 +10,9 @@ function Home() {
         <div>
             <Navbar/>
             <Caroucel/>
+            <Noticias/>
             <Campeonato/>
             <Jogar/>
-            <Noticias/>
             <Footer/>
         </div>
     )
