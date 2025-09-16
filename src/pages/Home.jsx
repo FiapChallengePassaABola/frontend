@@ -10,8 +10,8 @@ function Home() {
         <div className="min-h-screen">
             <Navbar/>
             <Caroucel/>
-            <Noticias/>
             <Campeonato/>
+            <Noticias/>
             <Jogar/>
             <Footer/>
         </div>
