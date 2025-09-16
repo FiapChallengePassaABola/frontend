@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
+import { FaSignOutAlt } from "react-icons/fa";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 import Logo from "../assets/logoBranca.png";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -12,11 +14,40 @@ function Navbar() {
 
     const handleUserClick = () => {
         if (isAuthenticated) {
-            // Se estiver logado, fazer logout
-            logout();
+            // Se estiver logado, redireciona para perfil
+            navigate('/profile');
         } else {
             // Se não estiver logado, redireciona para login
             navigate('/login');
+        }
+    };
+
+    const handleLogout = async () => {
+        const result = await Swal.fire({
+            title: 'Sair da conta',
+            text: 'Tem certeza que deseja sair da sua conta?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#dc2626',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Sim, sair',
+            cancelButtonText: 'Cancelar',
+            background: '#1a1a1a',
+            color: '#ffffff'
+        });
+
+        if (result.isConfirmed) {
+            logout();
+            await Swal.fire({
+                icon: 'success',
+                title: 'Logout realizado!',
+                text: 'Você foi desconectado com sucesso.',
+                timer: 2000,
+                showConfirmButton: false,
+                background: '#1a1a1a',
+                color: '#ffffff',
+                confirmButtonColor: '#dc2626'
+            });
         }
     };
 
@@ -43,14 +74,23 @@ function Navbar() {
             {/* Botão de usuário */}
             <div className="ml-auto flex items-center gap-3">
                 {isAuthenticated && (
-                    <span className="text-white text-sm md:text-base font-medium hidden sm:block">
-                        Olá, {user?.name || 'Usuário'}
-                    </span>
+                    <div className="flex items-center gap-2">
+                        <span className="text-white text-sm md:text-base font-medium hidden sm:block">
+                            Olá, {user?.name || 'Usuário'}
+                        </span>
+                        <button 
+                            onClick={handleLogout}
+                            className="text-red-400 hover:text-red-300 transition-colors"
+                            title="Sair da conta"
+                        >
+                            <FaSignOutAlt size={24} />
+                        </button>
+                    </div>
                 )}
                 <button 
                     onClick={handleUserClick}
                     className={`hover:opacity-80 transition-opacity relative ${isAuthenticated ? 'text-green-400' : 'text-white'}`}
-                    title={isAuthenticated ? `Logado como ${user?.name || 'Usuário'} - Clique para sair` : 'Fazer login'}
+                    title={isAuthenticated ? `Ver perfil de ${user?.name || 'Usuário'}` : 'Fazer login'}
                 >
                     <AiOutlineUser size={32} color={isAuthenticated ? '#4ade80' : 'white'} className="md:w-10 md:h-10" />
                     {isAuthenticated && (
@@ -75,6 +115,28 @@ function Navbar() {
                             <span className="text-white text-lg font-medium">
                                 Olá, {user?.name || 'Usuário'}
                             </span>
+                            <div className="flex justify-center gap-4 mt-4">
+                                <button 
+                                    onClick={() => {
+                                        navigate('/profile');
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                                >
+                                    <AiOutlineUser />
+                                    Meu Perfil
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        handleLogout();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                                >
+                                    <FaSignOutAlt />
+                                    Sair
+                                </button>
+                            </div>
                         </div>
                     )}
                     <ul className="flex flex-col items-center text-lg text-white font-bold gap-6 py-8">
