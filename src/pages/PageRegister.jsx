@@ -116,11 +116,43 @@ const PageRegister = () => {
       
       navigate('/');
     } catch (error) {
-      console.error('Erro detalhado:', error);
+      console.error('Erro detalhado no registro:', error);
+      
+      let errorMessage = 'Erro ao criar conta. Tente novamente.';
+      
+      // Mensagens de erro específicas baseadas no tipo de erro
+      if (error.message) {
+        if (error.message.includes('Nome é obrigatório')) {
+          errorMessage = 'Por favor, informe seu nome completo.';
+        } else if (error.message.includes('Email é obrigatório')) {
+          errorMessage = 'Por favor, informe seu email.';
+        } else if (error.message.includes('Senha é obrigatória')) {
+          errorMessage = 'Por favor, informe uma senha.';
+        } else if (error.message.includes('Formato de email inválido')) {
+          errorMessage = 'Por favor, informe um email válido.';
+        } else if (error.message.includes('Email já cadastrado')) {
+          errorMessage = 'Este email já está sendo usado. Tente fazer login ou use outro email.';
+        } else if (error.message.includes('Nome deve ter pelo menos 2 caracteres')) {
+          errorMessage = 'Nome deve ter pelo menos 2 caracteres.';
+        } else if (error.message.includes('Senha deve ter pelo menos 6 caracteres')) {
+          errorMessage = 'Senha deve ter pelo menos 6 caracteres.';
+        } else if (error.message.includes('Dados do usuário são obrigatórios')) {
+          errorMessage = 'Por favor, preencha todos os campos obrigatórios.';
+        } else if (error.message.includes('Tempo limite')) {
+          errorMessage = 'Tempo limite excedido. Verifique sua conexão e tente novamente.';
+        } else if (error.message.includes('Erro de conexão')) {
+          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        } else if (error.message.includes('Erro interno do servidor')) {
+          errorMessage = 'Servidor temporariamente indisponível. Tente novamente em alguns minutos.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       await Swal.fire({
         icon: 'error',
-        title: 'Erro',
-        text: error.message || 'Erro ao criar conta. Tente novamente.',
+        title: 'Erro no Cadastro',
+        text: errorMessage,
         background: '#1a1a1a',
         color: '#ffffff',
         confirmButtonColor: '#dc2626'
