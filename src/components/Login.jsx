@@ -104,7 +104,6 @@ const Login = () => {
       
       let errorMessage = 'Erro ao fazer login. Tente novamente.';
       
-      // Mensagens de erro específicas baseadas no tipo de erro
       if (error.message) {
         if (error.message.includes('Email é obrigatório')) {
           errorMessage = 'Por favor, informe seu email.';

@@ -28,10 +28,8 @@ function PageChaveamento() {
                 </h2>
                 
                 <div className="w-full">
-                    {/* Mobile Layout - Grid 2x2 com todas as fases */}
                     <div className="block md:hidden">
                         <div className="space-y-6">
-                            {/* Oitavas de Final */}
                             <div>
                                 <h3 className="text-white text-lg font-bold text-center mb-4 bg-gradient-to-r from-[#6B2A3A] to-[#8B3A4A] px-4 py-2 rounded-full">
                                     OITAVAS DE FINAL
@@ -67,7 +65,6 @@ function PageChaveamento() {
                                         ))}
                                     </div>
 
-                                    {/* Chave C */}
                                     <div className="space-y-1">
                                         <h4 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
                                             Chave C
@@ -82,7 +79,6 @@ function PageChaveamento() {
                                         ))}
                                     </div>
 
-                                    {/* Chave D */}
                                     <div className="space-y-1">
                                         <h4 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
                                             Chave D
@@ -99,7 +95,6 @@ function PageChaveamento() {
                                 </div>
                             </div>
 
-                            {/* Quartas de Final */}
                             <div>
                                 <h3 className="text-white text-lg font-bold text-center mb-4 bg-gradient-to-r from-[#6B2A3A] to-[#8B3A4A] px-4 py-2 rounded-full">
                                     QUARTAS DE FINAL
@@ -137,13 +132,11 @@ function PageChaveamento() {
                                 </div>
                             </div>
 
-                            {/* Semifinais */}
                             <div>
                                 <h3 className="text-white text-lg font-bold text-center mb-4 bg-gradient-to-r from-[#6B2A3A] to-[#8B3A4A] px-4 py-2 rounded-full">
                                     SEMIFINAIS
                                 </h3>
                                 <div className="grid grid-cols-2 gap-3">
-                                    {/* Semifinal 1 */}
                                     <div className="space-y-1">
                                         <h4 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
                                             Semifinal 1
@@ -158,7 +151,6 @@ function PageChaveamento() {
                                         ))}
                                     </div>
 
-                                    {/* Semifinal 2 */}
                                     <div className="space-y-1">
                                         <h4 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
                                             Semifinal 2
@@ -175,7 +167,6 @@ function PageChaveamento() {
                                 </div>
                             </div>
 
-                            {/* Final */}
                             <div>
                                 <h3 className="text-white text-lg font-bold text-center mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 px-4 py-2 rounded-full text-black">
                                     FINAL
@@ -211,7 +202,6 @@ function PageChaveamento() {
                         </div>
                     </div>
 
-                    {/* Desktop Layout */}
                     <div className="hidden md:flex md:flex-nowrap justify-center gap-2 lg:gap-2 items-center">
                         <div className="flex flex-col space-y-2 lg:space-y-1 min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
@@ -256,7 +246,6 @@ function PageChaveamento() {
                         </div>
 
                         <div className="flex flex-col justify-center min-w-[120px] lg:min-w-[130px] relative">
-                            {/* Logo do PassaBola atrás da final */}
                             <div className="absolute inset-0 flex items-center justify-center z-0">
                                 <img 
                                     src="/src/assets/logoBranca.png" 
