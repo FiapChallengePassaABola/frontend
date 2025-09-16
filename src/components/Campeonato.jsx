@@ -9,7 +9,7 @@ function Campeonato() {
             <div className="w-full max-w-7xl space-y-8 md:space-y-12">
                 <TabelaPontos/>
                 <CaroucelTimes/>
-                <Chaveamento/>
+                <Chaveamento campeonatoId="1"/>
             </div>
         </div>
     )

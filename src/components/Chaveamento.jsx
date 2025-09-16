@@ -1,7 +1,7 @@
 import { useChaveamento } from "../hooks/useChaveamento.js";
 import TimesChaveamento from "./campeonato/TimesChaveamento";
 
-function Chaveamento({ campeonatoId = 1 }){
+function Chaveamento({ campeonatoId = "1" }){
     const { chaveamento, loading, error } = useChaveamento(campeonatoId);
 
     if (loading) {

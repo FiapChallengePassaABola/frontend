@@ -14,8 +14,8 @@ function Navbar() {
 
     const handleUserClick = () => {
         if (isAuthenticated) {
-            // Se estiver logado, redireciona para perfil
-            navigate('/profile');
+            // Se estiver logado, faz logout direto
+            handleLogout();
         } else {
             // Se não estiver logado, redireciona para login
             navigate('/login');
@@ -90,7 +90,7 @@ function Navbar() {
                 <button 
                     onClick={handleUserClick}
                     className={`hover:opacity-80 transition-opacity relative ${isAuthenticated ? 'text-green-400' : 'text-white'}`}
-                    title={isAuthenticated ? `Ver perfil de ${user?.name || 'Usuário'}` : 'Fazer login'}
+                    title={isAuthenticated ? `Sair da conta de ${user?.name || 'Usuário'}` : 'Fazer login'}
                 >
                     <AiOutlineUser size={32} color={isAuthenticated ? '#4ade80' : 'white'} className="md:w-10 md:h-10" />
                     {isAuthenticated && (
@@ -118,23 +118,13 @@ function Navbar() {
                             <div className="flex justify-center gap-4 mt-4">
                                 <button 
                                     onClick={() => {
-                                        navigate('/profile');
-                                        setIsMenuOpen(false);
-                                    }}
-                                    className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                                >
-                                    <AiOutlineUser />
-                                    Meu Perfil
-                                </button>
-                                <button 
-                                    onClick={() => {
                                         handleLogout();
                                         setIsMenuOpen(false);
                                     }}
                                     className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                                 >
                                     <FaSignOutAlt />
-                                    Sair
+                                    Sair da Conta
                                 </button>
                             </div>
                         </div>

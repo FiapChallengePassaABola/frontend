@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import img1 from "../assets/mcqueen.jpeg"
 import img2 from "../assets/mcqueen2.jpg"
 
-function Carousel() {
+function Caroucel() {
   const imgs = [img1, img2]
 
   const [index, setIndex] = useState(0)
@@ -28,4 +28,4 @@ function Carousel() {
     </div>
   )
 }
-export default Carousel
+export default Caroucel

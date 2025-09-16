@@ -13,10 +13,10 @@ function Footer(){
             <div className="mt-4 md:mt-0">
                 <h1 className="flex items-center justify-center p-3 md:p-5 text-xl md:text-2xl text-white font-semibold">Nossas redes</h1>
                 <ul className="flex flex-row gap-2 md:gap-4">
-                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.facebook.com/oficialpassaabola/?locale=pt_BR"></a><FaFacebook size={32} color="black" className="md:w-10 md:h-10"/></li>
+                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.facebook.com/oficialpassaabola/?locale=pt_BR"><FaFacebook size={32} color="black" className="md:w-10 md:h-10"/></a></li>
                     <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.youtube.com/@passabola"><BsYoutube size={32} color="black" className="md:w-10 md:h-10"/></a></li>
-                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.instagram.com/passaabola/"></a><FaInstagram size={32} color="black" className="md:w-10 md:h-10"/></li>
-                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.tiktok.com/@passabola"></a><FaTiktok size={32} color="black" className="md:w-10 md:h-10"/></li>
+                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.instagram.com/passaabola/"><FaInstagram size={32} color="black" className="md:w-10 md:h-10"/></a></li>
+                    <li className="bg-white rounded-full p-2"><a target="_blank" href="https://www.tiktok.com/@passabola"><FaTiktok size={32} color="black" className="md:w-10 md:h-10"/></a></li>
                     <li className="bg-white rounded-full p-2"><a target="_blank" href="https://x.com/passaabola"><BsTwitterX size={32} color="black" className="md:w-10 md:h-10"/></a></li>
                 </ul>
                 

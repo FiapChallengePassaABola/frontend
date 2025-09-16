@@ -29,7 +29,7 @@ function Noticias() {
           <CardNoticias imgNoticia={VideoYT} tituloNoticia="Titulo de teste sobre a empresa passa a bola" descricaoNoticia="Descrição basica sobre a noticia"/>
         </div>
       </div>
-      <Link to="Noticias"><FaChevronCircleDown size={40} color="green" className="mt-6 -mb-8 md:-mb-16 md:w-16 md:h-16"/></Link>
+      <Link to="/noticias"><FaChevronCircleDown size={40} color="green" className="mt-6 -mb-8 md:-mb-16 md:w-16 md:h-16"/></Link>
     </div>
   )
 }
