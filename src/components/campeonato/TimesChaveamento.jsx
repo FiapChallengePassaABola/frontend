@@ -14,12 +14,7 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }){
     const currentTeam = team || mockTeams[position] || mockTeams[0];
 
     const getPositionColor = (pos) => {
-        switch(pos) {
-            case 0: return "bg-gradient-to-r from-yellow-500 to-yellow-600 border-yellow-400";
-            case 1: return "bg-gradient-to-r from-gray-400 to-gray-500 border-gray-300";
-            case 2: return "bg-gradient-to-r from-orange-500 to-orange-600 border-orange-400";
-            default: return "bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-[#6B2A3A]";
-        }
+        return "bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-[#6B2A3A]";
     };
 
     return(

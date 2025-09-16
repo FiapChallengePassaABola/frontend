@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import img1 from "../assets/mcqueen.jpeg"
-import img2 from "../assets/mcqueen2.jpg"
+import img1 from "../assets/bannerpassabola.png"
+import img2 from "../assets/passabola2.png"
 
 function Caroucel() {
   const imgs = [img1, img2]

@@ -1,4 +1,6 @@
-import { FaGamepad, FaHome, FaRunning, FaShoppingBag, FaSignOutAlt } from 'react-icons/fa';
+import { useRef, useState } from 'react';
+import { AiOutlineUser } from 'react-icons/ai';
+import { FaCamera, FaFutbol, FaHome, FaRunning, FaShoppingBag, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,6 +8,93 @@ import { useAuth } from '../contexts/AuthContext';
 const PageProfile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [profileImage, setProfileImage] = useState(() => {
+    // Carregar imagem salva do localStorage
+    return localStorage.getItem('profileImage') || null;
+  });
+  const fileInputRef = useRef(null);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // Validar tipo de arquivo
+      if (!file.type.startsWith('image/')) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Arquivo inválido',
+          text: 'Por favor, selecione apenas arquivos de imagem.',
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
+        return;
+      }
+
+      // Validar tamanho (máximo 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Arquivo muito grande',
+          text: 'A imagem deve ter no máximo 5MB.',
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageData = e.target.result;
+        setProfileImage(imageData);
+        // Salvar no localStorage
+        localStorage.setItem('profileImage', imageData);
+        
+        // Mostrar mensagem de sucesso
+        Swal.fire({
+          icon: 'success',
+          title: 'Foto atualizada!',
+          text: 'Sua foto de perfil foi atualizada com sucesso.',
+          timer: 2000,
+          showConfirmButton: false,
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveImage = () => {
+    Swal.fire({
+      title: 'Remover foto',
+      text: 'Tem certeza que deseja remover sua foto de perfil?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Sim, remover',
+      cancelButtonText: 'Cancelar',
+      background: '#1a1a1a',
+      color: '#ffffff'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setProfileImage(null);
+        localStorage.removeItem('profileImage');
+        Swal.fire({
+          icon: 'success',
+          title: 'Foto removida!',
+          text: 'Sua foto de perfil foi removida.',
+          timer: 2000,
+          showConfirmButton: false,
+          background: '#1a1a1a',
+          color: '#ffffff'
+        });
+      }
+    });
+  };
 
   const handleLogout = async () => {
     const result = await Swal.fire({
@@ -41,7 +130,7 @@ const PageProfile = () => {
     { icon: FaHome, label: 'Home', path: '/' },
     { icon: FaRunning, label: 'Status', path: '/profile' },
     { icon: FaRunning, label: 'Treino', path: '/training' },
-    { icon: FaGamepad, label: 'Meus Jogos', path: '/games' },
+    { icon: FaFutbol, label: 'Meus Jogos', path: '/games' },
     { icon: FaShoppingBag, label: 'Compras', path: '/shop' }
   ];
 
@@ -61,17 +150,51 @@ const PageProfile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#2D1B2E] flex flex-col lg:flex-row">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className="w-full lg:w-80 bg-[#2D1B2E] p-6 flex flex-col">
-        {/* Profile Photo */}
+      <div className="w-full lg:w-80 bg-[#521E2B] p-6 flex flex-col border-r border-[#6B2A3A]">
+        {/* Profile Avatar */}
         <div className="flex justify-center mb-8">
-          <div className="w-24 h-24 bg-gray-300 rounded-full overflow-hidden">
-            <img 
-              src="https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=150&h=150&fit=crop&crop=face" 
-              alt="Profile" 
-              className="w-full h-full object-cover"
+          <div className="relative">
+            <div 
+              onClick={handleAvatarClick}
+              className="w-24 h-24 bg-[#521E2B] rounded-full flex items-center justify-center border border-[#6B2A3A] cursor-pointer hover:bg-[#6B2A3A] transition-colors group"
+            >
+              {profileImage ? (
+                <img 
+                  src={profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover rounded-full"
+                />
+              ) : (
+                <AiOutlineUser size={48} className="text-white" />
+              )}
+              
+              {/* Camera icon overlay */}
+              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center border-2 border-white group-hover:bg-green-700 transition-colors">
+                <FaCamera size={12} className="text-white" />
+              </div>
+            </div>
+            
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
             />
+            
+            {/* Remove button - only show when image exists */}
+            {profileImage && (
+              <button
+                onClick={handleRemoveImage}
+                className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center border-2 border-white transition-colors"
+                title="Remover foto"
+              >
+                <span className="text-white text-xs font-bold">×</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -110,7 +233,7 @@ const PageProfile = () => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8 bg-[#2D1B2E]">
+      <div className="flex-1 p-4 lg:p-8">
         {/* Status da Jogadora */}
         <div className="mb-6 lg:mb-8">
           <h1 className="text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6">Status da Jogadora</h1>
@@ -131,22 +254,22 @@ const PageProfile = () => {
                   
                   {/* Area Chart SVG */}
                   <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {/* Purple area (bottom) */}
+                    {/* Dark green area (bottom) */}
                     <path
                       d="M 10 70 Q 30 65 50 60 T 90 55 L 90 100 L 10 100 Z"
-                      fill="#8B5CF6"
+                      fill="#065f46"
                       opacity="0.8"
                     />
-                    {/* Light purple area (middle) */}
+                    {/* Medium green area (middle) */}
                     <path
                       d="M 10 50 Q 30 45 50 40 T 90 35 L 90 100 L 10 100 Z"
-                      fill="#A78BFA"
+                      fill="#047857"
                       opacity="0.8"
                     />
-                    {/* Pink area (top) */}
+                    {/* Light green area (top) */}
                     <path
                       d="M 10 30 Q 30 25 50 20 T 90 15 L 90 100 L 10 100 Z"
-                      fill="#F472B6"
+                      fill="#059669"
                       opacity="0.8"
                     />
                   </svg>
@@ -179,7 +302,7 @@ const PageProfile = () => {
           
           <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
             {championshipStats.map((stat, index) => (
-              <div key={index} className="bg-[#2D1B2E] border border-[#4A2A4A] rounded-xl p-4 lg:p-6 text-center flex-1">
+              <div key={index} className="bg-[#521E2B] border border-[#6B2A3A] rounded-xl p-4 lg:p-6 text-center flex-1 shadow-lg">
                 <div className="text-3xl lg:text-4xl font-bold text-white mb-2">{stat.value}</div>
                 <div className="text-white/70 text-sm lg:text-base">{stat.label}</div>
               </div>
