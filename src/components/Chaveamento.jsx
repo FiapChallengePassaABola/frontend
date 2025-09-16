@@ -40,7 +40,6 @@ function Chaveamento({ campeonatoId = 1 }){
                 
                 <div className="w-full">
                     <div className="flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-1 lg:gap-2 items-center">
-                        
                         <div className="flex flex-col space-y-2 md:space-y-1 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Oitavas
@@ -92,6 +91,20 @@ function Chaveamento({ campeonatoId = 1 }){
                                 isWinner={true}
                                 position={0}
                             />
+                        </div>
+
+                        <div className="flex flex-col justify-center space-y-6 md:space-y-3 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
+                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
+                                Semifinal
+                            </h3>
+                            {[0, 1].map((index) => (
+                                <TimesChaveamento 
+                                    key={index + 4}
+                                    team={mockTeams[index * 4 + 4]} 
+                                    isWinner={index === 0}
+                                    position={index + 1}
+                                />
+                            ))}
                         </div>
 
                         <div className="flex flex-col justify-center space-y-4 md:space-y-2 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
