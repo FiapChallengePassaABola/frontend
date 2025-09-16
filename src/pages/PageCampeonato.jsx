@@ -1,7 +1,8 @@
 import Footer from "../components/Footer"
 import Navbar from "../components/Navbar"
-import PageChaveamento from "../components/pageCampeonatos/PageChaveamento"
 import Titulos from "../components/Titulos"
+import PageCalendario from "../components/pageCampeonatos/PageCalendario"
+import PageChaveamento from "../components/pageCampeonatos/PageChaveamento"
 
 function PageCampeonato(){
     return(
@@ -13,6 +14,7 @@ function PageCampeonato(){
                 <Titulos titulo="CHAVEAMENTO"/>
                 <PageChaveamento/>
                 <Titulos titulo="CALENDARIO"/>
+                <PageCalendario/>
             </div>
             
             <Footer/>
