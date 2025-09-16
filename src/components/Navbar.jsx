@@ -50,17 +50,17 @@ function Navbar() {
     };
 
     return (
-        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
+        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 2xl:justify-center 2xl:px-0 pt-4 sm:pt-6 lg:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
             {/* Logo Mobile */}
             <Link to="/" className="md:hidden">
                 <img src={Logo} alt="Logo" className="w-12 sm:w-16" />
             </Link>
 
             {/* Menu Desktop */}
-            <ul className="hidden md:flex items-center justify-center text-lg text-white font-bold gap-4 lg:gap-6 flex-1">
+            <ul className="hidden md:flex items-center justify-center text-lg text-white font-bold gap-4 lg:gap-6 flex-1 2xl:flex-none 2xl:gap-8">
                 <li><Link to="/noticias" className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
                 <li><Link to="/campeonato" className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
-                <li><Link to="/"><img src={Logo} alt="Logo" className="w-16 lg:w-20" /></Link></li>
+                <li><Link to="/"><img src={Logo} alt="Logo" className="w-16 lg:w-20 2xl:w-24" /></Link></li>
                 <li className="hover:text-gray-300 transition-colors cursor-pointer">JOGAR</li>
                 <li>
                     <a href="https://www.youtube.com/@passabola" target="_blank" className="flex items-center hover:text-gray-300 transition-colors">
@@ -70,7 +70,7 @@ function Navbar() {
             </ul>
 
             {/* User Actions */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2 sm:gap-3 2xl:absolute 2xl:right-8">
                 {isAuthenticated && (
                     <div className="hidden sm:flex items-center gap-2">
                         <span className="text-white text-sm lg:text-base font-medium">
