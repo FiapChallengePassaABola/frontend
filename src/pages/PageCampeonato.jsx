@@ -6,11 +6,11 @@ import PageChaveamento from "../components/pageCampeonatos/PageChaveamento"
 
 function PageCampeonato(){
     return(
-        <div>
-            <div className="pb-13">
-            <Navbar/>
+        <div className="min-h-screen">
+            <div className="pb-16 sm:pb-20">
+                <Navbar/>
             </div>
-            <div className="px-4 md:px-0 flex flex-col items-center">
+            <div className="px-4 sm:px-6 lg:px-0 flex flex-col items-center">
                 <Titulos titulo="CHAVEAMENTO"/>
                 <PageChaveamento/>
                 <Titulos titulo="CALENDARIO"/>

@@ -18,28 +18,28 @@ function TabelaPontos(){
 
     return(
         <div className="w-full max-w-6xl mx-auto">
-            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 md:p-6 rounded-2xl shadow-2xl border border-[#6B2A3A]">
-                <h2 className="text-lg md:text-2xl font-bold text-center mb-4 md:mb-6 text-white">
+            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl shadow-2xl border border-[#6B2A3A]">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-center mb-4 sm:mb-6 text-white">
                     Tabela de Pontos
                 </h2>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <div className="space-y-2">
-                        <h3 className="text-white text-sm md:text-base font-semibold text-center mb-2 bg-gradient-to-r from-yellow-500 to-yellow-600 px-3 py-1 rounded-full">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-yellow-500 to-yellow-600 px-3 py-1 rounded-full">
                             TOP 3
                         </h3>
                         <ListaPontos teams={topTeams}/>
                     </div>
                     
                     <div className="space-y-2">
-                        <h3 className="text-white text-sm md:text-base font-semibold text-center mb-2 bg-gradient-to-r from-blue-500 to-blue-600 px-3 py-1 rounded-full">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-blue-500 to-blue-600 px-3 py-1 rounded-full">
                             MEIO
                         </h3>
                         <ListaPontos teams={midTeams}/>
                     </div>
                     
-                    <div className="space-y-2">
-                        <h3 className="text-white text-sm md:text-base font-semibold text-center mb-2 bg-gradient-to-r from-gray-500 to-gray-600 px-3 py-1 rounded-full">
+                    <div className="space-y-2 sm:col-span-2 lg:col-span-1">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-gray-500 to-gray-600 px-3 py-1 rounded-full">
                             OUTROS
                         </h3>
                         <ListaPontos teams={bottomTeams}/>

@@ -152,13 +152,13 @@ const PageProfile = () => {
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <div className="w-full lg:w-80 bg-[#521E2B] p-6 flex flex-col border-r border-[#6B2A3A]">
+      <div className="w-full lg:w-80 bg-[#521E2B] p-4 sm:p-6 flex flex-col border-r border-[#6B2A3A]">
         {/* Profile Avatar */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <div className="relative">
             <div 
               onClick={handleAvatarClick}
-              className="w-24 h-24 bg-[#521E2B] rounded-full flex items-center justify-center border border-[#6B2A3A] cursor-pointer hover:bg-[#6B2A3A] transition-colors group"
+              className="w-20 h-20 sm:w-24 sm:h-24 bg-[#521E2B] rounded-full flex items-center justify-center border border-[#6B2A3A] cursor-pointer hover:bg-[#6B2A3A] transition-colors group"
             >
               {profileImage ? (
                 <img 
@@ -167,12 +167,12 @@ const PageProfile = () => {
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <AiOutlineUser size={48} className="text-white" />
+                <AiOutlineUser size={40} className="text-white sm:w-12 sm:h-12" />
               )}
               
               {/* Camera icon overlay */}
-              <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-600 rounded-full flex items-center justify-center border-2 border-white group-hover:bg-green-700 transition-colors">
-                <FaCamera size={12} className="text-white" />
+              <div className="absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 bg-green-600 rounded-full flex items-center justify-center border-2 border-white group-hover:bg-green-700 transition-colors">
+                <FaCamera size={10} className="text-white sm:w-3 sm:h-3" />
               </div>
             </div>
             
@@ -189,7 +189,7 @@ const PageProfile = () => {
             {profileImage && (
               <button
                 onClick={handleRemoveImage}
-                className="absolute -top-2 -right-2 w-6 h-6 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center border-2 border-white transition-colors"
+                className="absolute -top-2 -right-2 w-5 h-5 sm:w-6 sm:h-6 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center border-2 border-white transition-colors"
                 title="Remover foto"
               >
                 <span className="text-white text-xs font-bold">×</span>
@@ -199,7 +199,7 @@ const PageProfile = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="space-y-2 lg:space-y-4">
+        <nav className="space-y-2 sm:space-y-3 lg:space-y-4">
           {navigationItems.map((item, index) => {
             const Icon = item.icon;
             const isActive = item.path === '/profile';
@@ -207,45 +207,45 @@ const PageProfile = () => {
               <button
                 key={index}
                 onClick={() => navigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-2 lg:py-3 rounded-lg transition-colors text-left ${
+                className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-left ${
                   isActive 
                     ? 'bg-white/10 text-white' 
                     : 'text-white/70 hover:text-white hover:bg-white/5'
                 }`}
               >
-                <Icon size={18} className="lg:w-5 lg:h-5" />
-                <span className="font-medium text-sm lg:text-base">{item.label}</span>
+                <Icon size={16} className="sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
+                <span className="font-medium text-sm sm:text-base">{item.label}</span>
               </button>
             );
           })}
         </nav>
 
         {/* Logout Button */}
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-4 sm:pt-6">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-white/70 hover:text-white hover:bg-red-600/20 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg text-white/70 hover:text-white hover:bg-red-600/20 transition-colors text-left"
           >
-            <FaSignOutAlt size={20} />
-            <span className="font-medium">Sair</span>
+            <FaSignOutAlt size={16} className="sm:w-5 sm:h-5" />
+            <span className="font-medium text-sm sm:text-base">Sair</span>
           </button>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-4 lg:p-8">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8">
         {/* Status da Jogadora */}
-        <div className="mb-6 lg:mb-8">
-          <h1 className="text-2xl lg:text-3xl font-bold text-white mb-4 lg:mb-6">Status da Jogadora</h1>
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">Status da Jogadora</h1>
           
-          <div className="bg-white rounded-2xl p-4 lg:p-6">
-            <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
+          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
               {/* Chart Area */}
               <div className="flex-1">
-                <div className="h-48 bg-gray-100 rounded-lg p-4 relative overflow-hidden">
+                <div className="h-40 sm:h-48 bg-gray-100 rounded-lg p-3 sm:p-4 relative overflow-hidden">
                   {/* Grid lines */}
                   <div className="absolute inset-0">
-                    <div className="h-full flex flex-col justify-between px-4">
+                    <div className="h-full flex flex-col justify-between px-3 sm:px-4">
                       {[...Array(4)].map((_, i) => (
                         <div key={i} className="border-t border-gray-300"></div>
                       ))}
@@ -275,7 +275,7 @@ const PageProfile = () => {
                   </svg>
                   
                   {/* X-axis labels */}
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-around px-4 pb-2">
+                  <div className="absolute bottom-0 left-0 right-0 flex justify-around px-3 sm:px-4 pb-2">
                     <span className="text-xs text-gray-600">Item 1</span>
                     <span className="text-xs text-gray-600">Item 2</span>
                     <span className="text-xs text-gray-600">Item 3</span>
@@ -284,11 +284,11 @@ const PageProfile = () => {
               </div>
 
               {/* Stats Grid */}
-              <div className="w-full lg:w-80 grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-4">
+              <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
                 {playerStats.map((stat, index) => (
-                  <div key={index} className="bg-gray-50 rounded-xl p-3 lg:p-4 text-center">
-                    <div className="text-lg lg:text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
-                    <div className="text-xs lg:text-sm text-gray-600">{stat.label}</div>
+                  <div key={index} className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
+                    <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
+                    <div className="text-xs sm:text-sm text-gray-600">{stat.label}</div>
                   </div>
                 ))}
               </div>
@@ -298,13 +298,13 @@ const PageProfile = () => {
 
         {/* Estatísticas do Campeonato */}
         <div>
-          <h2 className="text-xl lg:text-2xl font-bold text-white mb-4">Estatísticas do Campeonato</h2>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Estatísticas do Campeonato</h2>
           
-          <div className="flex flex-col sm:flex-row gap-3 lg:gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {championshipStats.map((stat, index) => (
-              <div key={index} className="bg-[#521E2B] border border-[#6B2A3A] rounded-xl p-4 lg:p-6 text-center flex-1 shadow-lg">
-                <div className="text-3xl lg:text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-white/70 text-sm lg:text-base">{stat.label}</div>
+              <div key={index} className="bg-[#521E2B] border border-[#6B2A3A] rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg">
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-white/70 text-sm sm:text-base">{stat.label}</div>
               </div>
             ))}
           </div>

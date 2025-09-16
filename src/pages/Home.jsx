@@ -1,13 +1,13 @@
-import Navbar from "../components/Navbar"
-import Caroucel from "../components/Caroucel"
 import Campeonato from "../components/Campeonato"
-import Jogar from "../components/Jogar"
-import Noticias from "../components/Noticias"
+import Caroucel from "../components/Caroucel"
 import Footer from "../components/Footer"
+import Jogar from "../components/Jogar"
+import Navbar from "../components/Navbar"
+import Noticias from "../components/Noticias"
 
 function Home() {
     return(
-        <div>
+        <div className="min-h-screen">
             <Navbar/>
             <Caroucel/>
             <Noticias/>

@@ -20,37 +20,37 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }){
     return(
         <div className={`
             ${getPositionColor(position)}
-            w-full h-12 md:h-12 lg:h-14 rounded-lg md:rounded-xl 
-            p-3 md:p-3 flex items-center justify-between
+            w-full h-10 sm:h-12 lg:h-14 rounded-lg sm:rounded-xl 
+            p-2 sm:p-3 flex items-center justify-between
             border-2 transition-all duration-300 hover:scale-105
             ${isWinner ? 'ring-2 ring-green-400 ring-opacity-50' : ''}
-            shadow-lg m-1 md:m-1
+            shadow-lg m-1
         `}>
-            <div className="flex items-center space-x-2 md:space-x-2">
-                <div className="w-8 h-8 md:w-7 md:h-7 lg:w-8 lg:h-8 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
+            <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
                     {currentTeam.image ? (
                         <img 
                             src={currentTeam.image} 
                             alt={currentTeam.name}
-                            className="w-6 h-6 md:w-5 md:h-5 lg:w-6 lg:h-6 rounded-full object-cover"
+                            className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 rounded-full object-cover"
                         />
                     ) : (
-                        <div className="text-base md:text-base lg:text-lg">
+                        <div className="text-sm sm:text-base lg:text-lg">
                             {currentTeam.logo}
                         </div>
                     )}
                 </div>
-                <h1 className="text-white font-semibold text-sm md:text-sm lg:text-base truncate">
+                <h1 className="text-white font-semibold text-xs sm:text-sm lg:text-base truncate">
                     {currentTeam.name}
                 </h1>
             </div>
             
             <div className="flex items-center space-x-1">
-                <span className="text-white/80 text-sm md:text-sm font-medium">
+                <span className="text-white/80 text-xs sm:text-sm font-medium">
                     {currentTeam.points} pts
                 </span>
                 {isWinner && (
-                    <div className="w-2 h-2 md:w-2 md:h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
                 )}
             </div>
         </div>

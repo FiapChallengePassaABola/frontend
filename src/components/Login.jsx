@@ -141,30 +141,30 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="p-6">
+      <header className="p-4 sm:p-6">
         <button 
           onClick={() => navigate('/')}
-          className="text-white text-2xl hover:text-gray-300 transition-colors flex items-center gap-2"
+          className="text-white text-lg sm:text-xl lg:text-2xl hover:text-gray-300 transition-colors flex items-center gap-2"
         >
-          <FaArrowLeft />
+          <FaArrowLeft size={20} className="sm:w-6 sm:h-6" />
           Voltar
         </button>
       </header>
 
-      <main className="flex-1 flex items-center justify-center px-6">
-        <div className="w-full max-w-md">
-          <div className="bg-[#521E2B] rounded-3xl p-8 shadow-2xl border border-[#6B2A3A]">
-            <div className="flex justify-center mb-8">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6">
+        <div className="w-full max-w-sm sm:max-w-md">
+          <div className="bg-[#521E2B] rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-[#6B2A3A]">
+            <div className="flex justify-center mb-6 sm:mb-8">
               <img 
                 src={Logo} 
                 alt="Logo" 
-                className="w-24 h-24 md:w-32 md:h-32 object-contain"
+                className="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 object-contain"
               />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               {errors.general && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl">
+                <div className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm">
                   {errors.general}
                 </div>
               )}
@@ -176,12 +176,12 @@ const Login = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Email"
-                  className={`w-full px-4 py-3 bg-gray-200 rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-200 ${
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 rounded-lg sm:rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-200 text-sm sm:text-base ${
                     errors.email ? 'border-2 border-red-500 focus:ring-red-500' : 'focus:ring-red-500'
                   }`}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.email}</p>
                 )}
               </div>
 
@@ -192,27 +192,27 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Senha"
-                  className={`w-full px-4 py-3 pr-12 bg-gray-200 rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-200 ${
+                  className={`w-full px-3 sm:px-4 py-2 sm:py-3 pr-10 sm:pr-12 bg-gray-200 rounded-lg sm:rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-200 text-sm sm:text-base ${
                     errors.password ? 'border-2 border-red-500 focus:ring-red-500' : 'focus:ring-red-500'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPassword ? <FaEyeSlash size={16} className="sm:w-5 sm:h-5" /> : <FaEye size={16} className="sm:w-5 sm:h-5" />}
                 </button>
                 {errors.password && (
-                  <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                  <p className="text-red-500 text-xs sm:text-sm mt-1">{errors.password}</p>
                 )}
               </div>
 
-              <div className="flex space-x-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`flex-1 py-3 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center ${
+                  className={`flex-1 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 flex items-center justify-center text-sm sm:text-base ${
                     isLoading 
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                       : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -220,7 +220,7 @@ const Login = () => {
                 >
                   {isLoading ? (
                     <>
-                      <FaSpinner className="animate-spin mr-2" />
+                      <FaSpinner className="animate-spin mr-2" size={16} />
                       Entrando...
                     </>
                   ) : (
@@ -231,7 +231,7 @@ const Login = () => {
                   type="button"
                   onClick={() => navigate('/register')}
                   disabled={isLoading}
-                  className={`flex-1 py-3 rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 ${
+                  className={`flex-1 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 text-sm sm:text-base ${
                     isLoading 
                       ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                       : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
@@ -241,9 +241,8 @@ const Login = () => {
                 </button>
               </div>
 
-
-              <div className="flex flex-col items-center space-y-3 pt-4">
-                <div className="text-gray-300 text-sm">
+              <div className="flex flex-col items-center space-y-2 sm:space-y-3 pt-2 sm:pt-4">
+                <div className="text-gray-300 text-xs sm:text-sm text-center">
                   Ainda não tem conta?{' '}
                   <button
                     type="button"

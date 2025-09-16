@@ -76,7 +76,7 @@ function PageCalendario() {
 
     return (
         <div className="w-full max-w-7xl mx-auto">
-            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 md:p-8 rounded-2xl m-2 md:m-4 shadow-2xl border border-[#6B2A3A] overflow-hidden">
+            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl m-2 sm:m-4 shadow-2xl border border-[#6B2A3A] overflow-hidden">
                 <style>
                     {`
                     @keyframes scroll-horizontal {
@@ -94,7 +94,7 @@ function PageCalendario() {
                 </style>
 
                 {jogosLoop.length === 0 ? (
-                    <div className="text-center text-white/70 py-8">
+                    <div className="text-center text-white/70 py-6 sm:py-8">
                         Nenhum jogo agendado no momento
                     </div>
                 ) : (
@@ -103,38 +103,38 @@ function PageCalendario() {
                             {jogosLoop.map((jogo, idx) => (
                                 <div
                                     key={`${jogo.id}-${idx}`}
-                                    className="w-72 shrink-0 mx-2 bg-gradient-to-r from-[#14020A] to-[#2A0A15] rounded-lg p-4 border border-[#6B2A3A] hover:border-[#8B3A4A] transition-all duration-300"
+                                    className="w-64 sm:w-72 shrink-0 mx-1 sm:mx-2 bg-gradient-to-r from-[#14020A] to-[#2A0A15] rounded-lg p-3 sm:p-4 border border-[#6B2A3A] hover:border-[#8B3A4A] transition-all duration-300"
                                 >
-                                    <div className="flex items-center justify-between mb-3">
+                                    <div className="flex items-center justify-between mb-2 sm:mb-3">
                                         <div className="flex items-center space-x-2">
-                                            <div className={`w-3 h-3 rounded-full ${getStatusColor(jogo.status)}`}></div>
-                                            <span className="text-white/70 text-xs md:text-sm">{getStatusText(jogo.status)}</span>
+                                            <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${getStatusColor(jogo.status)}`}></div>
+                                            <span className="text-white/70 text-xs sm:text-sm">{getStatusText(jogo.status)}</span>
                                         </div>
-                                        <div className="text-white/70 text-xs md:text-sm">{jogo.horario}</div>
+                                        <div className="text-white/70 text-xs sm:text-sm">{jogo.horario}</div>
                                     </div>
 
-                                    <div className="text-center text-white/60 text-xs mb-3">
+                                    <div className="text-center text-white/60 text-xs mb-2 sm:mb-3">
                                         {new Date(jogo.data).toLocaleDateString("pt-BR")}
                                     </div>
 
                                     <div className="flex items-center justify-between">
-                                        <div className="flex items-center space-x-3">
-                                            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                                                {jogo.timeCasa.logo}
+                                        <div className="flex items-center space-x-2 sm:space-x-3">
+                                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm">{jogo.timeCasa.logo}</span>
                                             </div>
-                                            <span className="text-white font-medium truncate max-w-[110px]">{jogo.timeCasa.name}</span>
+                                            <span className="text-white font-medium truncate max-w-[80px] sm:max-w-[110px] text-xs sm:text-sm">{jogo.timeCasa.name}</span>
                                         </div>
-                                        <div className="text-white/70 text-lg font-bold">VS</div>
-                                        <div className="flex items-center space-x-3">
-                                            <span className="text-white font-medium truncate max-w-[110px]">{jogo.timeFora.name}</span>
-                                            <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                                                {jogo.timeFora.logo}
+                                        <div className="text-white/70 text-sm sm:text-lg font-bold">VS</div>
+                                        <div className="flex items-center space-x-2 sm:space-x-3">
+                                            <span className="text-white font-medium truncate max-w-[80px] sm:max-w-[110px] text-xs sm:text-sm">{jogo.timeFora.name}</span>
+                                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white/20 rounded-full flex items-center justify-center">
+                                                <span className="text-xs sm:text-sm">{jogo.timeFora.logo}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 text-center">
-                                        <span className="text-white/60 text-sm">{jogo.local}</span>
+                                    <div className="mt-2 sm:mt-3 text-center">
+                                        <span className="text-white/60 text-xs sm:text-sm">{jogo.local}</span>
                                     </div>
                                 </div>
                             ))}

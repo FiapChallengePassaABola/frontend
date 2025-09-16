@@ -24,30 +24,30 @@ function ListaPontos({ teams = [] }){
 
     return(
         <div className="w-full">
-            <ol className="space-y-2 md:space-y-4">
+            <ol className="space-y-2 sm:space-y-3 lg:space-y-4">
                 {displayTeams.map((team, index) => (
                     <li key={team.id} className={`
                         ${getPositionColor(index)}
-                        text-sm md:text-lg font-bold text-white 
+                        text-sm sm:text-base lg:text-lg font-bold text-white 
                         flex items-center justify-between
-                        p-2 md:p-4 rounded-xl md:rounded-2xl
+                        p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl lg:rounded-2xl
                         border-2 border-opacity-50
                         transition-all duration-300 hover:scale-105
                         shadow-lg
                     `}>
-                        <div className="flex items-center space-x-2 md:space-x-4">
-                            <div className="text-lg md:text-2xl">
+                        <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
+                            <div className="text-base sm:text-lg lg:text-xl xl:text-2xl">
                                 {team.logo}
                             </div>
-                            <span className="truncate">
+                            <span className="truncate text-xs sm:text-sm lg:text-base">
                                 {team.name}
                             </span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                            <span className="text-white/80 text-xs md:text-sm">
+                        <div className="flex items-center space-x-1 sm:space-x-2">
+                            <span className="text-white/80 text-xs sm:text-sm">
                                 {team.points} pts
                             </span>
-                            <div className={`h-4 w-4 md:h-6 md:w-6 rounded-full ${getPositionColor(index)} border-2 border-white`}></div>
+                            <div className={`h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6 rounded-full ${getPositionColor(index)} border-2 border-white`}></div>
                         </div>
                     </li>
                 ))}
