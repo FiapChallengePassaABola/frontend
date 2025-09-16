@@ -1,11 +1,24 @@
 import { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import { HiMenuAlt3, HiX } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logoBranca.png";
+import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { isAuthenticated, user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleUserClick = () => {
+        if (isAuthenticated) {
+            // Se estiver logado, fazer logout
+            logout();
+        } else {
+            // Se não estiver logado, redireciona para login
+            navigate('/login');
+        }
+    };
 
     return (
         <header className="flex items-center justify-between px-4 md:px-8 pt-6 md:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
@@ -28,9 +41,23 @@ function Navbar() {
             </Link>
 
             {/* Botão de usuário */}
-            <a href="#" className="ml-auto">
-                <AiOutlineUser size={32} color="white" className="md:w-10 md:h-10" />
-            </a>
+            <div className="ml-auto flex items-center gap-3">
+                {isAuthenticated && (
+                    <span className="text-white text-sm md:text-base font-medium hidden sm:block">
+                        Olá, {user?.name || 'Usuário'}
+                    </span>
+                )}
+                <button 
+                    onClick={handleUserClick}
+                    className={`hover:opacity-80 transition-opacity relative ${isAuthenticated ? 'text-green-400' : 'text-white'}`}
+                    title={isAuthenticated ? `Logado como ${user?.name || 'Usuário'} - Clique para sair` : 'Fazer login'}
+                >
+                    <AiOutlineUser size={32} color={isAuthenticated ? '#4ade80' : 'white'} className="md:w-10 md:h-10" />
+                    {isAuthenticated && (
+                        <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    )}
+                </button>
+            </div>
 
             {/* Botão hambúrguer apenas para mobile */}
             <button 
@@ -43,6 +70,13 @@ function Navbar() {
             {/* Menu mobile expandido */}
             {isMenuOpen && (
                 <div className="absolute top-20 left-0 right-0 bg-black/90 backdrop-blur-sm z-[9999] md:hidden">
+                    {isAuthenticated && (
+                        <div className="text-center py-4 border-b border-gray-600">
+                            <span className="text-white text-lg font-medium">
+                                Olá, {user?.name || 'Usuário'}
+                            </span>
+                        </div>
+                    )}
                     <ul className="flex flex-col items-center text-lg text-white font-bold gap-6 py-8">
                         <li><Link to="/noticias" onClick={() => setIsMenuOpen(false)}>NOTICIAS</Link></li>
                         <li><Link to="/campeonato" onClick={() => setIsMenuOpen(false)}>CAMPEONATO</Link></li>
