@@ -52,7 +52,7 @@ function Navbar() {
     };
 
     return (
-        <header className="flex items-center justify-between px-4 md:px-8 pt-6 md:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
+        <header className="flex items-center justify-center px-4 md:px-8 pt-6 md:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
             {/* Menu Desktop/Tablet - design original */}
             <ul className="hidden md:flex items-center justify-center text-lg text-white font-bold gap-6 flex-1">
                 <li><Link to="/noticias">NOTICIAS</Link></li>
@@ -72,7 +72,7 @@ function Navbar() {
             </Link>
 
             {/* Botão de usuário */}
-            <div className="ml-auto flex items-center gap-3">
+            <div className="absolute right-4 md:right-8 flex items-center gap-3">
                 {isAuthenticated && (
                     <div className="flex items-center gap-2">
                         <span className="text-white text-sm md:text-base font-medium hidden sm:block">
@@ -101,7 +101,7 @@ function Navbar() {
 
             {/* Botão hambúrguer apenas para mobile */}
             <button 
-                className="md:hidden ml-4 text-white"
+                className="md:hidden absolute left-4 text-white"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
                 {isMenuOpen ? <HiX size={32} /> : <HiMenuAlt3 size={32} />}

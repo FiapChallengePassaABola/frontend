@@ -10,7 +10,7 @@ function PageCampeonato(){
             <div className="pb-13">
             <Navbar/>
             </div>
-            <div className="px-4 md:px-0">
+            <div className="px-4 md:px-0 flex flex-col items-center">
                 <Titulos titulo="CHAVEAMENTO"/>
                 <PageChaveamento/>
                 <Titulos titulo="CALENDARIO"/>
