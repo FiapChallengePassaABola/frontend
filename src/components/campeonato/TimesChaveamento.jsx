@@ -46,9 +46,6 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }){
             </div>
             
             <div className="flex items-center space-x-1">
-                <span className="text-white/80 text-xs sm:text-sm font-medium">
-                    {currentTeam.points} pts
-                </span>
                 {isWinner && (
                     <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
                 )}
