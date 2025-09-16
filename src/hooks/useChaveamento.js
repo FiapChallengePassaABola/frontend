@@ -1,76 +1,43 @@
-import { useCallback, useEffect, useState } from 'react';
-import { chaveamentoService } from '../services/chaveamentoService';
+import { useEffect, useState } from 'react';
 
 export const useChaveamento = (campeonatoId) => {
   const [chaveamento, setChaveamento] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchChaveamento = useCallback(async () => {
-    if (!campeonatoId) {
-      setError('ID do campeonato é obrigatório');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const data = await chaveamentoService.getChaveamento(campeonatoId);
-      setChaveamento(data);
-    } catch (err) {
-      console.error('Erro ao buscar chaveamento:', err);
-      setError(err.message || 'Erro ao carregar chaveamento');
-    } finally {
-      setLoading(false);
-    }
-  }, [campeonatoId]);
+  const [error] = useState(null);
 
   useEffect(() => {
-    fetchChaveamento();
-  }, [fetchChaveamento]);
+    setLoading(true);
+    setTimeout(() => {
+      setChaveamento({ id: campeonatoId, teams: [] });
+      setLoading(false);
+    }, 1000);
+  }, [campeonatoId]);
 
   return {
     chaveamento,
     loading,
     error,
-    refetch: fetchChaveamento
+    refetch: () => {}
   };
 };
 
 export const useJogos = (campeonatoId) => {
   const [jogos, setJogos] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  const fetchJogos = useCallback(async () => {
-    if (!campeonatoId) {
-      setError('ID do campeonato é obrigatório');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const data = await chaveamentoService.getJogos(campeonatoId);
-      setJogos(data || []);
-    } catch (err) {
-      console.error('Erro ao buscar jogos:', err);
-      setError(err.message || 'Erro ao carregar jogos');
-    } finally {
-      setLoading(false);
-    }
-  }, [campeonatoId]);
+  const [error] = useState(null);
 
   useEffect(() => {
-    fetchJogos();
-  }, [fetchJogos]);
+    setLoading(true);
+    setTimeout(() => {
+      setJogos([]);
+      setLoading(false);
+    }, 1000);
+  }, [campeonatoId]);
 
   return {
     jogos,
     loading,
     error,
-    refetch: fetchJogos
+    refetch: () => {}
   };
 };
