@@ -22,7 +22,7 @@ function PageChaveamento() {
 
     return(
         <div className="w-full max-w-7xl mx-auto">
-            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 md:p-8 rounded-2xl m-2 md:m-4 shadow-2xl border border-[#6B2A3A]">
+            <div className="p-4 md:p-8">
                 <h2 className="text-xl md:text-3xl font-bold text-center mb-6 md:mb-8 text-white">
                     Chaveamento do Torneio
                 </h2>
@@ -255,15 +255,25 @@ function PageChaveamento() {
                             ))}
                         </div>
 
-                        <div className="flex flex-col justify-center min-w-[120px] lg:min-w-[130px]">
-                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-yellow-400 to-orange-500 px-1 py-0.5 rounded-full">
+                        <div className="flex flex-col justify-center min-w-[120px] lg:min-w-[130px] relative">
+                            {/* Logo do PassaBola atrás da final */}
+                            <div className="absolute inset-0 flex items-center justify-center z-0">
+                                <img 
+                                    src="/src/assets/logoBranca.png" 
+                                    alt="PassaBola" 
+                                    className="w-48 h-48 rounded-full opacity-30"
+                                />
+                            </div>
+                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-yellow-400 to-orange-500 px-1 py-0.5 rounded-full relative z-10">
                                 FINAL
                             </h3>
-                            <TimesChaveamento 
-                                team={mockTeams[0]} 
-                                isWinner={true}
-                                position={0}
-                            />
+                            <div className="relative z-10">
+                                <TimesChaveamento 
+                                    team={mockTeams[0]} 
+                                    isWinner={true}
+                                    position={0}
+                                />
+                            </div>
                         </div>
 
                         <div className="flex flex-col justify-center space-y-4 lg:space-y-2 min-w-[120px] lg:min-w-[130px]">
