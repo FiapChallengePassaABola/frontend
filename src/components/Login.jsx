@@ -100,10 +100,37 @@ const Login = () => {
         });
       }
     } catch (error) {
+      console.error('Erro detalhado no login:', error);
+      
+      let errorMessage = 'Erro ao fazer login. Tente novamente.';
+      
+      // Mensagens de erro específicas baseadas no tipo de erro
+      if (error.message) {
+        if (error.message.includes('Email é obrigatório')) {
+          errorMessage = 'Por favor, informe seu email.';
+        } else if (error.message.includes('Senha é obrigatória')) {
+          errorMessage = 'Por favor, informe sua senha.';
+        } else if (error.message.includes('Formato de email inválido')) {
+          errorMessage = 'Por favor, informe um email válido.';
+        } else if (error.message.includes('Dados de usuário inválidos')) {
+          errorMessage = 'Dados de usuário inválidos. Tente fazer login novamente.';
+        } else if (error.message.includes('Tempo limite')) {
+          errorMessage = 'Tempo limite excedido. Verifique sua conexão e tente novamente.';
+        } else if (error.message.includes('Erro de conexão')) {
+          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
+        } else if (error.message.includes('Não autorizado')) {
+          errorMessage = 'Sessão expirada. Faça login novamente.';
+        } else if (error.message.includes('Erro interno do servidor')) {
+          errorMessage = 'Servidor temporariamente indisponível. Tente novamente em alguns minutos.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       await Swal.fire({
         icon: 'error',
-        title: 'Erro',
-        text: 'Erro ao fazer login. Tente novamente.',
+        title: 'Erro no Login',
+        text: errorMessage,
         background: '#1a1a1a',
         color: '#ffffff',
         confirmButtonColor: '#dc2626'
