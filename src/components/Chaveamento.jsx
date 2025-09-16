@@ -20,7 +20,6 @@ function Chaveamento({ campeonatoId = 1 }){
         );
     }
 
-    // Dados mock de times para demonstração
     const mockTeams = [
         { id: 1, name: "Flamengo", points: 15, logo: "🦅", image: null },
         { id: 2, name: "Palmeiras", points: 12, logo: "🌿", image: null },
@@ -39,11 +38,9 @@ function Chaveamento({ campeonatoId = 1 }){
                     Chaveamento do Torneio
                 </h2>
                 
-                {/* Bracket Container */}
                 <div className="w-full">
                     <div className="flex flex-wrap md:flex-nowrap justify-center gap-2 md:gap-1 lg:gap-2 items-center">
                         
-                        {/* Oitavas de Final - Lado Esquerdo */}
                         <div className="flex flex-col space-y-2 md:space-y-1 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Oitavas
@@ -58,7 +55,6 @@ function Chaveamento({ campeonatoId = 1 }){
                             ))}
                         </div>
 
-                        {/* Quartas de Final - Lado Esquerdo */}
                         <div className="flex flex-col justify-center space-y-4 md:space-y-2 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Quartas
@@ -73,7 +69,6 @@ function Chaveamento({ campeonatoId = 1 }){
                             ))}
                         </div>
 
-                        {/* Semifinal */}
                         <div className="flex flex-col justify-center space-y-6 md:space-y-3 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Semifinal
@@ -88,7 +83,6 @@ function Chaveamento({ campeonatoId = 1 }){
                             ))}
                         </div>
 
-                        {/* Final */}
                         <div className="flex flex-col justify-center w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-yellow-400 to-orange-500 px-1 py-0.5 rounded-full">
                                 FINAL
@@ -100,7 +94,6 @@ function Chaveamento({ campeonatoId = 1 }){
                             />
                         </div>
 
-                        {/* Quartas de Final - Lado Direito */}
                         <div className="flex flex-col justify-center space-y-4 md:space-y-2 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Quartas
@@ -115,7 +108,6 @@ function Chaveamento({ campeonatoId = 1 }){
                             ))}
                         </div>
 
-                        {/* Oitavas de Final - Lado Direito */}
                         <div className="flex flex-col space-y-2 md:space-y-1 w-full sm:w-auto min-w-[150px] md:min-w-[120px] lg:min-w-[130px]">
                             <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-1 py-0.5 rounded-full">
                                 Oitavas

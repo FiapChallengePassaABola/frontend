@@ -1,7 +1,6 @@
 import ListaPontos from "./ListaPontos";
 
 function TabelaPontos(){
-    // Dados mock de times para demonstração
     const mockTeams = [
         { id: 1, name: "Flamengo", points: 15, logo: "🦅", image: null },
         { id: 2, name: "Palmeiras", points: 12, logo: "🌿", image: null },
@@ -13,7 +12,6 @@ function TabelaPontos(){
         { id: 8, name: "Fluminense", points: 4, logo: "🌊", image: null }
     ];
 
-    // Dividir times em grupos (top 3, meio 3, resto)
     const topTeams = mockTeams.slice(0, 3);
     const midTeams = mockTeams.slice(3, 6);
     const bottomTeams = mockTeams.slice(6, 8);

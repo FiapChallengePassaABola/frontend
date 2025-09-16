@@ -4,8 +4,6 @@ import { motion } from "motion/react"
 function Background(){
     return(
         <div >
-            {/* <img src={Logo} alt="Logo" className="w-1/6 " /> */}
-            
         <motion.div
             initial={{ opacity: 1, scale: 1 }}
             animate={{ opacity: 0, scale: 0.8 }}

@@ -6,7 +6,6 @@ export const useChaveamento = (campeonatoId) => {
   const [error] = useState(null);
 
   useEffect(() => {
-    // Simular carregamento
     setLoading(true);
     setTimeout(() => {
       setChaveamento({ id: campeonatoId, teams: [] });
@@ -28,7 +27,6 @@ export const useJogos = (campeonatoId) => {
   const [error] = useState(null);
 
   useEffect(() => {
-    // Simular carregamento
     setLoading(true);
     setTimeout(() => {
       setJogos([]);

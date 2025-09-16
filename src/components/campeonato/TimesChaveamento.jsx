@@ -1,6 +1,5 @@
 
 function TimesChaveamento({ team, isWinner = false, position = 0 }){
-    // Dados mock de times para demonstração
     const mockTeams = [
         { id: 1, name: "Flamengo", points: 15, logo: "🦅", image: null },
         { id: 2, name: "Palmeiras", points: 12, logo: "🌿", image: null },
@@ -33,7 +32,6 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }){
             shadow-lg m-1 md:m-1
         `}>
             <div className="flex items-center space-x-2 md:space-x-2">
-                {/* Bucket para imagem do time */}
                 <div className="w-8 h-8 md:w-7 md:h-7 lg:w-8 lg:h-8 bg-white/20 rounded-full flex items-center justify-center border border-white/30">
                     {currentTeam.image ? (
                         <img 

@@ -8,7 +8,7 @@ function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
-        <header className="flex items-center justify-between px-4 md:px-8 pt-6 md:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4]">
+        <header className="flex items-center justify-between px-4 md:px-8 pt-6 md:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
             {/* Menu Desktop/Tablet - design original */}
             <ul className="hidden md:flex items-center justify-center text-lg text-white font-bold gap-6 flex-1">
                 <li><Link to="/noticias">NOTICIAS</Link></li>
@@ -42,7 +42,7 @@ function Navbar() {
 
             {/* Menu mobile expandido */}
             {isMenuOpen && (
-                <div className="absolute top-20 left-0 right-0 bg-black/90 backdrop-blur-sm z-50 md:hidden">
+                <div className="absolute top-20 left-0 right-0 bg-black/90 backdrop-blur-sm z-[9999] md:hidden">
                     <ul className="flex flex-col items-center text-lg text-white font-bold gap-6 py-8">
                         <li><Link to="/noticias" onClick={() => setIsMenuOpen(false)}>NOTICIAS</Link></li>
                         <li><Link to="/campeonato" onClick={() => setIsMenuOpen(false)}>CAMPEONATO</Link></li>

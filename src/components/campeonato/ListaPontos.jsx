@@ -1,6 +1,5 @@
 
 function ListaPontos({ teams = [] }){
-    // Dados mock de times para demonstração
     const mockTeams = [
         { id: 1, name: "Flamengo", points: 15, logo: "🦅", image: null },
         { id: 2, name: "Palmeiras", points: 12, logo: "🌿", image: null },
