@@ -81,33 +81,20 @@ const PageRegister = () => {
     setIsLoading(true);
     
     try {
-      const emailExists = await authService.checkEmailExists(formData.email);
+      const userData = await authService.signUp(
+        formData.email, 
+        formData.password, 
+        formData.name.trim()
+      );
       
-      if (emailExists) {
-        await Swal.fire({
-          icon: 'error',
-          title: 'Email já cadastrado',
-          text: 'Este email já está sendo usado por outro usuário.',
-          background: '#1a1a1a',
-          color: '#ffffff',
-          confirmButtonColor: '#dc2626'
-        });
-        return;
-      }
-      
-      const userData = await authService.addUser({
-        name: formData.name.trim(),
-        email: formData.email,
-        password: formData.password
-      });
-      
-      login(userData);
+      // O AuthContext vai detectar automaticamente a mudança de estado
+      // Não precisamos chamar login() manualmente
       
       await Swal.fire({
         icon: 'success',
         title: 'Conta criada!',
-        text: `Bem-vindo(a), ${userData.name}!`,
-        timer: 2000,
+        text: `Bem-vindo(a), ${userData.displayName}! Verifique seu email para confirmar a conta.`,
+        timer: 3000,
         showConfirmButton: false,
         background: '#1a1a1a',
         color: '#ffffff',
@@ -120,33 +107,8 @@ const PageRegister = () => {
       
       let errorMessage = 'Erro ao criar conta. Tente novamente.';
       
-      // Mensagens de erro específicas baseadas no tipo de erro
       if (error.message) {
-        if (error.message.includes('Nome é obrigatório')) {
-          errorMessage = 'Por favor, informe seu nome completo.';
-        } else if (error.message.includes('Email é obrigatório')) {
-          errorMessage = 'Por favor, informe seu email.';
-        } else if (error.message.includes('Senha é obrigatória')) {
-          errorMessage = 'Por favor, informe uma senha.';
-        } else if (error.message.includes('Formato de email inválido')) {
-          errorMessage = 'Por favor, informe um email válido.';
-        } else if (error.message.includes('Email já cadastrado')) {
-          errorMessage = 'Este email já está sendo usado. Tente fazer login ou use outro email.';
-        } else if (error.message.includes('Nome deve ter pelo menos 2 caracteres')) {
-          errorMessage = 'Nome deve ter pelo menos 2 caracteres.';
-        } else if (error.message.includes('Senha deve ter pelo menos 6 caracteres')) {
-          errorMessage = 'Senha deve ter pelo menos 6 caracteres.';
-        } else if (error.message.includes('Dados do usuário são obrigatórios')) {
-          errorMessage = 'Por favor, preencha todos os campos obrigatórios.';
-        } else if (error.message.includes('Tempo limite')) {
-          errorMessage = 'Tempo limite excedido. Verifique sua conexão e tente novamente.';
-        } else if (error.message.includes('Erro de conexão')) {
-          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-        } else if (error.message.includes('Erro interno do servidor')) {
-          errorMessage = 'Servidor temporariamente indisponível. Tente novamente em alguns minutos.';
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
 
       await Swal.fire({

@@ -74,7 +74,7 @@ function Navbar() {
                 {isAuthenticated && (
                     <div className="hidden sm:flex items-center gap-2">
                         <span className="text-white text-sm lg:text-base font-medium">
-                            Olá, {user?.name || 'Usuário'}
+                            Olá, {user?.displayName || user?.email || 'Usuário'}
                         </span>
                         <button 
                             onClick={handleLogout}
@@ -88,7 +88,7 @@ function Navbar() {
                 <button 
                     onClick={handleUserClick}
                     className={`hover:opacity-80 transition-opacity relative p-1 ${isAuthenticated ? 'text-green-400' : 'text-white'}`}
-                    title={isAuthenticated ? `Ver perfil de ${user?.name || 'Usuário'}` : 'Fazer login'}
+                    title={isAuthenticated ? `Ver perfil de ${user?.displayName || user?.email || 'Usuário'}` : 'Fazer login'}
                 >
                     <AiOutlineUser size={28} color={isAuthenticated ? '#4ade80' : 'white'} className="sm:w-8 sm:h-8 lg:w-10 lg:h-10" />
                     {isAuthenticated && (
@@ -112,7 +112,7 @@ function Navbar() {
                     {isAuthenticated && (
                         <div className="text-center py-4 border-b border-gray-600">
                             <span className="text-white text-base font-medium">
-                                Olá, {user?.name || 'Usuário'}
+                                Olá, {user?.displayName || user?.email || 'Usuário'}
                             </span>
                             <div className="flex justify-center gap-3 mt-3">
                                 <button 

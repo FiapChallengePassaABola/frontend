@@ -1,4 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
+import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
+import { auth } from '../config/firebase';
 
 const AuthContext = createContext();
 
@@ -16,69 +18,45 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const loadAuthData = async () => {
-      try {
-        const savedAuth = localStorage.getItem('auth');
-        if (savedAuth) {
-          const authData = JSON.parse(savedAuth);
-          
-          if (authData && typeof authData === 'object' && 
-              typeof authData.isAuthenticated === 'boolean' && 
-              authData.user && typeof authData.user === 'object') {
-            setIsAuthenticated(authData.isAuthenticated);
-            setUser(authData.user);
-          } else {
-            console.warn('Dados de autenticação inválidos, removendo...');
-            localStorage.removeItem('auth');
-          }
-        }
-      } catch (error) {
-        console.error('Erro ao carregar dados de autenticação:', error);
-        try {
-          localStorage.removeItem('auth');
-        } catch (storageError) {
-          console.error('Erro ao limpar localStorage:', storageError);
-        }
-      } finally {
-        setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        // Usuário logado
+        const userData = {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          emailVerified: firebaseUser.emailVerified
+        };
+        
+        setIsAuthenticated(true);
+        setUser(userData);
+      } else {
+        // Usuário não logado
+        setIsAuthenticated(false);
+        setUser(null);
       }
-    };
+      setIsLoading(false);
+    });
 
-    loadAuthData();
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
   const login = (userData) => {
-    try {
-      if (!userData || typeof userData !== 'object' || !userData.id || !userData.email) {
-        throw new Error('Dados de usuário inválidos para login');
-      }
-
-      setIsAuthenticated(true);
-      setUser(userData);
-      
-      const authData = {
-        isAuthenticated: true,
-        user: userData
-      };
-      
-      localStorage.setItem('auth', JSON.stringify(authData));
-    } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      setIsAuthenticated(false);
-      setUser(null);
-      throw error;
-    }
+    // Esta função agora é usada internamente pelo Firebase Auth
+    // Não precisa mais gerenciar estado manualmente
+    setIsAuthenticated(true);
+    setUser(userData);
   };
 
-  const logout = () => {
+  const logout = async () => {
     try {
-      setIsAuthenticated(false);
-      setUser(null);
-      localStorage.removeItem('auth');
+      await firebaseSignOut(auth);
+      // O onAuthStateChanged vai detectar a mudança e atualizar o estado
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
-      setIsAuthenticated(false);
-      setUser(null);
+      throw error;
     }
   };
 

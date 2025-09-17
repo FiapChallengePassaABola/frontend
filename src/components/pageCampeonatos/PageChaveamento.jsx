@@ -168,7 +168,7 @@ function PageChaveamento() {
                             </div>
 
                             <div>
-                                <h3 className="text-white text-base sm:text-lg font-bold text-center mb-3 sm:mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-black">
+                                <h3 className="text-white text-base sm:text-lg font-bold text-center mb-3 sm:mb-4 bg-gradient-to-r from-purple-300 to-purple-400 px-3 sm:px-4 py-1 sm:py-2 rounded-full text-white">
                                     FINAL
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -188,7 +188,7 @@ function PageChaveamento() {
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <h4 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-yellow-400 to-orange-500 px-2 py-1 rounded-full text-black">
+                                        <h4 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-purple-300 to-purple-400 px-2 py-1 rounded-full text-white">
                                             CAMPEÃO
                                         </h4>
                                         <TimesChaveamento 
@@ -253,7 +253,7 @@ function PageChaveamento() {
                                     className="w-32 h-32 xl:w-48 xl:h-48 rounded-full opacity-30"
                                 />
                             </div>
-                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-yellow-400 to-orange-500 px-2 py-1 rounded-full relative z-10">
+                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-gradient-to-r from-purple-300 to-purple-400 px-2 py-1 rounded-full relative z-10">
                                 FINAL
                             </h3>
                             <div className="relative z-10">

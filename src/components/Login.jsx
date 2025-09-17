@@ -56,6 +56,42 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    if (!formData.email) {
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Email necessário',
+        text: 'Por favor, digite seu email primeiro para redefinir a senha.',
+        background: '#1a1a1a',
+        color: '#ffffff',
+        confirmButtonColor: '#dc2626'
+      });
+      return;
+    }
+
+    try {
+      await authService.resetPassword(formData.email);
+      
+      await Swal.fire({
+        icon: 'success',
+        title: 'Email enviado!',
+        text: 'Verifique sua caixa de entrada para redefinir sua senha.',
+        background: '#1a1a1a',
+        color: '#ffffff',
+        confirmButtonColor: '#dc2626'
+      });
+    } catch (error) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Erro ao enviar email',
+        text: error.message || 'Erro ao enviar email de redefinição.',
+        background: '#1a1a1a',
+        color: '#ffffff',
+        confirmButtonColor: '#dc2626'
+      });
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -66,64 +102,30 @@ const Login = () => {
     setIsLoading(true);
     
     try {
-      const user = await authService.checkUserExists(formData.email, formData.password);
+      const userData = await authService.signIn(formData.email, formData.password);
       
-      if (user) {
-        const userData = {
-          id: user.id,
-          name: user.name,
-          email: user.email
-        };
-        
-        login(userData);
-        
-        await Swal.fire({
-          icon: 'success',
-          title: 'Login realizado!',
-          text: `Bem-vindo(a), ${user.name}!`,
-          timer: 2000,
-          showConfirmButton: false,
-          background: '#1a1a1a',
-          color: '#ffffff',
-          confirmButtonColor: '#dc2626'
-        });
-        
-        navigate('/');
-      } else {
-        await Swal.fire({
-          icon: 'error',
-          title: 'Login inexistente',
-          text: 'Email ou senha incorretos. Verifique suas credenciais.',
-          background: '#1a1a1a',
-          color: '#ffffff',
-          confirmButtonColor: '#dc2626'
-        });
-      }
+      // O AuthContext vai detectar automaticamente a mudança de estado
+      // Não precisamos chamar login() manualmente
+      
+      await Swal.fire({
+        icon: 'success',
+        title: 'Login realizado!',
+        text: `Bem-vindo(a), ${userData.displayName || userData.email}!`,
+        timer: 2000,
+        showConfirmButton: false,
+        background: '#1a1a1a',
+        color: '#ffffff',
+        confirmButtonColor: '#dc2626'
+      });
+      
+      navigate('/');
     } catch (error) {
       console.error('Erro detalhado no login:', error);
       
       let errorMessage = 'Erro ao fazer login. Tente novamente.';
       
       if (error.message) {
-        if (error.message.includes('Email é obrigatório')) {
-          errorMessage = 'Por favor, informe seu email.';
-        } else if (error.message.includes('Senha é obrigatória')) {
-          errorMessage = 'Por favor, informe sua senha.';
-        } else if (error.message.includes('Formato de email inválido')) {
-          errorMessage = 'Por favor, informe um email válido.';
-        } else if (error.message.includes('Dados de usuário inválidos')) {
-          errorMessage = 'Dados de usuário inválidos. Tente fazer login novamente.';
-        } else if (error.message.includes('Tempo limite')) {
-          errorMessage = 'Tempo limite excedido. Verifique sua conexão e tente novamente.';
-        } else if (error.message.includes('Erro de conexão')) {
-          errorMessage = 'Erro de conexão. Verifique sua internet e tente novamente.';
-        } else if (error.message.includes('Não autorizado')) {
-          errorMessage = 'Sessão expirada. Faça login novamente.';
-        } else if (error.message.includes('Erro interno do servidor')) {
-          errorMessage = 'Servidor temporariamente indisponível. Tente novamente em alguns minutos.';
-        } else {
-          errorMessage = error.message;
-        }
+        errorMessage = error.message;
       }
 
       await Swal.fire({
@@ -238,6 +240,17 @@ const Login = () => {
                   }`}
                 >
                   Cadastrar
+                </button>
+              </div>
+
+              <div className="text-center pt-2">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  disabled={isLoading}
+                  className="text-red-400 hover:text-red-300 underline font-medium transition-colors duration-200 text-sm"
+                >
+                  Esqueci minha senha
                 </button>
               </div>
 
