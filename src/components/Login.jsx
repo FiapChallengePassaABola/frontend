@@ -104,9 +104,6 @@ const Login = () => {
     try {
       const userData = await authService.signIn(formData.email, formData.password);
       
-      // O AuthContext vai detectar automaticamente a mudança de estado
-      // Não precisamos chamar login() manualmente
-      
       await Swal.fire({
         icon: 'success',
         title: 'Login realizado!',

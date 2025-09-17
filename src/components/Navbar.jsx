@@ -51,12 +51,10 @@ function Navbar() {
 
     return (
         <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 2xl:justify-center 2xl:px-0 pt-4 sm:pt-6 lg:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
-            {/* Logo Mobile */}
             <Link to="/" className="md:hidden">
                 <img src={Logo} alt="Logo" className="w-12 sm:w-16" />
             </Link>
 
-            {/* Menu Desktop */}
             <ul className="hidden md:flex items-center justify-center text-lg text-white font-bold gap-4 lg:gap-6 flex-1 2xl:flex-none 2xl:gap-8">
                 <li><Link to="/noticias" className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
                 <li><Link to="/campeonato" className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
@@ -69,7 +67,6 @@ function Navbar() {
                 </li>
             </ul>
 
-            {/* User Actions */}
             <div className="flex items-center gap-2 sm:gap-3 2xl:absolute 2xl:right-8">
                 {isAuthenticated && (
                     <div className="hidden sm:flex items-center gap-2">
@@ -97,7 +94,6 @@ function Navbar() {
                 </button>
             </div>
 
-            {/* Mobile Menu Button */}
             <button 
                 className="md:hidden text-white p-1"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -106,7 +102,6 @@ function Navbar() {
                 {isMenuOpen ? <HiX size={28} /> : <HiMenuAlt3 size={28} />}
             </button>
 
-            {/* Mobile Menu */}
             {isMenuOpen && (
                 <div className="absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-sm z-[9999] md:hidden border-t border-gray-600">
                     {isAuthenticated && (

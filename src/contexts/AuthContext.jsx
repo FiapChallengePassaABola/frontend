@@ -1,5 +1,5 @@
+import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { onAuthStateChanged, signOut as firebaseSignOut } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
 const AuthContext = createContext();
@@ -20,7 +20,6 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
-        // Usuário logado
         const userData = {
           uid: firebaseUser.uid,
           email: firebaseUser.email,
@@ -32,20 +31,16 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(true);
         setUser(userData);
       } else {
-        // Usuário não logado
         setIsAuthenticated(false);
         setUser(null);
       }
       setIsLoading(false);
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
   }, []);
 
   const login = (userData) => {
-    // Esta função agora é usada internamente pelo Firebase Auth
-    // Não precisa mais gerenciar estado manualmente
     setIsAuthenticated(true);
     setUser(userData);
   };
@@ -53,7 +48,6 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await firebaseSignOut(auth);
-      // O onAuthStateChanged vai detectar a mudança e atualizar o estado
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
       throw error;

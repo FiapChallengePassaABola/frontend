@@ -1,28 +1,25 @@
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  sendPasswordResetEmail,
-  sendEmailVerification,
-  updateProfile,
-  signOut as firebaseSignOut
+import {
+    createUserWithEmailAndPassword,
+    signOut as firebaseSignOut,
+    sendEmailVerification,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    updateProfile
 } from 'firebase/auth';
 import { auth } from '../config/firebase';
 
 export const authService = {
-  // Criar conta com email e senha
   async signUp(email, password, displayName) {
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Atualizar o perfil do usuário com o nome
       if (displayName) {
         await updateProfile(user, {
           displayName: displayName
         });
       }
 
-      // Enviar email de verificação
       await sendEmailVerification(user);
 
       return {
@@ -37,7 +34,6 @@ export const authService = {
     }
   },
 
-  // Fazer login com email e senha
   async signIn(email, password) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
@@ -55,7 +51,6 @@ export const authService = {
     }
   },
 
-  // Fazer logout
   async signOut() {
     try {
       await firebaseSignOut(auth);
@@ -65,7 +60,6 @@ export const authService = {
     }
   },
 
-  // Enviar email de reset de senha
   async resetPassword(email) {
     try {
       await sendPasswordResetEmail(auth, email);
@@ -75,7 +69,6 @@ export const authService = {
     }
   },
 
-  // Enviar email de verificação
   async sendEmailVerification() {
     try {
       if (auth.currentUser) {
@@ -89,12 +82,8 @@ export const authService = {
     }
   },
 
-  // Verificar se email já existe (para compatibilidade com código existente)
   async checkEmailExists(email) {
     try {
-      // No Firebase Auth, não podemos verificar se um email existe sem tentar criar uma conta
-      // Esta função é mantida para compatibilidade, mas retorna false
-      // A verificação real acontece no momento do signUp
       return false;
     } catch (error) {
       console.error('Erro ao verificar email:', error);
@@ -102,12 +91,8 @@ export const authService = {
     }
   },
 
-  // Verificar se usuário existe (para compatibilidade com código existente)
   async checkUserExists(email, password) {
     try {
-      // No Firebase Auth, não podemos verificar credenciais sem tentar fazer login
-      // Esta função é mantida para compatibilidade, mas retorna null
-      // A verificação real acontece no momento do signIn
       return null;
     } catch (error) {
       console.error('Erro ao verificar usuário:', error);
@@ -115,7 +100,6 @@ export const authService = {
     }
   },
 
-  // Adicionar usuário (para compatibilidade com código existente)
   async addUser(userData) {
     try {
       return await this.signUp(userData.email, userData.password, userData.name);
@@ -125,7 +109,6 @@ export const authService = {
     }
   },
 
-  // Tratar erros do Firebase Auth
   handleAuthError(error) {
     switch (error.code) {
       case 'auth/email-already-in-use':

@@ -87,9 +87,6 @@ const PageRegister = () => {
         formData.name.trim()
       );
       
-      // O AuthContext vai detectar automaticamente a mudança de estado
-      // Não precisamos chamar login() manualmente
-      
       await Swal.fire({
         icon: 'success',
         title: 'Conta criada!',
