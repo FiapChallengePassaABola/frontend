@@ -49,6 +49,37 @@
       "placarB": 1,
       "data": "2024-12-15"
     }
+  ],
+  "clubes": [
+    {
+      "id": 1,
+      "nome": "Flamengo",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "responsavel": "João Silva",
+      "email": "joao@flamengo.com",
+      "telefone": "(21) 99999-9999",
+      "dataInscricao": "2024-12-17",
+      "status": "ativo"
+    }
+  ],
+  "jogadoras": [
+    {
+      "id": 1,
+      "nome": "Maria Silva",
+      "email": "maria@email.com",
+      "telefone": "(21) 99999-9999",
+      "dataNascimento": "1995-05-15",
+      "altura": 165,
+      "peso": 60,
+      "posicao": "Atacante",
+      "cidade": "Rio de Janeiro",
+      "estado": "RJ",
+      "experiencia": "Intermediário",
+      "clubeAtual": "Flamengo",
+      "observacoes": "Jogadora experiente",
+      "dataInscricao": "2024-12-17",
+      "status": "pendente"
+    }
   ]
 }
-
