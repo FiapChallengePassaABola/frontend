@@ -1,0 +1,54 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "João Silva",
+      "email": "joao@email.com",
+      "team": "Flamengo"
+    },
+    {
+      "id": 2,
+      "name": "Maria Santos",
+      "email": "maria@email.com",
+      "team": "São Paulo"
+    }
+  ],
+  "campeonatos": [
+    {
+      "id": 1,
+      "nome": "Brasileirão 2024",
+      "status": "ativo",
+      "times": [
+        "Flamengo",
+        "São Paulo",
+        "Palmeiras",
+        "Corinthians"
+      ]
+    }
+  ],
+  "noticias": [
+    {
+      "id": 1,
+      "titulo": "Flamengo vence clássico",
+      "conteudo": "Grande jogo no Maracanã...",
+      "data": "2024-12-17"
+    },
+    {
+      "id": 2,
+      "titulo": "Contratação do século",
+      "conteudo": "Novo jogador chega ao Brasil...",
+      "data": "2024-12-16"
+    }
+  ],
+  "partidas": [
+    {
+      "id": 1,
+      "timeA": "Flamengo",
+      "timeB": "São Paulo",
+      "placarA": 2,
+      "placarB": 1,
+      "data": "2024-12-15"
+    }
+  ]
+}
+

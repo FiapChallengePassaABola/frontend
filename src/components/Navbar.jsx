@@ -59,7 +59,7 @@ function Navbar() {
                 <li><Link to="/noticias" className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
                 <li><Link to="/campeonato" className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
                 <li><Link to="/"><img src={Logo} alt="Logo" className="w-16 lg:w-20 2xl:w-24" /></Link></li>
-                <li className="hover:text-gray-300 transition-colors cursor-pointer">JOGAR</li>
+                <li><Link to="/jogar" className="hover:text-gray-300 transition-colors">JOGAR</Link></li>
                 <li>
                     <a href="https://www.youtube.com/@passabola" target="_blank" className="flex items-center hover:text-gray-300 transition-colors">
                         YOUTUBE
@@ -136,7 +136,7 @@ function Navbar() {
                     <ul className="flex flex-col items-center text-base text-white font-bold gap-4 py-6">
                         <li><Link to="/noticias" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
                         <li><Link to="/campeonato" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
-                        <li className="hover:text-gray-300 transition-colors cursor-pointer">JOGAR</li>
+                        <li><Link to="/jogar" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">JOGAR</Link></li>
                         <li>
                             <a href="https://www.youtube.com/@passabola" target="_blank" className="flex items-center hover:text-gray-300 transition-colors">
                                 YOUTUBE

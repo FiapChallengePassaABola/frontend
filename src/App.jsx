@@ -4,6 +4,7 @@ import PlasmaBackground from "./components/PlasmaBackground";
 import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Home";
 import PageCampeonato from "./pages/PageCampeonato";
+import PageJogar from "./pages/PageJogar";
 import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/campeonato" element={<PageCampeonato />} />
+            <Route path="/jogar" element={<PageJogar />} />
             <Route path="/noticias" element={<PageNoticias />} />
             <Route path="/login" element={<PageLogin />} />
             <Route path="/register" element={<PageRegister />} />

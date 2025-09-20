@@ -1,7 +1,6 @@
 import Campeonato from "../components/Campeonato"
 import Caroucel from "../components/Caroucel"
 import Footer from "../components/Footer"
-import Jogar from "../components/Jogar"
 import Navbar from "../components/Navbar"
 import Noticias from "../components/Noticias"
 
@@ -12,7 +11,6 @@ function Home() {
             <Caroucel/>
             <Campeonato/>
             <Noticias/>
-            <Jogar/>
             <Footer/>
         </div>
     )
