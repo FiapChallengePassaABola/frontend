@@ -4,9 +4,11 @@ import Navbar from "../components/Navbar"
 
 function PageJogar() {
     return(
-        <div className="min-h-screen">
+        <div className="min-h-screen flex flex-col">
             <Navbar/>
-            <Jogar/>
+            <div className="flex-1">
+                <Jogar/>
+            </div>
             <Footer/>
         </div>
     )

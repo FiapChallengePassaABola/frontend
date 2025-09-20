@@ -34,7 +34,6 @@ export const userServiceRealtime = {
 
   async getUserByEmail(email) {
     try {
-      // Validar entrada
       if (!email || typeof email !== 'string' || !email.trim()) {
         throw new Error('Email é obrigatório e deve ser uma string válida');
       }
@@ -66,7 +65,6 @@ export const userServiceRealtime = {
 
   async checkUserExists(email, password) {
     try {
-      // Validar entradas
       if (!email || typeof email !== 'string' || !email.trim()) {
         throw new Error('Email é obrigatório');
       }
@@ -87,7 +85,6 @@ export const userServiceRealtime = {
 
   async addUser(userData) {
     try {
-      // Validar dados obrigatórios
       if (!userData || typeof userData !== 'object') {
         throw new Error('Dados do usuário são obrigatórios');
       }
@@ -106,18 +103,15 @@ export const userServiceRealtime = {
         throw new Error('Senha é obrigatória e deve ser uma string válida');
       }
 
-      // Validar formato do email
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email.trim())) {
         throw new Error('Formato de email inválido');
       }
 
-      // Validar tamanho mínimo da senha
       if (password.length < 6) {
         throw new Error('Senha deve ter pelo menos 6 caracteres');
       }
 
-      // Validar tamanho mínimo do nome
       if (name.trim().length < 2) {
         throw new Error('Nome deve ter pelo menos 2 caracteres');
       }
@@ -144,7 +138,6 @@ export const userServiceRealtime = {
 
   async updateUser(userId, userData) {
     try {
-      // Validar entrada
       if (!userId || typeof userId !== 'string' || !userId.trim()) {
         throw new Error('ID do usuário é obrigatório');
       }
@@ -153,7 +146,6 @@ export const userServiceRealtime = {
         throw new Error('Dados do usuário são obrigatórios');
       }
 
-      // Validar campos se fornecidos
       if (userData.email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(userData.email.trim())) {
@@ -180,7 +172,6 @@ export const userServiceRealtime = {
 
   async deleteUser(userId) {
     try {
-      // Validar entrada
       if (!userId || typeof userId !== 'string' || !userId.trim()) {
         throw new Error('ID do usuário é obrigatório');
       }

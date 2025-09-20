@@ -6,7 +6,6 @@ export const useFootballGames = () => {
   const [error, setError] = useState(null);
   const [usingApi, setUsingApi] = useState(false);
 
-  // Dados mockados como fallback
   const getMockJogos = () => [
     {
       id: 1,
@@ -51,12 +50,9 @@ export const useFootballGames = () => {
       setLoading(true);
       setError(null);
       
-      console.log('📋 Carregando dados de exemplo...');
       
-      // Simular carregamento
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Usar dados mockados
       setUsingApi(false);
       setJogos(getMockJogos());
       

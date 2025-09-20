@@ -12,12 +12,10 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Atualiza o state para mostrar a UI de erro
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log do erro para debugging
     console.error('ErrorBoundary capturou um erro:', error, errorInfo);
     
     this.setState({
@@ -25,8 +23,6 @@ class ErrorBoundary extends React.Component {
       errorInfo: errorInfo
     });
 
-    // Aqui você pode enviar o erro para um serviço de monitoramento
-    // como Sentry, LogRocket, etc.
     if (this.props.onError) {
       this.props.onError(error, errorInfo);
     }
@@ -42,7 +38,6 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      // UI de fallback personalizada
       return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900 px-4">
           <div className="max-w-md w-full bg-[#521E2B] rounded-3xl p-8 shadow-2xl border border-[#6B2A3A] text-center">

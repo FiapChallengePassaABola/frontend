@@ -2,7 +2,7 @@ import React from "react";
 import { useFootballGames } from "../../hooks/useFootballGames";
 
 function PageCalendario() {
-    const { jogos, loading, error, usingApi, refetch } = useFootballGames();
+    const { jogos, loading, error, refetch } = useFootballGames();
 
     const getStatusColor = (status) => {
         switch (status) {
@@ -30,13 +30,11 @@ function PageCalendario() {
         }
     };
 
-    // Criar loop dos jogos para o efeito de scroll infinito
     const jogosLoop = jogos.length > 0 ? [...jogos, ...jogos] : [];
 
     return (
         <div className="w-full max-w-7xl mx-auto">
             <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl m-2 sm:m-4 shadow-2xl border border-[#6B2A3A] overflow-hidden">
-                {/* Indicador de fonte dos dados */}
                 {!loading && (
                     <div className="mb-4 text-center">
                         <span className="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400">
