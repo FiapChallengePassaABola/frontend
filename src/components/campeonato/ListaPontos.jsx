@@ -14,12 +14,7 @@ function ListaPontos({ teams = [] }){
     const displayTeams = teams.length > 0 ? teams : mockTeams.slice(0, 3);
 
     const getPositionColor = (position) => {
-        switch(position) {
-            case 0: return "bg-gradient-to-r from-yellow-500 to-yellow-600";
-            case 1: return "bg-gradient-to-r from-gray-400 to-gray-500";
-            case 2: return "bg-gradient-to-r from-orange-500 to-orange-600";
-            default: return "bg-gradient-to-r from-[#14020A] to-[#2A0A15]";
-        }
+        return "bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-[#6B2A3A]";
     };
 
     return(
@@ -47,7 +42,7 @@ function ListaPontos({ teams = [] }){
                             <span className="text-white/80 text-xs sm:text-sm">
                                 {team.points} pts
                             </span>
-                            <div className={`h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6 rounded-full ${getPositionColor(index)} border-2 border-white`}></div>
+                            <div className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6 rounded-full bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-2 border-white"></div>
                         </div>
                     </li>
                 ))}

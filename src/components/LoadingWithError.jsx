@@ -1,4 +1,4 @@
-import { FaExclamationTriangle, FaSpinner, FaRedo } from 'react-icons/fa';
+import { FaExclamationTriangle, FaRedo, FaSpinner } from 'react-icons/fa';
 
 const LoadingWithError = ({ 
   loading, 

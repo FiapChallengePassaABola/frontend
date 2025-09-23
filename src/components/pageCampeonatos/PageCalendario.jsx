@@ -30,18 +30,17 @@ function PageCalendario() {
         }
     };
 
-    const jogosLoop = jogos.length > 0 ? [...jogos, ...jogos] : [];
+    const jogosOrdenados = [...jogos].sort((a, b) => {
+        const da = `${a.data} ${a.horario}`;
+        const db = `${b.data} ${b.horario}`;
+        return new Date(da) - new Date(db);
+    });
+
+    const jogosLoop = [...jogosOrdenados, ...jogosOrdenados];
 
     return (
         <div className="w-full max-w-7xl mx-auto">
             <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl m-2 sm:m-4 shadow-2xl border border-[#6B2A3A] overflow-hidden">
-                {!loading && (
-                    <div className="mb-4 text-center">
-                        <span className="text-xs px-2 py-1 rounded-full bg-blue-500/20 text-blue-400">
-                            📅 Calendário de Jogos
-                        </span>
-                    </div>
-                )}
                 <style>
                     {`
                     @keyframes scroll-horizontal {
@@ -60,22 +59,20 @@ function PageCalendario() {
 
                 {loading ? (
                     <div className="text-center text-white/70 py-6 sm:py-8">
-                        <div className="flex items-center justify-center space-x-2">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                            <span>Carregando jogos...</span>
-                        </div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4"></div>
+                        Carregando jogos...
                     </div>
                 ) : error ? (
                     <div className="text-center text-white/70 py-6 sm:py-8">
                         <div className="mb-4">
-                            <p className="text-red-400 mb-2">Erro ao carregar jogos</p>
+                            <p className="text-slate-400 mb-2">Erro ao carregar jogos</p>
                             <p className="text-sm text-white/50">{error}</p>
                         </div>
                         <button 
                             onClick={refetch}
                             className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                         >
-                            Tentar novamente
+                            Tentar Novamente
                         </button>
                     </div>
                 ) : jogosLoop.length === 0 ? (

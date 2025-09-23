@@ -1,7 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PlasmaBackground from "./components/PlasmaBackground";
-import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Home";
 import PageCampeonato from "./pages/PageCampeonato";
@@ -16,7 +15,6 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          <ScrollToTop />
           <PlasmaBackground />
           <Routes>
             <Route path="/" element={<Home />} />

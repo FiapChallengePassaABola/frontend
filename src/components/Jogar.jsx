@@ -39,7 +39,7 @@ function Jogar(){
     };
 
     return(
-        <div className="flex flex-col justify-center items-center m-6 sm:m-8 lg:m-20 xl:m-40 px-4 sm:px-6 lg:px-0 pb-16 sm:pb-20">
+        <div className="flex flex-col justify-center items-center m-6 sm:m-8 lg:m-20 xl:m-40 px-4 sm:px-6 lg:px-0">
             <Titulos titulo="JOGAR"/>
 
             <div className="flex flex-col sm:flex-row justify-center gap-6 sm:gap-8 lg:gap-20 mt-6 sm:mt-8 lg:mt-20 w-full max-w-4xl">

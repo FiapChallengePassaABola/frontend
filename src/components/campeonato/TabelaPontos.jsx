@@ -25,21 +25,21 @@ function TabelaPontos(){
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                     <div className="space-y-2">
-                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-yellow-500 to-yellow-600 px-3 py-1 rounded-full">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-[#14020A] to-[#2A0A15] border border-[#6B2A3A] px-3 py-1 rounded-full">
                             TOP 3
                         </h3>
                         <ListaPontos teams={topTeams}/>
                     </div>
                     
                     <div className="space-y-2">
-                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-blue-500 to-blue-600 px-3 py-1 rounded-full">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-[#14020A] to-[#2A0A15] border border-[#6B2A3A] px-3 py-1 rounded-full">
                             MEIO
                         </h3>
                         <ListaPontos teams={midTeams}/>
                     </div>
                     
                     <div className="space-y-2 sm:col-span-2 lg:col-span-1">
-                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-gray-500 to-gray-600 px-3 py-1 rounded-full">
+                        <h3 className="text-white text-sm sm:text-base font-semibold text-center mb-2 bg-gradient-to-r from-[#14020A] to-[#2A0A15] border border-[#6B2A3A] px-3 py-1 rounded-full">
                             OUTROS
                         </h3>
                         <ListaPontos teams={bottomTeams}/>

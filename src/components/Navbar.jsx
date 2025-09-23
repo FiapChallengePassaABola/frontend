@@ -9,17 +9,8 @@ import { useAuth } from "../contexts/AuthContext";
 
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isClosing, setIsClosing] = useState(false);
     const { isAuthenticated, user, logout } = useAuth();
     const navigate = useNavigate();
-
-    const handleCloseMenu = () => {
-        setIsClosing(true);
-        setTimeout(() => {
-            setIsMenuOpen(false);
-            setIsClosing(false);
-        }, 200); // Duração da animação de fechamento
-    };
 
     const handleUserClick = () => {
         if (isAuthenticated) {
@@ -105,14 +96,14 @@ function Navbar() {
 
             <button 
                 className="md:hidden text-white p-1"
-                onClick={() => isMenuOpen ? handleCloseMenu() : setIsMenuOpen(true)}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle menu"
             >
                 {isMenuOpen ? <HiX size={28} /> : <HiMenuAlt3 size={28} />}
             </button>
 
             {isMenuOpen && (
-                <div className={`fixed top-0 left-0 right-0 bg-black/95 backdrop-blur-sm z-[9999] md:hidden ${isClosing ? 'dropdown-animation-closing' : 'dropdown-animation'}`}>
+                <div className="absolute top-16 left-0 right-0 bg-black/95 backdrop-blur-sm z-[9999] md:hidden border-t border-gray-600">
                     {isAuthenticated && (
                         <div className="text-center py-4 border-b border-gray-600">
                             <span className="text-white text-base font-medium">
@@ -122,7 +113,7 @@ function Navbar() {
                                 <button 
                                     onClick={() => {
                                         navigate('/profile');
-                                        handleCloseMenu();
+                                        setIsMenuOpen(false);
                                     }}
                                     className="flex items-center gap-2 px-3 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors text-sm"
                                 >
@@ -132,7 +123,7 @@ function Navbar() {
                                 <button 
                                     onClick={() => {
                                         handleLogout();
-                                        handleCloseMenu();
+                                        setIsMenuOpen(false);
                                     }}
                                     className="flex items-center gap-2 px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
                                 >
@@ -143,9 +134,9 @@ function Navbar() {
                         </div>
                     )}
                     <ul className="flex flex-col items-center text-base text-white font-bold gap-4 py-6">
-                        <li><Link to="/noticias" onClick={handleCloseMenu} className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
-                        <li><Link to="/campeonato" onClick={handleCloseMenu} className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
-                        <li><Link to="/jogar" onClick={handleCloseMenu} className="hover:text-gray-300 transition-colors">JOGAR</Link></li>
+                        <li><Link to="/noticias" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">NOTICIAS</Link></li>
+                        <li><Link to="/campeonato" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">CAMPEONATO</Link></li>
+                        <li><Link to="/jogar" onClick={() => setIsMenuOpen(false)} className="hover:text-gray-300 transition-colors">JOGAR</Link></li>
                         <li>
                             <a href="https://www.youtube.com/@passabola" target="_blank" className="flex items-center hover:text-gray-300 transition-colors">
                                 YOUTUBE
