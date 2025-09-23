@@ -179,9 +179,7 @@ const PageProfile = () => {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      {/* Sidebar */}
       <div className="w-full lg:w-80 bg-[#521E2B] p-4 sm:p-6 flex flex-col border-r border-[#6B2A3A]">
-        {/* Profile Avatar */}
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="relative">
             <div 
@@ -223,7 +221,6 @@ const PageProfile = () => {
           </div>
         </div>
 
-        {/* Navigation */}
         <nav className="space-y-2 sm:space-y-3 lg:space-y-4">
           {navigationItems.map((item, index) => {
             const Icon = item.icon;
@@ -245,7 +242,6 @@ const PageProfile = () => {
           })}
         </nav>
 
-        {/* Logout Button */}
         <div className="mt-auto pt-4 sm:pt-6">
           <button
             onClick={handleLogout}
@@ -257,18 +253,14 @@ const PageProfile = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
-        {/* Status da Jogadora */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">Status da Jogadora</h1>
           
           <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6">
             <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-              {/* Chart Area */}
               <div className="flex-1">
                 <div className="h-40 sm:h-48 bg-gray-100 rounded-lg p-3 sm:p-4 relative overflow-hidden">
-                  {/* Grid lines */}
                   <div className="absolute inset-0">
                     <div className="h-full flex flex-col justify-between px-3 sm:px-4">
                       {[...Array(4)].map((_, i) => (
@@ -277,21 +269,17 @@ const PageProfile = () => {
                     </div>
                   </div>
                   
-                  {/* Area Chart SVG */}
                   <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    {/* Dark green area (bottom) */}
                     <path
                       d="M 10 70 Q 30 65 50 60 T 90 55 L 90 100 L 10 100 Z"
                       fill="#065f46"
                       opacity="0.8"
                     />
-                    {/* Medium green area (middle) */}
                     <path
                       d="M 10 50 Q 30 45 50 40 T 90 35 L 90 100 L 10 100 Z"
                       fill="#047857"
                       opacity="0.8"
                     />
-                    {/* Light green area (top) */}
                     <path
                       d="M 10 30 Q 30 25 50 20 T 90 15 L 90 100 L 10 100 Z"
                       fill="#059669"
@@ -299,7 +287,6 @@ const PageProfile = () => {
                     />
                   </svg>
                   
-                  {/* X-axis labels */}
                   <div className="absolute bottom-0 left-0 right-0 flex justify-around px-3 sm:px-4 pb-2">
                     <span className="text-xs text-gray-600">Item 1</span>
                     <span className="text-xs text-gray-600">Item 2</span>
@@ -308,7 +295,6 @@ const PageProfile = () => {
                 </div>
               </div>
 
-              {/* Stats Grid */}
               <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
                 {playerStats.map((stat, index) => (
                   <div key={index} className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
@@ -321,7 +307,6 @@ const PageProfile = () => {
           </div>
         </div>
 
-        {/* Estatísticas do Campeonato */}
         <div>
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Estatísticas do Campeonato</h2>
           

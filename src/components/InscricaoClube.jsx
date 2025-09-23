@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuth } from '../contexts/AuthContext';
-import { clubeService } from '../services/clubeService';
+import { clubeServiceRealtime } from '../services/clubeServiceRealtime';
 import PlasmaBackground from './PlasmaBackground';
 
 const InscricaoClube = ({ onClose, onSuccess }) => {
@@ -100,36 +100,46 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (isLoading) {
+      console.log('Formulário já está sendo enviado, ignorando...');
+      return;
+    }
+    
     if (!validateForm()) {
       return;
     }
 
+    console.log('Iniciando envio do formulário de clube...');
     setIsLoading(true);
 
     try {
-      const nomeExiste = await clubeService.verificarNomeExistente(formData.nome);
+      console.log('Verificando se nome já existe...');
+      const nomeExiste = await clubeServiceRealtime.verificarNomeExistente(formData.nome);
       if (nomeExiste) {
         setErrors({ nome: 'Já existe um clube com este nome' });
         setIsLoading(false);
         return;
       }
 
-      await clubeService.createClube(formData);
+      console.log('Criando clube no Firebase...');
+      const resultado = await clubeServiceRealtime.createClube(formData);
+      console.log('Clube criado com sucesso:', resultado);
       
       Swal.fire({
         title: 'Sucesso!',
         text: 'Inscrição do clube realizada com sucesso!',
         icon: 'success',
         confirmButtonText: 'OK'
+      }).then(() => {
+        onSuccess?.();
+        onClose();
       });
 
-      onSuccess?.();
-      onClose();
     } catch (error) {
       console.error('Erro ao inscrever clube:', error);
       Swal.fire({
         title: 'Erro!',
-        text: 'Erro ao realizar inscrição. Tente novamente.',
+        text: `Erro ao realizar inscrição: ${error.message}`,
         icon: 'error',
         confirmButtonText: 'OK'
       });

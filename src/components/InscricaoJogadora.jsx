@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuth } from '../contexts/AuthContext';
-import { jogadoraService } from '../services/jogadoraService';
+import { jogadoraServiceRealtime } from '../services/jogadoraServiceRealtime';
 import PlasmaBackground from './PlasmaBackground';
 
 const InscricaoJogadora = ({ onClose, onSuccess }) => {
@@ -11,6 +11,8 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
     nome: user?.displayName || '',
     email: user?.email || '',
     telefone: '',
+    tipoDocumento: 'CPF',
+    documento: '',
     dataNascimento: '',
     altura: '',
     peso: '',
@@ -64,6 +66,60 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
     }
   };
 
+  const formatCpf = (value) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `${numbers.slice(0,3)}.${numbers.slice(3)}`;
+    if (numbers.length <= 9) return `${numbers.slice(0,3)}.${numbers.slice(3,6)}.${numbers.slice(6)}`;
+    return `${numbers.slice(0,3)}.${numbers.slice(3,6)}.${numbers.slice(6,9)}-${numbers.slice(9,11)}`;
+  };
+
+  const formatCnpj = (value) => {
+    const numbers = value.replace(/\D/g, '');
+    if (numbers.length <= 2) return numbers;
+    if (numbers.length <= 5) return `${numbers.slice(0,2)}.${numbers.slice(2)}`;
+    if (numbers.length <= 8) return `${numbers.slice(0,2)}.${numbers.slice(2,5)}.${numbers.slice(5)}`;
+    if (numbers.length <= 12) return `${numbers.slice(0,2)}.${numbers.slice(2,5)}.${numbers.slice(5,8)}/${numbers.slice(8)}`;
+    return `${numbers.slice(0,2)}.${numbers.slice(2,5)}.${numbers.slice(5,8)}/${numbers.slice(8,12)}-${numbers.slice(12,14)}`;
+  };
+
+  const handleDocumentoChange = (e) => {
+    const raw = e.target.value;
+    const formatted = formData.tipoDocumento === 'CPF' ? formatCpf(raw) : formatCnpj(raw);
+    setFormData(prev => ({
+      ...prev,
+      documento: formatted
+    }));
+    if (errors.documento) {
+      setErrors(prev => ({ ...prev, documento: '' }));
+    }
+  };
+
+  const isValidCPF = (value) => {
+    const digits = value.replace(/\D/g, '');
+    if (digits.length !== 11) return false;
+    if (/^(\d)\1{10}$/.test(digits)) return false;
+
+    const calcCheckDigit = (base, factorStart) => {
+      let sum = 0;
+      for (let i = 0; i < base.length; i++) {
+        sum += parseInt(base[i], 10) * (factorStart - i);
+      }
+      const remainder = sum % 11;
+      return remainder < 2 ? 0 : 11 - remainder;
+    };
+
+    const firstNine = digits.slice(0, 9);
+    const firstDigit = calcCheckDigit(firstNine, 10);
+    if (firstDigit !== parseInt(digits[9], 10)) return false;
+
+    const firstTen = digits.slice(0, 10);
+    const secondDigit = calcCheckDigit(firstTen, 11);
+    if (secondDigit !== parseInt(digits[10], 10)) return false;
+
+    return true;
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -83,6 +139,21 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
       newErrors.telefone = 'Telefone é obrigatório';
     } else if (!/^\(\d{2}\)\s\d{4,5}-\d{4}$/.test(formData.telefone)) {
       newErrors.telefone = 'Telefone deve estar no formato (XX) XXXXX-XXXX';
+    }
+
+    if (!formData.documento.trim()) {
+      newErrors.documento = `${formData.tipoDocumento} é obrigatório`;
+    } else {
+      if (formData.tipoDocumento === 'CPF' && !/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(formData.documento)) {
+        newErrors.documento = 'CPF deve estar no formato 000.000.000-00';
+      } else if (formData.tipoDocumento === 'CPF') {
+        if (!isValidCPF(formData.documento)) {
+          newErrors.documento = 'CPF inválido';
+        }
+      }
+      if (formData.tipoDocumento === 'CNPJ' && !/^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/.test(formData.documento)) {
+        newErrors.documento = 'CNPJ deve estar no formato 00.000.000/0000-00';
+      }
     }
 
     if (!formData.dataNascimento) {
@@ -155,36 +226,46 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (isLoading) {
+      console.log('Formulário já está sendo enviado, ignorando...');
+      return;
+    }
+    
     if (!validateForm()) {
       return;
     }
 
+    console.log('Iniciando envio do formulário de jogadora...');
     setIsLoading(true);
 
     try {
-      const emailExiste = await jogadoraService.verificarEmailExistente(formData.email);
+      console.log('Verificando se email já existe...');
+      const emailExiste = await jogadoraServiceRealtime.verificarEmailExistente(formData.email);
       if (emailExiste) {
         setErrors({ email: 'Já existe uma jogadora com este email' });
         setIsLoading(false);
         return;
       }
 
-      await jogadoraService.createJogadora(formData);
+      console.log('Criando jogadora no Firebase...');
+      const resultado = await jogadoraServiceRealtime.createJogadora(formData);
+      console.log('Jogadora criada com sucesso:', resultado);
       
       Swal.fire({
         title: 'Sucesso!',
         text: 'Inscrição da jogadora realizada com sucesso!',
         icon: 'success',
         confirmButtonText: 'OK'
+      }).then(() => {
+        onSuccess?.();
+        onClose();
       });
 
-      onSuccess?.();
-      onClose();
     } catch (error) {
       console.error('Erro ao inscrever jogadora:', error);
       Swal.fire({
         title: 'Erro!',
-        text: 'Erro ao realizar inscrição. Tente novamente.',
+        text: `Erro ao realizar inscrição: ${error.message}`,
         icon: 'error',
         confirmButtonText: 'OK'
       });
@@ -274,6 +355,40 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
                 />
                 {errors.telefone && (
                   <p className="text-red-500 text-xs mt-1">{errors.telefone}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Documento *
+                </label>
+                <div className="flex gap-2">
+                  <select
+                    name="tipoDocumento"
+                    value={formData.tipoDocumento}
+                    onChange={(e) => {
+                      setFormData(prev => ({ ...prev, tipoDocumento: e.target.value, documento: '' }));
+                      if (errors.documento) setErrors(prev => ({ ...prev, documento: '' }));
+                    }}
+                    className="px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#521E2B] border-gray-300"
+                  >
+                    <option value="CPF">CPF</option>
+                    <option value="CNPJ">CNPJ</option>
+                  </select>
+                  <input
+                    type="text"
+                    name="documento"
+                    value={formData.documento}
+                    onChange={handleDocumentoChange}
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#521E2B] ${
+                      errors.documento ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder={formData.tipoDocumento === 'CPF' ? '000.000.000-00' : '00.000.000/0000-00'}
+                    maxLength={formData.tipoDocumento === 'CPF' ? 14 : 18}
+                  />
+                </div>
+                {errors.documento && (
+                  <p className="text-red-500 text-xs mt-1">{errors.documento}</p>
                 )}
               </div>
 
