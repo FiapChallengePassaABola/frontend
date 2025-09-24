@@ -6,7 +6,8 @@ import {
     signInWithEmailAndPassword,
     updateProfile
 } from 'firebase/auth';
-import { auth } from '../config/firebase';
+import { get, ref, set } from 'firebase/database';
+import { auth, realtimeDb } from '../config/firebase';
 
 export const authService = {
   async signUp(email, password, displayName) {
@@ -21,6 +22,14 @@ export const authService = {
       }
 
       await sendEmailVerification(user);
+
+      const userRef = ref(realtimeDb, `users/${user.uid}`);
+      await set(userRef, {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || displayName || '',
+        createdAt: new Date().toISOString()
+      });
 
       return {
         uid: user.uid,
@@ -38,6 +47,17 @@ export const authService = {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+
+      const userRef = ref(realtimeDb, `users/${user.uid}`);
+      const snapshot = await get(userRef);
+      if (!snapshot.exists()) {
+        await set(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || '',
+          createdAt: new Date().toISOString()
+        });
+      }
 
       return {
         uid: user.uid,

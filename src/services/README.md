@@ -136,12 +136,10 @@ Para que os serviços funcionem corretamente, configure as seguintes regras no F
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Regras para clubes
     match /clubes/{document} {
       allow read, write: if request.auth != null;
     }
 
-    // Regras para jogadoras
     match /jogadoras/{document} {
       allow read, write: if request.auth != null;
     }

@@ -5,6 +5,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Home from "./pages/Home";
 import PageCampeonato from "./pages/PageCampeonato";
 import PageJogar from "./pages/PageJogar";
+import PageJogos from "./pages/PageJogos";
 import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
@@ -24,6 +25,7 @@ function App() {
             <Route path="/login" element={<PageLogin />} />
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
+            <Route path="/jogos" element={<PageJogos />} />
           </Routes>
         </Router>
       </AuthProvider>

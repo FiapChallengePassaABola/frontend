@@ -3,12 +3,13 @@ import { PiCourtBasketballBold } from "react-icons/pi";
 import { TbPlayFootball } from "react-icons/tb";
 import Swal from "sweetalert2";
 import { useAuth } from "../contexts/AuthContext";
+import { userServiceRealtime } from "../services/userServiceRealtime";
 import InscricaoClube from "./InscricaoClube";
 import InscricaoJogadora from "./InscricaoJogadora";
 import Titulos from "./Titulos";
 
 function Jogar(){
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, user } = useAuth();
     const [showInscricaoClube, setShowInscricaoClube] = useState(false);
     const [showInscricaoJogadora, setShowInscricaoJogadora] = useState(false);
 
@@ -25,7 +26,7 @@ function Jogar(){
         setShowInscricaoClube(true);
     };
 
-    const handleInscricaoJogadora = () => {
+    const handleInscricaoJogadora = async () => {
         if (!isAuthenticated) {
             Swal.fire({
                 title: 'Login Necessário',
@@ -34,6 +35,14 @@ function Jogar(){
                 confirmButtonText: 'OK'
             });
             return;
+        }
+        try {
+            const hasProfile = user?.uid ? await userServiceRealtime.hasUserJogadora(user.uid) : false;
+            if (hasProfile) {
+                window.location.href = '/jogos';
+                return;
+            }
+        } catch (e) {
         }
         setShowInscricaoJogadora(true);
     };

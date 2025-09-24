@@ -45,6 +45,13 @@ export const AuthProvider = ({ children }) => {
     setUser(userData);
   };
 
+  const updateUserProfile = (profileData) => {
+    setUser(prev => ({
+      ...prev,
+      ...profileData
+    }));
+  };
+
   const logout = async () => {
     try {
       await firebaseSignOut(auth);
@@ -59,7 +66,8 @@ export const AuthProvider = ({ children }) => {
     user,
     isLoading,
     login,
-    logout
+    logout,
+    updateUserProfile
   };
 
   return (

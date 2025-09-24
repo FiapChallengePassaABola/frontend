@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useAuth } from '../contexts/AuthContext';
-import { jogadoraServiceRealtime } from '../services/jogadoraServiceRealtime';
+import { } from '../services/jogadoraServiceRealtime';
+import { userServiceRealtime } from '../services/userServiceRealtime';
 import PlasmaBackground from './PlasmaBackground';
 
 const InscricaoJogadora = ({ onClose, onSuccess }) => {
-  const { user } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome: user?.displayName || '',
@@ -239,17 +240,46 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
     setIsLoading(true);
 
     try {
-      console.log('Verificando se email já existe...');
-      const emailExiste = await jogadoraServiceRealtime.verificarEmailExistente(formData.email);
-      if (emailExiste) {
-        setErrors({ email: 'Já existe uma jogadora com este email' });
-        setIsLoading(false);
+      if (!user?.uid) {
+        throw new Error('Usuária não autenticada');
+      }
+
+      const jaTemPerfil = await userServiceRealtime.hasUserJogadora(user.uid);
+      if (jaTemPerfil) {
+        Swal.fire({
+          title: 'Você já é jogadora',
+          text: 'Redirecionando para os jogos...',
+          icon: 'info',
+          confirmButtonText: 'OK'
+        }).then(() => {
+          onSuccess?.();
+          window.location.href = '/jogos';
+        });
         return;
       }
 
-      console.log('Criando jogadora no Firebase...');
-      const resultado = await jogadoraServiceRealtime.createJogadora(formData);
-      console.log('Jogadora criada com sucesso:', resultado);
+      const resultado = { id: user.uid };
+      
+      const jogadoraProfile = {
+        jogadoraId: resultado.id,
+        nome: formData.nome,
+        telefone: formData.telefone,
+        tipoDocumento: formData.tipoDocumento,
+        documento: formData.documento,
+        dataNascimento: formData.dataNascimento,
+        altura: formData.altura,
+        peso: formData.peso,
+        posicao: formData.posicao,
+        cidade: formData.cidade,
+        estado: formData.estado,
+        experiencia: formData.experiencia,
+        clubeAtual: formData.clubeAtual,
+        observacoes: formData.observacoes,
+        isJogadora: true
+      };
+      
+      updateUserProfile(jogadoraProfile);
+      await userServiceRealtime.setUserJogadora(user.uid, jogadoraProfile);
       
       Swal.fire({
         title: 'Sucesso!',
@@ -258,7 +288,7 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
         confirmButtonText: 'OK'
       }).then(() => {
         onSuccess?.();
-        onClose();
+        window.location.href = '/jogos';
       });
 
     } catch (error) {

@@ -307,6 +307,78 @@ const PageProfile = () => {
           </div>
         </div>
 
+        {user?.isJogadora && (
+          <div className="mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Dados da Jogadora</h2>
+            
+            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Nome Completo</label>
+                  <p className="text-gray-900 font-medium">{user.nome}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Email</label>
+                  <p className="text-gray-900">{user.email}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Telefone</label>
+                  <p className="text-gray-900">{user.telefone}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Documento</label>
+                  <p className="text-gray-900">{user.tipoDocumento}: {user.documento}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Data de Nascimento</label>
+                  <p className="text-gray-900">{user.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : '-'}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Posição</label>
+                  <p className="text-gray-900">{user.posicao}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Altura</label>
+                  <p className="text-gray-900">{user.altura}cm</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Peso</label>
+                  <p className="text-gray-900">{user.peso}kg</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Nível de Experiência</label>
+                  <p className="text-gray-900">{user.experiencia}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Cidade</label>
+                  <p className="text-gray-900">{user.cidade}, {user.estado}</p>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-600">Clube Atual</label>
+                  <p className="text-gray-900">{user.clubeAtual || 'Não informado'}</p>
+                </div>
+                
+                {user.observacoes && (
+                  <div className="space-y-2 md:col-span-2 lg:col-span-3">
+                    <label className="text-sm font-medium text-gray-600">Observações</label>
+                    <p className="text-gray-900">{user.observacoes}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div>
           <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Estatísticas do Campeonato</h2>
           

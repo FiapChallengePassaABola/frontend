@@ -3,11 +3,13 @@ import {
     push,
     ref,
     remove,
+    set,
     update
 } from 'firebase/database';
 import { realtimeDb } from '../config/firebase';
 
 const USERS_PATH = 'users';
+const USER_PROFILES_PATH = 'user_profiles';
 
 export const userServiceRealtime = {
   async getAllUsers() {
@@ -183,5 +185,46 @@ export const userServiceRealtime = {
       console.error('Erro ao deletar usuário:', error);
       return false;
     }
+  }
+  ,
+  async getUserJogadora(uid) {
+    try {
+      if (!uid || typeof uid !== 'string' || !uid.trim()) {
+        throw new Error('UID é obrigatório');
+      }
+      const profileRef = ref(realtimeDb, `${USER_PROFILES_PATH}/${uid}/jogadora`);
+      const snapshot = await get(profileRef);
+      if (snapshot.exists()) {
+        return snapshot.val();
+      }
+      return null;
+    } catch (error) {
+      console.error('Erro ao buscar perfil de jogadora do usuário:', error);
+      return null;
+    }
+  },
+  async setUserJogadora(uid, jogadoraData) {
+    try {
+      if (!uid || typeof uid !== 'string' || !uid.trim()) {
+        throw new Error('UID é obrigatório');
+      }
+      if (!jogadoraData || typeof jogadoraData !== 'object') {
+        throw new Error('Dados da jogadora são obrigatórios');
+      }
+      const profileRef = ref(realtimeDb, `${USER_PROFILES_PATH}/${uid}/jogadora`);
+      await set(profileRef, {
+        ...jogadoraData,
+        updatedAt: new Date().toISOString(),
+        createdAt: jogadoraData.createdAt || new Date().toISOString()
+      });
+      return true;
+    } catch (error) {
+      console.error('Erro ao salvar perfil de jogadora do usuário:', error);
+      return false;
+    }
+  },
+  async hasUserJogadora(uid) {
+    const data = await this.getUserJogadora(uid);
+    return !!data;
   }
 };
