@@ -41,7 +41,7 @@ function Chaveamento({ campeonatoId = "1" }){
 
     return(
         <div className="w-full max-w-7xl mx-auto">
-            <div className="bg-gradient-to-br from-[#521E2B] to-[#3A1520] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl m-2 sm:m-4 shadow-2xl border border-[#6B2A3A]">
+            <div className="bg-gradient-to-br  from-[#381d3c97] to-[#200f23ad] p-4 sm:p-6 lg:p-8 rounded-xl sm:rounded-2xl m-2 sm:m-4 shadow-2xl">
                 <h2 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-center mb-4 sm:mb-6 lg:mb-8 text-white">
                     Chaveamento do Torneio
                 </h2>

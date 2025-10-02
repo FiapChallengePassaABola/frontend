@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import imgBackground from "../assets/background.png"
+import teste from "../assets/teste.png"
 import Navbar from "./Navbar"
 function Header() {
   return (
