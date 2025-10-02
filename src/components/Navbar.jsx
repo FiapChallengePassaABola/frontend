@@ -50,7 +50,7 @@ function Navbar() {
     };
 
     return (
-        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 2xl:justify-center 2xl:px-0 pt-4 sm:pt-6 lg:pt-12 drop-shadow-xl drop-shadow-[#9c0528d4] relative z-50">
+        <header className="flex items-center justify-between px-4 sm:px-6 lg:px-8 2xl:justify-center 2xl:px-0 pt-2 sm:pt-6 lg:pt-4 drop-shadow-xl drop-shadow-[#381D3C] relative z-50">
             <Link to="/" className="md:hidden">
                 <img src={Logo} alt="Logo" className="w-12 sm:w-16" />
             </Link>

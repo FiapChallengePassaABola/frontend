@@ -4,7 +4,7 @@ import Logo from "../assets/logoBranca.png";
 
 function Footer(){
     return(
-        <div className="bg-[#083825] w-full h-auto flex flex-col">
+        <div className="bg-[#0e7252b9] w-full h-auto flex flex-col">
             <footer className="flex flex-col lg:flex-row items-center justify-around p-1 lg:p-3">
                 <div className="flex flex-col items-center justify-center p-2 lg:p-4">
                     <h1 className="text-white text-base sm:text-lg lg:text-xl font-bold p-1">PASSA A BOLA</h1>

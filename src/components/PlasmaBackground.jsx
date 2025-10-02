@@ -29,10 +29,10 @@ const PlasmaBackground = () => {
         width / 2, height / 2, Math.max(width, height) / 2
       );
       
-      gradient.addColorStop(0, 'rgba(255, 50, 50, 0.1)');
-      gradient.addColorStop(0.3, 'rgba(200, 20, 20, 0.15)');
-      gradient.addColorStop(0.6, 'rgba(150, 10, 10, 0.1)');
-      gradient.addColorStop(1, 'rgba(100, 5, 5, 0.05)');
+      gradient.addColorStop(0, '#741976');
+      gradient.addColorStop(0.3, '#6A1B6C');
+      gradient.addColorStop(0.6, '#6A1B6C');
+      gradient.addColorStop(1, '#360F33');
       
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);

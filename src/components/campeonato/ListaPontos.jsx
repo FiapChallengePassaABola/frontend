@@ -14,7 +14,7 @@ function ListaPontos({ teams = [] }){
     const displayTeams = teams.length > 0 ? teams : mockTeams.slice(0, 3);
 
     const getPositionColor = (position) => {
-        return "bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-[#6B2A3A]";
+        return "bg-gradient-to-r from-[#a2139f] to-[#DD4C9B] border-[#a2267f]";
     };
 
     return(
