@@ -1,40 +1,49 @@
-import { useRef, useState } from 'react';
-import { AiOutlineUser } from 'react-icons/ai';
-import { FaCamera, FaFutbol, FaHome, FaRunning, FaShoppingBag, FaSignOutAlt } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
-import { ChartTooltipDefault } from '../components/ui/chart-component';
-import { useAuth } from '../contexts/AuthContext';
+import { useRef, useState } from "react";
+import { AiOutlineUser } from "react-icons/ai";
+import {
+  FaCamera,
+  FaFutbol,
+  FaHome,
+  FaRunning,
+  FaShoppingBag,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { ChartTooltipDefault } from "../components/ui/chart-component";
+import { useAuth } from "../contexts/AuthContext";
 
 const PageProfile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [profileImage, setProfileImage] = useState(() => {
-    return localStorage.getItem('profileImage') || null;
+    return localStorage.getItem("profileImage") || null;
   });
   const fileInputRef = useRef(null);
+  // ...existing code... (map removed from this page)
+  const mapContainerRef = useRef(null);
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      if (!file.type.startsWith('image/')) {
+      if (!file.type.startsWith("image/")) {
         Swal.fire({
-          icon: 'error',
-          title: 'Arquivo inválido',
-          text: 'Por favor, selecione apenas arquivos de imagem.',
-          background: '#1a1a1a',
-          color: '#ffffff'
+          icon: "error",
+          title: "Arquivo inválido",
+          text: "Por favor, selecione apenas arquivos de imagem.",
+          background: "#1a1a1a",
+          color: "#ffffff",
         });
         return;
       }
 
       if (file.size > 5 * 1024 * 1024) {
         Swal.fire({
-          icon: 'error',
-          title: 'Arquivo muito grande',
-          text: 'A imagem deve ter no máximo 5MB.',
-          background: '#1a1a1a',
-          color: '#ffffff'
+          icon: "error",
+          title: "Arquivo muito grande",
+          text: "A imagem deve ter no máximo 5MB.",
+          background: "#1a1a1a",
+          color: "#ffffff",
         });
         return;
       }
@@ -43,21 +52,23 @@ const PageProfile = () => {
       reader.onload = (e) => {
         const imageData = e.target.result;
         setProfileImage(imageData);
-        localStorage.setItem('profileImage', imageData);
-        
+        localStorage.setItem("profileImage", imageData);
+
         Swal.fire({
-          icon: 'success',
-          title: 'Foto atualizada!',
-          text: 'Sua foto de perfil foi atualizada com sucesso.',
+          icon: "success",
+          title: "Foto atualizada!",
+          text: "Sua foto de perfil foi atualizada com sucesso.",
           timer: 2000,
           showConfirmButton: false,
-          background: '#1a1a1a',
-          color: '#ffffff'
+          background: "#1a1a1a",
+          color: "#ffffff",
         });
       };
       reader.readAsDataURL(file);
     }
   };
+
+  // map logic removed from this page — moved to a dedicated component
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -65,28 +76,28 @@ const PageProfile = () => {
 
   const handleRemoveImage = () => {
     Swal.fire({
-      title: 'Remover foto',
-      text: 'Tem certeza que deseja remover sua foto de perfil?',
-      icon: 'question',
+      title: "Remover foto",
+      text: "Tem certeza que deseja remover sua foto de perfil?",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Sim, remover',
-      cancelButtonText: 'Cancelar',
-      background: '#1a1a1a',
-      color: '#ffffff'
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Sim, remover",
+      cancelButtonText: "Cancelar",
+      background: "#1a1a1a",
+      color: "#ffffff",
     }).then((result) => {
       if (result.isConfirmed) {
         setProfileImage(null);
-        localStorage.removeItem('profileImage');
+        localStorage.removeItem("profileImage");
         Swal.fire({
-          icon: 'success',
-          title: 'Foto removida!',
-          text: 'Sua foto de perfil foi removida.',
+          icon: "success",
+          title: "Foto removida!",
+          text: "Sua foto de perfil foi removida.",
           timer: 2000,
           showConfirmButton: false,
-          background: '#1a1a1a',
-          color: '#ffffff'
+          background: "#1a1a1a",
+          color: "#ffffff",
         });
       }
     });
@@ -94,7 +105,7 @@ const PageProfile = () => {
 
   const handleTrainingClick = () => {
     Swal.fire({
-      title: '',
+      title: "",
       html: `
         <div style="display:flex;flex-direction:column;gap:14px">
           <div style="background:linear-gradient(135deg,#3F0A3F 0%, #2A052A 100%);border-radius:16px;padding:16px;border:1px solid #3F0A3F">
@@ -116,66 +127,66 @@ const PageProfile = () => {
       `,
       showConfirmButton: false,
       showCancelButton: true,
-      cancelButtonText: 'Fechar',
-      background: '#1a1a1a',
-      color: '#ffffff',
-      cancelButtonColor: '#6b7280',
+      cancelButtonText: "Fechar",
+      background: "#1a1a1a",
+      color: "#ffffff",
+      cancelButtonColor: "#6b7280",
       width: 480,
-      backdrop: 'rgba(0,0,0,0.6)'
+      backdrop: "rgba(0,0,0,0.6)",
     });
   };
 
   const handleLogout = async () => {
     const result = await Swal.fire({
-      title: 'Sair da conta',
-      text: 'Tem certeza que deseja sair da sua conta?',
-      icon: 'question',
+      title: "Sair da conta",
+      text: "Tem certeza que deseja sair da sua conta?",
+      icon: "question",
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Sim, sair',
-      cancelButtonText: 'Cancelar',
-      background: '#1a1a1a',
-      color: '#ffffff'
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Sim, sair",
+      cancelButtonText: "Cancelar",
+      background: "#1a1a1a",
+      color: "#ffffff",
     });
 
     if (result.isConfirmed) {
       logout();
       await Swal.fire({
-        icon: 'success',
-        title: 'Logout realizado!',
-        text: 'Você foi desconectado com sucesso.',
+        icon: "success",
+        title: "Logout realizado!",
+        text: "Você foi desconectado com sucesso.",
         timer: 2000,
         showConfirmButton: false,
-        background: '#1a1a1a',
-        color: '#ffffff',
-        confirmButtonColor: '#dc2626'
+        background: "#1a1a1a",
+        color: "#ffffff",
+        confirmButtonColor: "#dc2626",
       });
-      navigate('/');
+      navigate("/");
     }
   };
 
   const navigationItems = [
-    { icon: FaHome, label: 'Home', path: '/' },
-    { icon: FaRunning, label: 'Status', path: '/profile' },
-    { icon: FaRunning, label: 'Treino', path: '/training' },
-    { icon: FaFutbol, label: 'Meus Jogos', path: '/games' },
-    { icon: FaShoppingBag, label: 'Compras', path: '/shop' }
+    { icon: FaHome, label: "Home", path: "/" },
+    { icon: FaRunning, label: "Status", path: "/profile" },
+    { icon: FaRunning, label: "Treino", path: "/training" },
+    { icon: FaFutbol, label: "Meus Jogos", path: "/games" },
+    { icon: FaShoppingBag, label: "Compras", path: "/shop" },
   ];
 
   const playerStats = [
-    { label: 'Velocidade máxima', value: '10 km/h' },
-    { label: 'Força do Chute', value: '26km/h' },
-    { label: 'Distancia Corrida', value: '2 km' },
-    { label: 'Idade', value: '18 anos' },
-    { label: 'Altura', value: '1,70 m' },
-    { label: 'Peso', value: '60kg' }
+    { label: "Velocidade máxima", value: "10 km/h" },
+    { label: "Força do Chute", value: "26km/h" },
+    { label: "Distancia Corrida", value: "2 km" },
+    { label: "Idade", value: "18 anos" },
+    { label: "Altura", value: "1,70 m" },
+    { label: "Peso", value: "60kg" },
   ];
 
   const championshipStats = [
-    { label: 'Gols', value: '12' },
-    { label: 'Assistências', value: '7' },
-    { label: 'Defesas', value: '3' }
+    { label: "Gols", value: "12" },
+    { label: "Assistências", value: "7" },
+    { label: "Defesas", value: "3" },
   ];
 
   return (
@@ -183,25 +194,28 @@ const PageProfile = () => {
       <div className="w-full lg:w-80 bg-[#1F051F] p-4 sm:p-6 flex flex-col border-r border-[#3F0A3F]">
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="relative">
-            <div 
+            <div
               onClick={handleAvatarClick}
               className="w-20 h-20 sm:w-24 sm:h-24 bg-[#2A052A] rounded-full flex items-center justify-center border border-[#3F0A3F] cursor-pointer hover:bg-[#3F0A3F] transition-colors group"
             >
               {profileImage ? (
-                <img 
-                  src={profileImage} 
-                  alt="Profile" 
+                <img
+                  src={profileImage}
+                  alt="Profile"
                   className="w-full h-full object-cover rounded-full"
                 />
               ) : (
-                <AiOutlineUser size={40} className="text-white sm:w-12 sm:h-12" />
+                <AiOutlineUser
+                  size={40}
+                  className="text-white sm:w-12 sm:h-12"
+                />
               )}
-              
+
               <div className="absolute -bottom-1 -right-1 w-6 h-6 sm:w-8 sm:h-8 bg-green-600 rounded-full flex items-center justify-center border-2 border-white group-hover:bg-green-700 transition-colors">
                 <FaCamera size={10} className="text-white sm:w-3 sm:h-3" />
               </div>
             </div>
-            
+
             <input
               ref={fileInputRef}
               type="file"
@@ -209,7 +223,7 @@ const PageProfile = () => {
               onChange={handleImageUpload}
               className="hidden"
             />
-            
+
             {profileImage && (
               <button
                 onClick={handleRemoveImage}
@@ -225,19 +239,25 @@ const PageProfile = () => {
         <nav className="space-y-2 sm:space-y-3 lg:space-y-4">
           {navigationItems.map((item, index) => {
             const Icon = item.icon;
-            const isActive = item.path === '/profile';
+            const isActive = item.path === "/profile";
             return (
               <button
                 key={index}
-                onClick={() => item.label === 'Treino' ? handleTrainingClick() : navigate(item.path)}
+                onClick={() =>
+                  item.label === "Treino"
+                    ? handleTrainingClick()
+                    : navigate(item.path)
+                }
                 className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-left ${
-                  isActive 
-                    ? 'bg-white/10 text-white' 
-                    : 'text-white/70 hover:text-white hover:bg-white/5'
+                  isActive
+                    ? "bg-white/10 text-white"
+                    : "text-white/70 hover:text-white hover:bg-white/5"
                 }`}
               >
                 <Icon size={16} className="sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-                <span className="font-medium text-sm sm:text-base">{item.label}</span>
+                <span className="font-medium text-sm sm:text-base">
+                  {item.label}
+                </span>
               </button>
             );
           })}
@@ -256,8 +276,10 @@ const PageProfile = () => {
 
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">Status da Jogadora</h1>
-          
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">
+            Status da Jogadora
+          </h1>
+
           <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
             <div className="flex-1">
               <ChartTooltipDefault />
@@ -265,79 +287,153 @@ const PageProfile = () => {
 
             <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
               {playerStats.map((stat, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-white/20">
-                  <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-1">{stat.value}</div>
-                  <div className="text-xs sm:text-sm text-white/70">{stat.label}</div>
+                <div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-white/20"
+                >
+                  <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs sm:text-sm text-white/70">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
+            Mapa
+          </h2>
+
+          <div className="bg-white/5 rounded-xl p-4 sm:p-6 border border-white/10">
+            <form onSubmit={handleSearch} className="flex gap-2 mb-3">
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Buscar endereço, cidade ou ponto de referência"
+                className="flex-1 bg-transparent border border-white/20 rounded-md py-2 px-3 text-white placeholder:text-white/50 outline-none"
+              />
+              <button
+                type="submit"
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md"
+              >
+                {mapLoading ? "Buscando..." : "Buscar"}
+              </button>
+            </form>
+
+            <div
+              ref={mapContainerRef}
+              style={{ width: "100%", height: 320 }}
+              className="rounded-md overflow-hidden"
+            />
+          </div>
+        </div>
+
         {user?.isJogadora && (
           <div className="mb-6 sm:mb-8">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Dados da Jogadora</h2>
-            
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
+              Dados da Jogadora
+            </h2>
+
             <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Nome Completo</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Nome Completo
+                  </label>
                   <p className="text-white font-medium">{user.nome}</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Email</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Email
+                  </label>
                   <p className="text-white">{user.email}</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Telefone</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Telefone
+                  </label>
                   <p className="text-white">{user.telefone}</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Documento</label>
-                  <p className="text-white">{user.tipoDocumento}: {user.documento}</p>
+                  <label className="text-sm font-medium text-white/70">
+                    Documento
+                  </label>
+                  <p className="text-white">
+                    {user.tipoDocumento}: {user.documento}
+                  </p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Data de Nascimento</label>
-                  <p className="text-white">{user.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : '-'}</p>
+                  <label className="text-sm font-medium text-white/70">
+                    Data de Nascimento
+                  </label>
+                  <p className="text-white">
+                    {user.dataNascimento
+                      ? new Date(user.dataNascimento).toLocaleDateString(
+                          "pt-BR"
+                        )
+                      : "-"}
+                  </p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Posição</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Posição
+                  </label>
                   <p className="text-white">{user.posicao}</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Altura</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Altura
+                  </label>
                   <p className="text-white">{user.altura}cm</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Peso</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Peso
+                  </label>
                   <p className="text-white">{user.peso}kg</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Nível de Experiência</label>
+                  <label className="text-sm font-medium text-white/70">
+                    Nível de Experiência
+                  </label>
                   <p className="text-white">{user.experiencia}</p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Cidade</label>
-                  <p className="text-white">{user.cidade}, {user.estado}</p>
+                  <label className="text-sm font-medium text-white/70">
+                    Cidade
+                  </label>
+                  <p className="text-white">
+                    {user.cidade}, {user.estado}
+                  </p>
                 </div>
-                
+
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">Clube Atual</label>
-                  <p className="text-white">{user.clubeAtual || 'Não informado'}</p>
+                  <label className="text-sm font-medium text-white/70">
+                    Clube Atual
+                  </label>
+                  <p className="text-white">
+                    {user.clubeAtual || "Não informado"}
+                  </p>
                 </div>
-                
+
                 {user.observacoes && (
                   <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                    <label className="text-sm font-medium text-white/70">Observações</label>
+                    <label className="text-sm font-medium text-white/70">
+                      Observações
+                    </label>
                     <p className="text-white">{user.observacoes}</p>
                   </div>
                 )}
@@ -347,13 +443,22 @@ const PageProfile = () => {
         )}
 
         <div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Estatísticas do Campeonato</h2>
-          
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
+            Estatísticas do Campeonato
+          </h2>
+
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {championshipStats.map((stat, index) => (
-              <div key={index} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg">
-                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-white/70 text-sm sm:text-base">{stat.label}</div>
+              <div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg"
+              >
+                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+                  {stat.value}
+                </div>
+                <div className="text-white/70 text-sm sm:text-base">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
