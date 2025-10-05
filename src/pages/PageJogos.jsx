@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
+import HeaderBar from "../components/HeaderBar"
 import PlasmaBackground from "../components/PlasmaBackground"
 import Titulos from "../components/Titulos"
 
@@ -105,11 +105,9 @@ function PageJogos(){
 
     if (loading) {
         return (
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col pt-24 sm:pt-28">
                 <PlasmaBackground />
-                <div className="pb-16 sm:pb-20">
-                    <Navbar/>
-                </div>
+                <HeaderBar triggerElementId="page-title"/>
                 <div className="flex items-center justify-center min-h-[60vh]">
                     <div className="text-white/80 text-xl">Carregando jogos...</div>
                 </div>
@@ -119,14 +117,12 @@ function PageJogos(){
     }
 
     return(
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col pt-24 sm:pt-28">
             <PlasmaBackground />
-            <div className="pb-16 sm:pb-20">
-                <Navbar/>
-            </div>
+            <HeaderBar triggerElementId="page-title"/>
             
             <div className="flex-1 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-20">
-                <Titulos titulo="JOGOS"/>
+                <Titulos id="page-title" titulo="JOGOS"/>
 
                 <div className="space-y-12">
                     <section>

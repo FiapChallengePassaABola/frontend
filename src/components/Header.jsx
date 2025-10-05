@@ -11,7 +11,6 @@ function Header() {
       const firstSectionHeight = window.innerHeight
       const scrollPosition = window.scrollY
       
-      // Ativa background quando passar da primeira section
       if (scrollPosition > firstSectionHeight * 0.8) {
         setHasBackground(true)
       } else {
@@ -25,7 +24,6 @@ function Header() {
 
   return (
     <>
-      {/* Fixed Navbar */}
       <div className={`fixed top-0 left-0 w-full z-50 transition-all duration-700 ${
         hasBackground 
           ? 'bg-[#1F051F] border-b border-[#3F0A3F]/50' 
@@ -34,12 +32,10 @@ function Header() {
         <NavbarProfessional />
       </div>
 
-      {/* First Section */}
       <div className="relative w-full">
         <Link to="/jogar">
           <img src={imgBackground} alt="background" className="w-full h-screen object-cover"/>
         </Link>
-        {/* Overlay elegante com gradiente */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/70"></div>
       </div>
     </>
