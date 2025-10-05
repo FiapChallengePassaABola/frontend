@@ -14,10 +14,10 @@ function ListaPontos({ teams = [] }){
     const displayTeams = teams.length > 0 ? teams : mockTeams.slice(0, 3);
 
     const getTierClasses = (position) => {
-        if (position === 0) return "from-emerald-500 to-lime-500 border-emerald-300"; // 1º
-        if (position === 1) return "from-emerald-400 to-lime-400 border-emerald-300"; // 2º
-        if (position === 2) return "from-emerald-300 to-lime-300 border-emerald-200"; // 3º
-        return "from-[#123524] to-[#0f2a1f] border-[#1e4b35]"; // demais
+        if (position === 0) return "from-emerald-500 to-lime-500 border-emerald-300";
+        if (position === 1) return "from-emerald-400 to-lime-400 border-emerald-300";
+        if (position === 2) return "from-emerald-300 to-lime-300 border-emerald-200";
+        return "from-[#123524] to-[#0f2a1f] border-[#1e4b35]";
     };
 
     return(

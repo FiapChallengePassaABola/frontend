@@ -218,10 +218,4 @@ button {
   body {
     @apply bg-background text-foreground;
   }
-  /* Ensure section titles are white */
-  section h1,
-  section h2,
-  section h3 {
-    color: #ffffff;
-  }
 }

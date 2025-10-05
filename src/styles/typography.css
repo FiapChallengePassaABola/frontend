@@ -1,4 +1,4 @@
-/* Font Families */
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 :root {
@@ -21,7 +21,7 @@ html {
   font-weight: var(--font-weight-extrabold);
   line-height: var(--line-height-tight);
   letter-spacing: -0.025em;
-  color: var(--color-dark-50);
+  color: inherit;
 }
 
 .heading-2 {
@@ -29,35 +29,35 @@ html {
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-tight);
   letter-spacing: -0.025em;
-  color: var(--color-dark-100);
+  color: inherit;
 }
 
 .heading-3 {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-bold);
   line-height: var(--line-height-snug);
-  color: var(--color-dark-200);
+  color: inherit;
 }
 
 .heading-4 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-snug);
-  color: var(--color-dark-300);
+  color: inherit;
 }
 
 .heading-5 {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
   line-height: var(--line-height-snug);
-  color: var(--color-dark-400);
+  color: inherit;
 }
 
 .heading-6 {
   font-size: var(--font-size-xl);
   font-weight: var(--font-weight-medium);
   line-height: var(--line-height-normal);
-  color: var(--color-dark-500);
+  color: inherit;
 }
 
 .body-large {
