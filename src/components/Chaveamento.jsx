@@ -261,7 +261,7 @@ function Chaveamento({ campeonatoId = "1" }){
                         </div>
 
                         <div className="flex flex-col justify-center min-w-[120px] xl:min-w-[130px] relative">
-                            <div className="absolute inset-0 flex items-center justify-center z-0">
+                            <div className="absolute inset-0 flex items_center justify-center z-0">
                                 <img 
                                     src="/src/assets/logoBranca.png" 
                                     alt="PassaBola" 
@@ -272,16 +272,16 @@ function Chaveamento({ campeonatoId = "1" }){
                                 FINAL
                             </h3>
                             <div className="relative z-10">
-                            <TimesChaveamento 
-                                team={mockTeams[0]} 
-                                isWinner={true}
-                                position={0}
-                            />
+                                <TimesChaveamento 
+                                    team={mockTeams[0]} 
+                                    isWinner={true}
+                                    position={0}
+                                />
                             </div>
                         </div>
 
-                        <div className="flex flex-col justify-center space-y-4 xl:space-y-2 min-w-[120px] xl:min-w-[130px]">
-                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
+                        <div className="flex flex-col justify_center space-y-4 xl:space-y-2 min-w-[120px] xl:min-w-[130px]">
+                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded_full">
                                 Semifinal
                             </h3>
                             {[8, 12].map((index) => (
@@ -309,7 +309,7 @@ function Chaveamento({ campeonatoId = "1" }){
                         </div>
 
                         <div className="flex flex-col space-y-2 xl:space-y-1 min-w-[120px] xl:min-w-[130px]">
-                            <h3 className="text-white text-xs font-semibold text-center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
+                            <h3 className="text-white text-xs font-semibold text_center mb-1 bg-[#6B2A3A] px-2 py-1 rounded-full">
                                 Oitavas
                             </h3>
                             {mockTeams.slice(8, 16).map((team, index) => (

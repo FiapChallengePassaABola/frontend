@@ -71,7 +71,6 @@ function NavbarProfessional() {
         <nav className={`w-full transition-all duration-500 ${scrolled ? 'py-3' : 'py-6'}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
-                    {/* Logo */}
                     <div className="flex-shrink-0">
                         <Link to="/" className="flex items-center space-x-3 group">
                             <div className="relative">
@@ -87,7 +86,6 @@ function NavbarProfessional() {
                         </Link>
                     </div>
 
-                    {/* Desktop Navigation */}
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
                             {navItems.map((item) => (
@@ -109,7 +107,6 @@ function NavbarProfessional() {
                         </div>
                     </div>
 
-                    {/* User Section */}
                     <div className="hidden md:block">
                         <div className="ml-4 flex items-center md:ml-6">
                             {isAuthenticated ? (
@@ -154,7 +151,6 @@ function NavbarProfessional() {
                         </div>
                     </div>
 
-                    {/* Mobile menu button */}
                     <div className="md:hidden">
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -170,7 +166,6 @@ function NavbarProfessional() {
                 </div>
             </div>
 
-            {/* Mobile menu */}
             {isMenuOpen && (
                 <div className="md:hidden">
                     <div className="px-2 pt-2 pb-3 space-y-1 bg-dark-900/95 backdrop-blur-xl border-t border-dark-700/50">

@@ -303,35 +303,6 @@ const PageProfile = () => {
           </div>
         </div>
 
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
-            Mapa
-          </h2>
-
-          <div className="bg-white/5 rounded-xl p-4 sm:p-6 border border-white/10">
-            <form onSubmit={handleSearch} className="flex gap-2 mb-3">
-              <input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Buscar endereço, cidade ou ponto de referência"
-                className="flex-1 bg-transparent border border-white/20 rounded-md py-2 px-3 text-white placeholder:text-white/50 outline-none"
-              />
-              <button
-                type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md"
-              >
-                {mapLoading ? "Buscando..." : "Buscar"}
-              </button>
-            </form>
-
-            <div
-              ref={mapContainerRef}
-              style={{ width: "100%", height: 320 }}
-              className="rounded-md overflow-hidden"
-            />
-          </div>
-        </div>
-
         {user?.isJogadora && (
           <div className="mb-6 sm:mb-8">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">

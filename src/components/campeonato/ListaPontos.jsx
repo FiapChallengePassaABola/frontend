@@ -14,10 +14,10 @@ function ListaPontos({ teams = [] }){
     const displayTeams = teams.length > 0 ? teams : mockTeams.slice(0, 3);
 
     const getTierClasses = (position) => {
-        if (position === 0) return "from-emerald-500 to-lime-500 border-emerald-300"; // 1º
-        if (position === 1) return "from-emerald-400 to-lime-400 border-emerald-300"; // 2º
-        if (position === 2) return "from-emerald-300 to-lime-300 border-emerald-200"; // 3º
-        return "from-[#123524] to-[#0f2a1f] border-[#1e4b35]"; // demais
+        if (position === 0) return "from-emerald-500 to-lime-500 border-emerald-300";
+        if (position === 1) return "from-emerald-400 to-lime-400 border-emerald-300";
+        if (position === 2) return "from-emerald-300 to-lime-300 border-emerald-200";
+        return "from-[#123524] to-[#0f2a1f] border-[#1e4b35]";
     };
 
     return(
@@ -31,10 +31,8 @@ function ListaPontos({ teams = [] }){
                         bg-gradient-to-r ${getTierClasses(index)}
                         transition-transform duration-300 hover:scale-[1.02]`}
                     >
-                        {/* Pitch stripes overlay */}
                         <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-overlay bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.12)_0px,rgba(255,255,255,0.12)_8px,transparent_8px,transparent_16px)]"></div>
 
-                        {/* Left side: position badge + team */}
                         <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
                             <div className="relative grid place-items-center w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-full bg-black/30 border border-white/40">
                                 <span className="text-xs sm:text-sm lg:text-base font-extrabold">{index + 1}</span>
@@ -50,7 +48,6 @@ function ListaPontos({ teams = [] }){
                             </span>
                         </div>
 
-                        {/* Right side: points pill */}
                         <div className="flex items-center gap-2">
                             <div className="hidden sm:block h-6 w-px bg-white/30" />
                             <div className="px-2 sm:px-3 py-1 rounded-full bg-black/25 border border-white/30 backdrop-blur-[1px] flex items-center gap-1">

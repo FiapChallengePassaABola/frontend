@@ -49,7 +49,6 @@ function TabelaPontos(){
                         <tbody>
                             {sorted.map((t, idx) => (
                                 <tr key={t.id} className={`relative text-white text-xs sm:text-sm lg:text-base`}>
-                                    {/* pitch stripes */}
                                     <td className="px-3 py-3 align-middle">
                                         <div className={`w-8 h-8 grid place-items-center rounded-full text-xs sm:text-sm font-extrabold border ${idx === 0 ? 'bg-emerald-500/90 border-emerald-300' : idx === 1 ? 'bg-emerald-400/90 border-emerald-300' : idx === 2 ? 'bg-emerald-300/90 border-emerald-200' : 'bg-white/10 border-white/20'}`}>{idx + 1}</div>
                                     </td>
