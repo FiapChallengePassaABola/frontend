@@ -18,7 +18,7 @@ function NewsCard({
   };
 
   return (
-    <div className="bg-[#180824] rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border-[#1B4509] border-2">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border-[#1B4509] border-2">
       <div className="relative">
         <img
           src={imgNoticia}
@@ -30,16 +30,16 @@ function NewsCard({
           className="absolute top-3 right-3 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors border-[#1B4509] border"
         >
           {isBookmarked ? (
-            <FaBookmark className="text-[#4fb922]" size={16} />
+            <FaBookmark className="text-[#1B4509]" size={16} />
           ) : (
-            <FaRegBookmark className="text-[#378117]" size={16} />
+            <FaRegBookmark className="text-[#1B4509]" size={16} />
           )}
         </button>
       </div>
 
       <div className={`${isLarge ? "p-6" : "p-4"}`}>
         <h3
-          className={`font-bold text-[#80c464] mb-2 line-clamp-2 ${
+          className={`font-bold text-[#1B4509] mb-2 line-clamp-2 ${
             isLarge ? "text-xl" : "text-lg"
           }`}
         >

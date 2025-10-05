@@ -7,6 +7,7 @@ import { userServiceRealtime } from "../services/userServiceRealtime";
 import InscricaoClube from "./InscricaoClube";
 import InscricaoJogadora from "./InscricaoJogadora";
 import Titulos from "./Titulos";
+import MapNominatim from "../components/MapNominatim";
 
 function Jogar() {
   const { isAuthenticated, user } = useAuth();
