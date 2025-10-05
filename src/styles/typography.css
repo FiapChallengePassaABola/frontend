@@ -1,0 +1,168 @@
+/* Typography System - Professional Grade */
+
+/* Font Families */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+  --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  --font-family-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono",
+    Consolas, monospace;
+}
+
+/* Base Typography */
+html {
+  font-family: var(--font-family-sans);
+  font-size: 16px;
+  line-height: var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Heading Styles */
+.heading-1 {
+  font-size: var(--font-size-6xl);
+  font-weight: var(--font-weight-extrabold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.025em;
+  color: var(--color-dark-50);
+}
+
+.heading-2 {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: -0.025em;
+  color: var(--color-dark-100);
+}
+
+.heading-3 {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-snug);
+  color: var(--color-dark-200);
+}
+
+.heading-4 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--color-dark-300);
+}
+
+.heading-5 {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-snug);
+  color: var(--color-dark-400);
+}
+
+.heading-6 {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  color: var(--color-dark-500);
+}
+
+/* Body Text */
+.body-large {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-dark-200);
+}
+
+.body-base {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-dark-300);
+}
+
+.body-small {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-dark-400);
+}
+
+.body-xs {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  color: var(--color-dark-500);
+}
+
+/* Special Text Styles */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-400),
+    var(--color-accent-400)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-muted {
+  color: var(--color-dark-500);
+}
+
+.text-accent {
+  color: var(--color-accent-400);
+}
+
+.text-primary {
+  color: var(--color-primary-400);
+}
+
+.text-error {
+  color: var(--color-error);
+}
+
+.text-warning {
+  color: var(--color-warning);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  .heading-1 {
+    font-size: var(--font-size-5xl);
+  }
+  .heading-2 {
+    font-size: var(--font-size-4xl);
+  }
+  .heading-3 {
+    font-size: var(--font-size-3xl);
+  }
+  .heading-4 {
+    font-size: var(--font-size-2xl);
+  }
+  .heading-5 {
+    font-size: var(--font-size-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .heading-1 {
+    font-size: var(--font-size-4xl);
+  }
+  .heading-2 {
+    font-size: var(--font-size-3xl);
+  }
+  .heading-3 {
+    font-size: var(--font-size-2xl);
+  }
+  .heading-4 {
+    font-size: var(--font-size-xl);
+  }
+  .heading-5 {
+    font-size: var(--font-size-lg);
+  }
+}
+

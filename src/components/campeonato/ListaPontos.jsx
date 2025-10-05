@@ -13,36 +13,51 @@ function ListaPontos({ teams = [] }){
 
     const displayTeams = teams.length > 0 ? teams : mockTeams.slice(0, 3);
 
-    const getPositionColor = (position) => {
-        return "bg-gradient-to-r from-[#a2139f] to-[#DD4C9B] border-[#a2267f]";
+    const getTierClasses = (position) => {
+        if (position === 0) return "from-emerald-500 to-lime-500 border-emerald-300"; // 1º
+        if (position === 1) return "from-emerald-400 to-lime-400 border-emerald-300"; // 2º
+        if (position === 2) return "from-emerald-300 to-lime-300 border-emerald-200"; // 3º
+        return "from-[#123524] to-[#0f2a1f] border-[#1e4b35]"; // demais
     };
 
     return(
         <div className="w-full">
             <ol className="space-y-2 sm:space-y-3 lg:space-y-4">
                 {displayTeams.map((team, index) => (
-                    <li key={team.id} className={`
-                        ${getPositionColor(index)}
-                        text-sm sm:text-base lg:text-lg font-bold text-white 
-                        flex items-center justify-between
-                        p-2 sm:p-3 lg:p-4 rounded-lg sm:rounded-xl lg:rounded-2xl
-                        border-2 border-opacity-50
-                        transition-all duration-300 hover:scale-105
-                        shadow-lg
-                    `}>
-                        <div className="flex items-center space-x-2 sm:space-x-3 lg:space-x-4">
-                            <div className="text-base sm:text-lg lg:text-xl xl:text-2xl">
-                                {team.logo}
+                    <li
+                        key={team.id}
+                        className={`relative overflow-hidden text-white rounded-xl sm:rounded-2xl border-2 shadow-xl
+                        p-2 sm:p-3 lg:p-4 flex items-center justify-between gap-3
+                        bg-gradient-to-r ${getTierClasses(index)}
+                        transition-transform duration-300 hover:scale-[1.02]`}
+                    >
+                        {/* Pitch stripes overlay */}
+                        <div className="pointer-events-none absolute inset-0 opacity-20 mix-blend-overlay bg-[repeating-linear-gradient(90deg,rgba(255,255,255,0.12)_0px,rgba(255,255,255,0.12)_8px,transparent_8px,transparent_16px)]"></div>
+
+                        {/* Left side: position badge + team */}
+                        <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                            <div className="relative grid place-items-center w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 rounded-full bg-black/30 border border-white/40">
+                                <span className="text-xs sm:text-sm lg:text-base font-extrabold">{index + 1}</span>
+                                <div className="absolute -inset-[2px] rounded-full ring-1 ring-white/20"></div>
                             </div>
-                            <span className="truncate text-xs sm:text-sm lg:text-base">
+                            <div className="grid place-items-center w-8 h-8 sm:w-9 sm:h-9 lg:w-10 lg:h-10 rounded-full bg-white/10 border border-white/40">
+                                <span className="text-base sm:text-lg lg:text-xl xl:text-2xl">
+                                    {team.logo || "⚽"}
+                                </span>
+                            </div>
+                            <span className="truncate text-xs sm:text-sm lg:text-base font-semibold">
                                 {team.name}
                             </span>
                         </div>
-                        <div className="flex items-center space-x-1 sm:space-x-2">
-                            <span className="text-white/80 text-xs sm:text-sm">
-                                {team.points} pts
-                            </span>
-                            <div className="h-3 w-3 sm:h-4 sm:w-4 lg:h-5 lg:w-5 xl:h-6 xl:w-6 rounded-full bg-gradient-to-r from-[#14020A] to-[#2A0A15] border-2 border-white"></div>
+
+                        {/* Right side: points pill */}
+                        <div className="flex items-center gap-2">
+                            <div className="hidden sm:block h-6 w-px bg-white/30" />
+                            <div className="px-2 sm:px-3 py-1 rounded-full bg-black/25 border border-white/30 backdrop-blur-[1px] flex items-center gap-1">
+                                <span className="text-[10px] sm:text-xs opacity-90">⚽</span>
+                                <span className="text-xs sm:text-sm font-bold">{team.points}</span>
+                                <span className="text-[10px] sm:text-xs opacity-80">pts</span>
+                            </div>
                         </div>
                     </li>
                 ))}

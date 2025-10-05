@@ -1,9 +1,7 @@
 import Campeonato from "../components/Campeonato"
-import Caroucel from "../components/Caroucel"
 import Footer from "../components/Footer"
-import Navbar from "../components/Navbar"
-import Noticias from "../components/Noticias"
 import Header from "../components/Header"
+import Noticias from "../components/Noticias"
 
 function Home() {
     return(

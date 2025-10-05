@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./styles/design-tokens.css";
+@import "./styles/typography.css";
 
 @custom-variant dark (&:is(.dark *));
 
+/* Enhanced Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -19,6 +22,20 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #6b2a3a;
 }
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Enhanced Focus Styles */
+*:focus-visible {
+  outline: 2px solid #521e2b;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Selection Styles removed to use OS/browser defaults */
 
 html {
   scroll-behavior: smooth;
@@ -205,5 +222,11 @@ button {
   }
   body {
     @apply bg-background text-foreground;
+  }
+  /* Ensure section titles are white */
+  section h1,
+  section h2,
+  section h3 {
+    color: #ffffff;
   }
 }

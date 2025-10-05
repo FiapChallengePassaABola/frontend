@@ -3,6 +3,7 @@ import { AiOutlineUser } from 'react-icons/ai';
 import { FaCamera, FaFutbol, FaHome, FaRunning, FaShoppingBag, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { ChartTooltipDefault } from '../components/ui/chart-component';
 import { useAuth } from '../contexts/AuthContext';
 
 const PageProfile = () => {
@@ -96,9 +97,9 @@ const PageProfile = () => {
       title: '',
       html: `
         <div style="display:flex;flex-direction:column;gap:14px">
-          <div style="background:linear-gradient(135deg,#6B2A3A 0%, #521E2B 100%);border-radius:16px;padding:16px;border:1px solid #6B2A3A">
+          <div style="background:linear-gradient(135deg,#3F0A3F 0%, #2A052A 100%);border-radius:16px;padding:16px;border:1px solid #3F0A3F">
             <div style="display:flex;align-items:center;gap:12px">
-              <div style="width:40px;height:40px;border-radius:10px;background:#16a34a;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">🏃‍♀️</div>
+              <div style="width:40px;height:40px;border-radius:10px;background:#ec4899;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">🏃‍♀️</div>
               <div>
                 <div style="color:#fff;font-weight:700;font-size:16px;line-height:1.2">Treinos no App</div>
                 <div style="color:rgba(255,255,255,0.7);font-size:13px">Para ver e acompanhar seus treinos, baixe nosso aplicativo.</div>
@@ -107,7 +108,7 @@ const PageProfile = () => {
           </div>
 
           <div style="display:flex;gap:10px">
-            <button style="flex:1;background:#16a34a;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;border:1px solid #15803d;font-weight:600;outline:none;">
+            <button style="flex:1;background:#ec4899;color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer;border:1px solid #db2777;font-weight:600;outline:none;">
               Baixar app
             </button>
           </div>
@@ -179,12 +180,12 @@ const PageProfile = () => {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
-      <div className="w-full lg:w-80 bg-[#521E2B] p-4 sm:p-6 flex flex-col border-r border-[#6B2A3A]">
+      <div className="w-full lg:w-80 bg-[#1F051F] p-4 sm:p-6 flex flex-col border-r border-[#3F0A3F]">
         <div className="flex justify-center mb-6 sm:mb-8">
           <div className="relative">
             <div 
               onClick={handleAvatarClick}
-              className="w-20 h-20 sm:w-24 sm:h-24 bg-[#521E2B] rounded-full flex items-center justify-center border border-[#6B2A3A] cursor-pointer hover:bg-[#6B2A3A] transition-colors group"
+              className="w-20 h-20 sm:w-24 sm:h-24 bg-[#2A052A] rounded-full flex items-center justify-center border border-[#3F0A3F] cursor-pointer hover:bg-[#3F0A3F] transition-colors group"
             >
               {profileImage ? (
                 <img 
@@ -257,52 +258,18 @@ const PageProfile = () => {
         <div className="mb-6 sm:mb-8">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">Status da Jogadora</h1>
           
-          <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6">
-            <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-              <div className="flex-1">
-                <div className="h-40 sm:h-48 bg-gray-100 rounded-lg p-3 sm:p-4 relative overflow-hidden">
-                  <div className="absolute inset-0">
-                    <div className="h-full flex flex-col justify-between px-3 sm:px-4">
-                      {[...Array(4)].map((_, i) => (
-                        <div key={i} className="border-t border-gray-300"></div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                    <path
-                      d="M 10 70 Q 30 65 50 60 T 90 55 L 90 100 L 10 100 Z"
-                      fill="#065f46"
-                      opacity="0.8"
-                    />
-                    <path
-                      d="M 10 50 Q 30 45 50 40 T 90 35 L 90 100 L 10 100 Z"
-                      fill="#047857"
-                      opacity="0.8"
-                    />
-                    <path
-                      d="M 10 30 Q 30 25 50 20 T 90 15 L 90 100 L 10 100 Z"
-                      fill="#059669"
-                      opacity="0.8"
-                    />
-                  </svg>
-                  
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-around px-3 sm:px-4 pb-2">
-                    <span className="text-xs text-gray-600">Item 1</span>
-                    <span className="text-xs text-gray-600">Item 2</span>
-                    <span className="text-xs text-gray-600">Item 3</span>
-                  </div>
-                </div>
-              </div>
+          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+            <div className="flex-1">
+              <ChartTooltipDefault />
+            </div>
 
-              <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
-                {playerStats.map((stat, index) => (
-                  <div key={index} className="bg-gray-50 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center">
-                    <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
-                    <div className="text-xs sm:text-sm text-gray-600">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
+            <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
+              {playerStats.map((stat, index) => (
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-white/20">
+                  <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-1">{stat.value}</div>
+                  <div className="text-xs sm:text-sm text-white/70">{stat.label}</div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -311,67 +278,67 @@ const PageProfile = () => {
           <div className="mb-6 sm:mb-8">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">Dados da Jogadora</h2>
             
-            <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Nome Completo</label>
-                  <p className="text-gray-900 font-medium">{user.nome}</p>
+                  <label className="text-sm font-medium text-white/70">Nome Completo</label>
+                  <p className="text-white font-medium">{user.nome}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Email</label>
-                  <p className="text-gray-900">{user.email}</p>
+                  <label className="text-sm font-medium text-white/70">Email</label>
+                  <p className="text-white">{user.email}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Telefone</label>
-                  <p className="text-gray-900">{user.telefone}</p>
+                  <label className="text-sm font-medium text-white/70">Telefone</label>
+                  <p className="text-white">{user.telefone}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Documento</label>
-                  <p className="text-gray-900">{user.tipoDocumento}: {user.documento}</p>
+                  <label className="text-sm font-medium text-white/70">Documento</label>
+                  <p className="text-white">{user.tipoDocumento}: {user.documento}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Data de Nascimento</label>
-                  <p className="text-gray-900">{user.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : '-'}</p>
+                  <label className="text-sm font-medium text-white/70">Data de Nascimento</label>
+                  <p className="text-white">{user.dataNascimento ? new Date(user.dataNascimento).toLocaleDateString('pt-BR') : '-'}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Posição</label>
-                  <p className="text-gray-900">{user.posicao}</p>
+                  <label className="text-sm font-medium text-white/70">Posição</label>
+                  <p className="text-white">{user.posicao}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Altura</label>
-                  <p className="text-gray-900">{user.altura}cm</p>
+                  <label className="text-sm font-medium text-white/70">Altura</label>
+                  <p className="text-white">{user.altura}cm</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Peso</label>
-                  <p className="text-gray-900">{user.peso}kg</p>
+                  <label className="text-sm font-medium text-white/70">Peso</label>
+                  <p className="text-white">{user.peso}kg</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Nível de Experiência</label>
-                  <p className="text-gray-900">{user.experiencia}</p>
+                  <label className="text-sm font-medium text-white/70">Nível de Experiência</label>
+                  <p className="text-white">{user.experiencia}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Cidade</label>
-                  <p className="text-gray-900">{user.cidade}, {user.estado}</p>
+                  <label className="text-sm font-medium text-white/70">Cidade</label>
+                  <p className="text-white">{user.cidade}, {user.estado}</p>
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-600">Clube Atual</label>
-                  <p className="text-gray-900">{user.clubeAtual || 'Não informado'}</p>
+                  <label className="text-sm font-medium text-white/70">Clube Atual</label>
+                  <p className="text-white">{user.clubeAtual || 'Não informado'}</p>
                 </div>
                 
                 {user.observacoes && (
                   <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                    <label className="text-sm font-medium text-gray-600">Observações</label>
-                    <p className="text-gray-900">{user.observacoes}</p>
+                    <label className="text-sm font-medium text-white/70">Observações</label>
+                    <p className="text-white">{user.observacoes}</p>
                   </div>
                 )}
               </div>
@@ -384,7 +351,7 @@ const PageProfile = () => {
           
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             {championshipStats.map((stat, index) => (
-              <div key={index} className="bg-[#521E2B] border border-[#6B2A3A] rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg">
+              <div key={index} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg">
                 <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">{stat.value}</div>
                 <div className="text-white/70 text-sm sm:text-base">{stat.label}</div>
               </div>
