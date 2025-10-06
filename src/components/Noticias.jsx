@@ -1,6 +1,11 @@
 import { FaChevronCircleDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import VideoYT from "../assets/VideoYT.jpg";
+import Foto1 from "../assets/Foto1.jpg";
+import Foto2 from "../assets/Foto2.jpg";
+import Foto3 from "../assets/Foto3.jpg";
+import Foto4 from "../assets/Foto4.jpg";
+import Foto5 from "../assets/Foto5.jpg";
 import CardNoticias from "./CardNoticias";
 import Titulos from "./Titulos";
 
@@ -12,7 +17,7 @@ function Noticias() {
       <div className="flex flex-col lg:flex-row w-full max-w-7xl gap-6 lg:gap-10">
         <div className="w-full lg:w-2/3">
           <img
-            src={VideoYT}
+            src={Foto1}
             alt="VideoYt"
             className="w-full rounded-xl sm:rounded-2xl border-[#1B4509] border-2 sm:border-4"
           />
@@ -34,17 +39,17 @@ function Noticias() {
             descricaoNoticia="Descrição basica sobre a noticia"
           />
           <CardNoticias
-            imgNoticia={VideoYT}
+            imgNoticia={Foto2}
             tituloNoticia="Titulo de teste sobre a empresa passa a bola"
             descricaoNoticia="Descrição basica sobre a noticia"
           />
           <CardNoticias
-            imgNoticia={VideoYT}
+            imgNoticia={Foto3}
             tituloNoticia="Titulo de teste sobre a empresa passa a bola"
             descricaoNoticia="Descrição basica sobre a noticia"
           />
           <CardNoticias
-            imgNoticia={VideoYT}
+            imgNoticia={Foto4}
             tituloNoticia="Titulo de teste sobre a empresa passa a bola"
             descricaoNoticia="Descrição basica sobre a noticia"
           />

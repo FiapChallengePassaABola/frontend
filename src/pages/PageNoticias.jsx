@@ -1,5 +1,10 @@
 import { useState } from "react";
 import VideoYT from "../assets/VideoYT.jpg";
+import Foto1 from "../assets/Foto1.jpg";
+import Foto2 from "../assets/Foto2.jpg";
+import Foto3 from "../assets/Foto3.jpg";
+import Foto4 from "../assets/Foto4.jpg";
+import Foto5 from "../assets/Foto5.jpg";
 import Footer from "../components/Footer";
 import HeaderBar from "../components/HeaderBar";
 import NewsCard from "../components/NewsCard";
@@ -13,11 +18,11 @@ function PageNoticias() {
 
   const noticias = [
     {
-      img: VideoYT,
+      img: Foto1,
       titulo:
-        "Gol de Haaland garante vitória apertada do City sobre o Brentford",
+        "PABCAST CONVIDA: KETLEN WIGGERS - FALA, BEBÊ #40",
       descricao:
-        "O Manchester City superou o Brentford com uma vitória por 1-0 no Gtech Community Stadium, graças ao gol cedo de Erling Haaland. O atacante norueguês finalizou com precisão aos nove minutos.",
+        "No episódio de hoje temos uma convidada especial: a maior artilheira das Sereias da Vila e a mamãe do Lucca. Conversamos muito sobre maternidade e o esporte de alto rendimento, e a evolução de mais atletas mulheres no futebol como um todo. Vem conversar e debater com a gente :)",
       fonte: "PassaBola",
       tempoAtras: "há 8 minutos",
       temDescricao: true,
@@ -26,43 +31,43 @@ function PageNoticias() {
     {
       img: VideoYT,
       titulo:
-        "Será o protagonista da Seleção? Vini Jr ressurge no Real e vira capa",
+        "COMO TEM SIDO NOSSOS PRIMEIROS MESES? - FALA, BEBÊ #39",
       descricao:
-        "Vini Jr tem protagonizado uma REDENÇÃO no Real Madrid. Após uma reta final discreta em 2024/25, ele parece ter retomado o alto nível. Já são NOVE participações diretas em gol em apenas.",
+        "Voltamos pra contar como tem sido nossos dias desde a chegada da Antonella. Foram muitos aprendizados e momentos especiais, e claro que viemos dividir aqui com vocês. Mais uma montanha russa de emoções. Vem conversar e debater com a gente :)",
       fonte: "PassaBola",
       tempoAtras: "há 3 horas",
       temDescricao: true,
       categoria: "Internacional",
     },
     {
-      img: VideoYT,
-      titulo: "Cruzeiro monitora ex-jogador do Palmeiras; saiba",
-      fonte: "Mercado do Fut",
+      img: Foto2,
+      titulo: "PABCAST CONVIDA: BIA MENEZES - FALA, BEBÊ #34",
+      fonte: "PassaABola",
       tempoAtras: "há 50 min",
       temDescricao: false,
       categoria: "Mercado",
     },
     {
-      img: VideoYT,
+      img: Foto3,
       titulo:
-        "Arrascaeta e Varela não serão convocados pelo Uruguai; veja as situações",
-      fonte: "MundoBola",
+        "Amanda Gutierres é vendida por valor recorde no Brasil",
+      fonte: "PassaABola",
       tempoAtras: "há 5 horas",
       temDescricao: false,
       categoria: "Seleções",
     },
     {
-      img: VideoYT,
+      img: Foto4,
       titulo:
-        "Agenda de DOMINGO: BR25 pega fogo, BuLi no OF, dérbis na Europa e +",
+        "Vai começar a Libertadores Feminina 🔥",
       fonte: "PassaBola",
       tempoAtras: "há 9 horas",
       temDescricao: false,
       categoria: "Agenda",
     },
     {
-      img: VideoYT,
-      titulo: "São Paulo não marca gols contra o Palmeiras há mais de um ano",
+      img: Foto5,
+      titulo: "História da Libertadores Feminina",
       fonte: "Gazeta Esportiva",
       tempoAtras: "há 8 horas",
       temDescricao: false,
