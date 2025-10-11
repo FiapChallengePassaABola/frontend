@@ -64,8 +64,7 @@ function Noticias() {
       >
         <FaChevronCircleDown
           size={32}
-          color="green"
-          className="sm:w-10 sm:h-10 lg:w-12 lg:h-12 xl:w-16 xl:h-16 hover:opacity-80 transition-opacity"
+          className="sm:w-10 sm:h-10 lg:w-12 lg:h-12 xl:w-16 xl:h-16 transition-opacity text-[#12815ee5] hover:text-white hover:scale-110"
         />
       </Link>
     </div>
