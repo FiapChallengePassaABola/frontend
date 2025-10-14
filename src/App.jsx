@@ -10,13 +10,20 @@ import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
 import PageRegister from "./pages/PageRegister";
+import AdminPage from "./pages/pageAdmin/PageAdmin"
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          <PlasmaBackground />
+ 
+          <PlasmaBackground 
+          color1={"#2A052A"}
+          color2={'#3F0A3F'}
+          color3={ '#1F051F'}
+          color4={'#0F030F'}
+          />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/campeonato" element={<PageCampeonato />} />
@@ -26,6 +33,8 @@ function App() {
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
+            <Route path="/admin" element={<AdminPage />} />
+
           </Routes>
         </Router>
       </AuthProvider>
