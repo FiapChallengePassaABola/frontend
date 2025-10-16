@@ -4,7 +4,7 @@ const ButtonNavBar = styled(Button)(({ theme }) => ({
   color: "#fff",
   justifyContent: "flex-start",
   textTransform: "none",
-  fontSize: "1rem",
+  fontSize: "2rem",
   fontWeight: 400,
   marginBottom: "10px",
   transition: "0.3s",
@@ -31,9 +31,9 @@ export default function NavBar() {
       <Avatar
         sx={{
           bgcolor: "#3b0a45",
-          width: { xs: 80, sm: 120, md: 140 },
-          height: { xs: 80, sm: 120, md: 140 },
-          fontSize: { xs: 28, sm: 36, md: 42 },
+          width: { xs: 80, sm: 150, md: 240 },
+          height: { xs: 80, sm: 150, md: 240 },
+          fontSize: { xs: 28, sm: 26, md: 62 },
           fontWeight: "bold",
           mb: 4,
         }}
@@ -53,9 +53,9 @@ export default function NavBar() {
         <ButtonNavBar
           sx={{
             marginTop: "25%",
-            borderBottom: "2px solid #b388ff",
+            borderBottom: ".6rem solid #b388ff",
             width: "80%",
-            color: "#b388ff",
+            color: "#8D34F9",
             fontWeight: "bold",
           }}
         >
