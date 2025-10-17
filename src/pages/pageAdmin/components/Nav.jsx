@@ -1,32 +1,65 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Button, styled, Avatar } from "@mui/material";
 
-function NavBar() {
+import { useState } from "react";
+
+export default function NavBar() {
+  const ButtonNavBar = styled(Button)(({ theme }) => ({
+    color: "#fff",
+    justifyContent: "flex-start",
+    textTransform: "none",
+    fontSize: "1.5vmax",
+    fontWeight: 400,
+    marginBottom: "10px",
+    transition: "0.3s",
+    "&:hover": {
+      color: "#b388ff",
+    },
+  }));
+
+  const [button, setButton] = useState(false);
+
   return (
     <Box
       sx={{
         backgroundColor: "#101110",
-        width: "20vw",
+        width: { xs: "60vw", sm: "30vw", md: "20vw" },
         height: "100vh",
         position: "fixed",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        paddingTop: "2rem",
+        color: "white",
       }}
     >
-      <div className="rounded-full w-50 h-50 bg-[#431D46] overflow-hidden flex justify-center items-center">
-        <Typography
-          sx={{
-            color: "white",
-            fontFamily: "sans-serif",
-            fontWeight: "bold",
-            fontSize: "4.4rem",
-          }}
-        >
-          ADM
-        </Typography>
-      </div>
+      <Avatar
+        sx={{
+          bgcolor: "#3b0a45",
+          width: { xs: 80, sm: 150, md: 240 },
+          height: { xs: 80, sm: 150, md: 240 },
+          fontSize: { xs: 28, sm: 26, md: 62 },
+          fontWeight: "bold",
+          mb: 4,
+        }}
+      >
+        ADM
+      </Avatar>
+
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 2,
+        }}
+      >
+        <ButtonNavBar sx={{ marginTop: "25%", width: "80%" }}>
+          Relatório do Site
+        </ButtonNavBar>
+        <ButtonNavBar sx={{ width: "80%" }}>Gerenciar Notícias</ButtonNavBar>
+        <ButtonNavBar sx={{ width: "80%" }}>Copa Passa a Bola</ButtonNavBar>
+      </Box>
     </Box>
   );
 }
-
-export default NavBar;
