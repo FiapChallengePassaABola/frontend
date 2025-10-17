@@ -10,19 +10,19 @@ import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
 import PageRegister from "./pages/PageRegister";
-import AdminPage from "./pages/pageAdmin/PageAdmin"
+import AdminPage from "./pages/pageAdmin/PageAdmin";
+import "./index.css";
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
         <Router>
- 
-          <PlasmaBackground 
-          color1={"#2A052A"}
-          color2={'#3F0A3F'}
-          color3={ '#1F051F'}
-          color4={'#0F030F'}
+          <PlasmaBackground
+            color1={"#2A052A"}
+            color2={"#3F0A3F"}
+            color3={"#1F051F"}
+            color4={"#0F030F"}
           />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -34,12 +34,11 @@ function App() {
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
             <Route path="/admin" element={<AdminPage />} />
-
           </Routes>
         </Router>
       </AuthProvider>
     </ErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;
