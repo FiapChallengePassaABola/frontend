@@ -1,18 +1,24 @@
 import { Box, Typography, Button, styled, Avatar } from "@mui/material";
-
+import { NavLink } from "react-router-dom";
 import { useState } from "react";
 
 export default function NavBar() {
-  const ButtonNavBar = styled(Button)(({ theme }) => ({
+  const ButtonNavBar = styled(NavLink)(() => ({
     color: "#fff",
     justifyContent: "flex-start",
     textTransform: "none",
     fontSize: "1.5vmax",
     fontWeight: 400,
     marginBottom: "10px",
-    transition: "0.3s",
+    transition: "0.15s",
     "&:hover": {
       color: "#b388ff",
+    },
+    "&.active": {
+      borderBottom: ".6rem solid #b388ff",
+      width: "80%",
+      color: "#8D34F9",
+      fontWeight: "bold",
     },
   }));
 
@@ -54,11 +60,18 @@ export default function NavBar() {
           gap: 2,
         }}
       >
-        <ButtonNavBar sx={{ marginTop: "25%", width: "80%" }}>
+        <ButtonNavBar
+          sx={{ marginTop: "25%", width: "80%" }}
+          to="/admin/summary"
+        >
           Relatório do Site
         </ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }}>Gerenciar Notícias</ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }}>Copa Passa a Bola</ButtonNavBar>
+        <ButtonNavBar sx={{ width: "80%" }} to="/admin/news_manager">
+          Gerenciar Notícias
+        </ButtonNavBar>
+        <ButtonNavBar sx={{ width: "80%" }} to="/admin/championship">
+          Copa Passa a Bola
+        </ButtonNavBar>
       </Box>
     </Box>
   );

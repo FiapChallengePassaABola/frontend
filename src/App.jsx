@@ -40,11 +40,10 @@ function App() {
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
             <Route path="/admin" element={<AdminPage />}>
-              <Route
-                path="summary"
-                index={true}
-                element={<SummaryPage />}
-              ></Route>
+              <Route path="summary" index element={<SummaryPage />}></Route>
+              <Route path="championship" element={<SummaryPage />}></Route>
+
+              <Route path="news_manager" element={<SummaryPage />}></Route>
             </Route>
           </Routes>
         </Router>
