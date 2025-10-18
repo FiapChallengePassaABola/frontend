@@ -15,14 +15,12 @@ export default function NavBar() {
       color: "#b388ff",
     },
     "&.active": {
-      borderBottom: ".6rem solid #b388ff",
+      borderBottom: ".4rem solid #b388ff",
       width: "80%",
       color: "#8D34F9",
       fontWeight: "bold",
     },
   }));
-
-  const [button, setButton] = useState(false);
 
   return (
     <Box
@@ -30,7 +28,6 @@ export default function NavBar() {
         backgroundColor: "#101110",
         width: { xs: "60vw", sm: "30vw", md: "20vw" },
         height: "100vh",
-        position: "fixed",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -60,16 +57,13 @@ export default function NavBar() {
           gap: 2,
         }}
       >
-        <ButtonNavBar
-          sx={{ marginTop: "25%", width: "80%" }}
-          to="/admin/summary"
-        >
+        <ButtonNavBar sx={{ marginTop: "25%", width: "80%" }} to="summary">
           Relatório do Site
         </ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }} to="/admin/news_manager">
+        <ButtonNavBar sx={{ width: "80%" }} to="news_manager">
           Gerenciar Notícias
         </ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }} to="/admin/championship">
+        <ButtonNavBar sx={{ width: "80%" }} to="championship">
           Copa Passa a Bola
         </ButtonNavBar>
       </Box>
