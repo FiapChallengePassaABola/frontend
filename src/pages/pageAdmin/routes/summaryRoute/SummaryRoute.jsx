@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Paper, Typography, Button, styled } from "@mui/material";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
+import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import { LineChart } from "@mui/x-charts/LineChart";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -54,7 +56,7 @@ export default function SummaryPage() {
               fontWeight: "700",
             }}
           >
-            Sign Ups: Per Month
+            Contas Criadas: Por mês
           </Typography>
           <Card
             sx={{
@@ -78,9 +80,26 @@ export default function SummaryPage() {
                 [`& .${gaugeClasses.referenceArc}`]: {
                   fill: "#FEFFFE",
                 },
+                [`& .${gaugeClasses.valueText}`]: {
+                  fontSize: 40,
+                  fill: "#ffffff",
+                  transform: "translate(0px, -60px)",
+                },
+                [`& .${gaugeClasses.text}`]: {
+                  fill: "#ffffff", // cor do texto adicional ("Goal")
+                  fontSize: 20,
+                  fontWeight: 600,
+                  transform: "translate(0px, 40px)",
+                },
+                "& text": {
+                  fill: "#ffffff !important",
+                },
+                color: "white",
                 width: "85%",
                 height: "85%",
               })}
+              text={`Meta:`}
+              textDecoration={"white"}
             />
           </Card>
         </Box>
@@ -103,10 +122,30 @@ export default function SummaryPage() {
 
           <Card
             sx={{
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
               width: "100%",
               height: "100%",
             }}
-          ></Card>
+          >
+            <Typography>Cores:</Typography>
+            <PieChart
+              series={[
+                {
+                  data: [
+                    { id: 0, value: 10, color: "#FFFF" },
+                    { id: 1, value: 15, color: "#A17AED" },
+                    { id: 2, value: 20, color: "#CEA3E6" },
+                  ],
+                  innerRadius: 50,
+                  outerRadius: 100,
+                },
+              ]}
+              width={200}
+              height={200}
+            />
+          </Card>
         </Box>
       </Box>
       <Box
@@ -148,7 +187,21 @@ export default function SummaryPage() {
           width: "80%",
           height: "30%",
         }}
-      ></Card>
+      >
+        <LineChart
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+          series={[
+            {
+              data: [2, 5.5, 2, 8.5, 1.5, 5],
+              area: true,
+              color: "rgba(177, 108, 229, 0.63)",
+            },
+          ]}
+          height={320}
+          width={1150}
+          margin={0}
+        />
+      </Card>
     </Box>
   );
 }
