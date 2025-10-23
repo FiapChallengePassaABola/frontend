@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Paper, Typography, Button, styled } from "@mui/material";
-import { Gauge } from "@mui/x-charts/Gauge";
+import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -9,6 +9,12 @@ const Card = styled(Paper)({
   padding: 16,
   boxShadow: "none",
 });
+
+const settings = {
+  value: 60,
+  startAngle: -90,
+  endAngle: 90,
+};
 
 export default function SummaryPage() {
   return (
@@ -54,15 +60,28 @@ export default function SummaryPage() {
             sx={{
               width: "100%",
               height: "100%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
             }}
           >
             <Gauge
-              width={100}
-              height={100}
-              value={60}
-              startAngle={-90}
-              endAngle={90}
-            ></Gauge>
+              {...settings}
+              cornerRadius="50%"
+              sx={(theme) => ({
+                [`& .${gaugeClasses.valueText}`]: {
+                  fontSize: 40,
+                },
+                [`& .${gaugeClasses.valueArc}`]: {
+                  fill: "#8B5DE4",
+                },
+                [`& .${gaugeClasses.referenceArc}`]: {
+                  fill: "#FEFFFE",
+                },
+                width: "85%",
+                height: "85%",
+              })}
+            />
           </Card>
         </Box>
         <Box
