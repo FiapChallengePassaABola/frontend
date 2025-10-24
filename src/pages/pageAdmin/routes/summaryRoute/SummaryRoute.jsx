@@ -4,6 +4,7 @@ import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { LineChart,  } from "@mui/x-charts/LineChart";
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
+import { useEffect } from "react";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -20,6 +21,15 @@ const settings = {
 };
 
 export default function SummaryPage() {
+  
+    useEffect(() => {
+    const chartElement = document.querySelector('.MuiCharts-root');
+    if (chartElement) {
+      chartElement.style.setProperty('--MuiCharts-axis-line', '#fff');
+      chartElement.style.setProperty('--MuiCharts-axis-tickLabel', '#fff');
+      chartElement.style.setProperty('--MuiCharts-grid-line', '#fff');
+    }
+  }, []);
   return (
     <Box
       sx={{
@@ -195,7 +205,7 @@ export default function SummaryPage() {
           sx={{
               [`& .${chartsGridClasses.line}`]: {
                 stroke: "#fff", // cor das linhas do grid
-                strokeWidth: 0.5,
+                strokeWidth: 2,
                     },
               "& .MuiChartsAxis-line": {
                 stroke: "#fff", // cor das linhas do eixo
@@ -204,10 +214,11 @@ export default function SummaryPage() {
                 fill: "#fff", // cor dos textos dos ticks
               },
               "& .MuiChartsAxis-tick": {
-                stroke: "#ffffffff",
+                stroke: "#fff",
               },
           }}
-          xAxis={[{ data: [1, 2, 3, 5, 8, 10],
+          xAxis={[{
+             data: [1, 2, 3, 5, 8, 10],
             height: 0,
             width: 0,
            }]}
