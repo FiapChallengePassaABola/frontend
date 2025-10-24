@@ -23,8 +23,8 @@ export default function SummaryPage() {
     <Box
       sx={{
         width: "100%",
-        color: "#fff",
         height: "100%",
+        color: "#fff",
         padding: 4,
         display: "flex",
         flexDirection: "column",
@@ -87,12 +87,12 @@ export default function SummaryPage() {
                 },
                 [`& .${gaugeClasses.text}`]: {
                   fill: "#ffffff", // cor do texto adicional ("Goal")
-                  fontSize: 20,
                   fontWeight: 600,
                   transform: "translate(0px, 40px)",
                 },
                 "& text": {
                   fill: "#ffffff !important",
+                  fontSize: "2vmax",
                 },
                 color: "white",
                 width: "85%",
@@ -188,7 +188,8 @@ export default function SummaryPage() {
           height: "30%",
         }}
       >
-        <LineChart
+       
+       <LineChart
           xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
           series={[
             {
@@ -197,10 +198,8 @@ export default function SummaryPage() {
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}
-          height={320}
-          width={1150}
-          margin={0}
-        />
+        /> 
+        
       </Card>
     </Box>
   );
