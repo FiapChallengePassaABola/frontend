@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Paper, Typography, Button, styled } from "@mui/material";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { LineChart } from "@mui/x-charts/LineChart";
+import { LineChart,  } from "@mui/x-charts/LineChart";
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -129,7 +130,6 @@ export default function SummaryPage() {
               height: "100%",
             }}
           >
-            <Typography>Cores:</Typography>
             <PieChart
               series={[
                 {
@@ -185,16 +185,39 @@ export default function SummaryPage() {
         sx={{
           flex: "1",
           width: "80%",
-          height: "30%",
+          display: "flex",
+          flexDirection:"row",
+          justifyContent: "center",
         }}
       >
        
        <LineChart
-          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+          sx={{
+              [`& .${chartsGridClasses.line}`]: {
+                stroke: "#fff", // cor das linhas do grid
+                strokeWidth: 0.5,
+                    },
+              "& .MuiChartsAxis-line": {
+                stroke: "#fff", // cor das linhas do eixo
+              },
+              "& .MuiChartsAxis-tickLabel": {
+                fill: "#fff", // cor dos textos dos ticks
+              },
+              "& .MuiChartsAxis-tick": {
+                stroke: "#ffffffff",
+              },
+          }}
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10],
+            height: 0,
+            width: 0,
+           }]}
+          grid={{ vertical: true, horizontal: true }}
+
           series={[
             {
               data: [2, 5.5, 2, 8.5, 1.5, 5],
               area: true,
+              label: "string",
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}

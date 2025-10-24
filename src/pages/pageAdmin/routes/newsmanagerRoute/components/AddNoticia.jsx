@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Botao from './ui/Botao';
+import Botao from './Botao';
 
 const FormularioNoticias = () => {
   // Estados para armazenar os valores do formulário

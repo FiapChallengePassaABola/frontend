@@ -1,4 +1,4 @@
-import '../App.css'
+
 
 function Botao({children, onClick, className = ''}) {
     const base =
