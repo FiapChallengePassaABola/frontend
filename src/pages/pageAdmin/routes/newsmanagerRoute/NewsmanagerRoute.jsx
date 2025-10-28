@@ -1,9 +1,8 @@
-import { Box, Container, Button, Paper, styled } from "@mui/material"; 
-
-
+import {Container, Box, Paper, styled, Typography } from "@mui/material";
+import NoticiasComponent from "./components/Noticias";  // Importando corretamente
 
 function NewsManagerRoute() {
-    const Card = styled(Paper)({
+  const Card = styled(Paper)({
     backgroundColor: "#157259",
     color: "#fff",
     borderRadius: 12,
@@ -13,64 +12,57 @@ function NewsManagerRoute() {
 
   return (
     <>
-      <Container
+    <Container
+    sx={{
+      display:"flex",
+      flexDirection:"column",
+    }}
+    >
+      <Box
         sx={{
-          height: "100%",
           width: "100%",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "row",
+          justifyContent: "space-between",  // Para garantir que os componentes se ajustem lado a lado
+          gap: 3,  // Adicionando um espaço entre as colunas
         }}
       >
-        <Box
+        <NoticiasComponent />  
+        <NoticiasComponent />  
+      </Box>
+      <Box
+      sx={{
+        display:"flex",
+        flexDirection:"row",
+        width:"100%",
+        justifyContent:"center",
+        alignItems:"center",
+        gap: 3,
+      }}
+      >
+      <Box
           sx={{
-            width: "100%",
-            minHeight: "60%",
-            display:"flex",
-            flexDirection:"row",
+            width: "40%",
+            height: "0.2px",
+            backgroundColor: "gray",
+          }}
+        ></Box>
+        <Typography
+          sx={{
+            fontSize: "2vmax",
+            fontWeight: "700",
+            color:"white"
           }}
         >
-          <Box
-            sx={{
-            flex:1,
-            width:"100%",
-            height:"100%",
+          Novo Post
+        </Typography>
+        <Box
+          sx={{
+            width: "40%",
+            height: "0.2px",
+            backgroundColor: "gray",
           }}
-          >
-          <Card
-          >
-            {/* Box abaixo são para montar o card, o de cima vai ser a foto e o de baixo o gauge*/}
-            <Box
-            sx={{
-              display:"flex",
-              flexDirection:"row"
-            }}
-            >
-              <Box>
-                <Card>
-                  
-                </Card>
-                </Box> 
-              <Box>
-                                <Card>
-                  
-                </Card>
-                </Box> 
-
-            </Box>
-          </Card>
-          </Box>
-          <Box
-            sx={{
-            flex:1,
-            width:"100%",
-            height:"100%",
-          }}
-          >
-          <Card
-          >
-
-          </Card>
-          </Box>
+        ></Box>
         </Box>
       </Container>
     </>

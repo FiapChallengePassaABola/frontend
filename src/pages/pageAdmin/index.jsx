@@ -13,7 +13,7 @@ export default function AdminPage() {
       }}
     >
       <Nav />
-      <Box component="main" sx={{ flex: 1, p: { xs: 2, md: 4 } }}>
+      <Box component="main" sx={{ flex: 1, p: { xs: 1, md: 2 } }}>
         <Outlet />
       </Box>
     </Box>

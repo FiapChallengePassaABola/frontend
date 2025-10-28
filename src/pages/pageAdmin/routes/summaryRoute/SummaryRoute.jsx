@@ -5,6 +5,7 @@ import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
 import { LineChart,  } from "@mui/x-charts/LineChart";
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { useEffect } from "react";
+import Botao from "./components/Botao";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -34,13 +35,13 @@ export default function SummaryPage() {
     <Box
       sx={{
         width: "100%",
-        height: "100%",
+        minHeight: "80vh",
         color: "#fff",
-        padding: 4,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 3,
+        gap: 1,
+        padding: 0,
       }}
     >
       <Box
@@ -71,8 +72,8 @@ export default function SummaryPage() {
           </Typography>
           <Card
             sx={{
-              width: "100%",
-              height: "100%",
+              width: "90%",
+              height: "80%",
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
@@ -136,8 +137,8 @@ export default function SummaryPage() {
               display: "flex",
               justifyContent: "center",
               flexDirection: "column",
-              width: "100%",
-              height: "100%",
+              width: "90%",
+              height: "80%",
             }}
           >
             <PieChart
@@ -166,6 +167,8 @@ export default function SummaryPage() {
           alignItems: "center",
           justifyContent: "center",
           gap: 3,
+          padding: 0,
+          margin: 0,
         }}
       >
         <Box
@@ -191,13 +194,17 @@ export default function SummaryPage() {
           }}
         ></Box>
       </Box>
-      <Card
+      <Box
         sx={{
           flex: "1",
           width: "80%",
           display: "flex",
           flexDirection:"row",
           justifyContent: "center",
+          alignItems:"center",
+          backgroundColor: "#157259",
+          margin: 0,
+          padding: 0,
         }}
       >
        
@@ -205,7 +212,6 @@ export default function SummaryPage() {
           sx={{
               [`& .${chartsGridClasses.line}`]: {
                 stroke: "#fff", // cor das linhas do grid
-                strokeWidth: 2,
                     },
               "& .MuiChartsAxis-line": {
                 stroke: "#fff", // cor das linhas do eixo
@@ -219,8 +225,6 @@ export default function SummaryPage() {
           }}
           xAxis={[{
              data: [1, 2, 3, 5, 8, 10],
-            height: 0,
-            width: 0,
            }]}
           grid={{ vertical: true, horizontal: true }}
 
@@ -232,9 +236,30 @@ export default function SummaryPage() {
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}
+          height={240}
+          width={850}
         /> 
         
-      </Card>
+      </Box>
+      <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent:"space-between",
+        minWidth:"80%",
+        minHeight:"5%",
+        gap: 4,
+      }}
+      >
+        <Botao
+          children={"Export Data"}
+        >
+        </Botao>
+        <Botao
+          children={"AI Summary"}
+
+        ></Botao>
+      </Box>
     </Box>
   );
 }
