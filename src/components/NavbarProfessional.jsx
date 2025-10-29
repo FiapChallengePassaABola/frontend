@@ -62,7 +62,7 @@ function NavbarProfessional() {
         { name: 'NOTÍCIAS', path: '/noticias' },
         { name: 'CAMPEONATO', path: '/campeonato' },
         { name: 'JOGAR', path: '/jogar' },
-        { name: 'YOUTUBE', path: '/youtube' }
+        { name: 'YOUTUBE', path: 'https://www.youtube.com/@passabola', isExternal: true }
     ];
 
     const isActive = (path) => location.pathname === path;
@@ -89,20 +89,33 @@ function NavbarProfessional() {
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
                             {navItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    to={item.path}
-                                    className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 group ${
-                                        isActive(item.path)
-                                            ? 'text-white'
-                                            : 'text-white hover:text-gray-300'
-                                    }`}
-                                >
-                                    {item.name}
-                                    <span className={`absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 ${
-                                        isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                                    }`}></span>
-                                </Link>
+                                item.isExternal ? (
+                                    <a
+                                        key={item.name}
+                                        href={item.path}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="relative px-3 py-2 text-sm font-medium transition-all duration-300 group text-white hover:text-gray-300"
+                                    >
+                                        {item.name}
+                                        <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
+                                    </a>
+                                ) : (
+                                    <Link
+                                        key={item.name}
+                                        to={item.path}
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 group ${
+                                            isActive(item.path)
+                                                ? 'text-white'
+                                                : 'text-white hover:text-gray-300'
+                                        }`}
+                                    >
+                                        {item.name}
+                                        <span className={`absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 ${
+                                            isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                        }`}></span>
+                                    </Link>
+                                )
                             ))}
                         </div>
                     </div>
@@ -170,18 +183,31 @@ function NavbarProfessional() {
                 <div className="md:hidden">
                     <div className="px-2 pt-2 pb-3 space-y-1 bg-dark-900/95 backdrop-blur-xl border-t border-dark-700/50">
                         {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                to={item.path}
-                                className={`block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 ${
-                                    isActive(item.path)
-                                        ? 'text-white bg-primary-600/10'
-                                        : 'text-white hover:text-gray-300 hover:bg-dark-800/50'
-                                }`}
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                {item.name}
-                            </Link>
+                            item.isExternal ? (
+                                <a
+                                    key={item.name}
+                                    href={item.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 text-white hover:text-gray-300 hover:bg-dark-800/50"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.name}
+                                </a>
+                            ) : (
+                                <Link
+                                    key={item.name}
+                                    to={item.path}
+                                    className={`block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 ${
+                                        isActive(item.path)
+                                            ? 'text-white bg-primary-600/10'
+                                            : 'text-white hover:text-gray-300 hover:bg-dark-800/50'
+                                    }`}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.name}
+                                </Link>
+                            )
                         ))}
                         <div className="border-t border-dark-700/50 pt-4 pb-3">
                             {isAuthenticated ? (

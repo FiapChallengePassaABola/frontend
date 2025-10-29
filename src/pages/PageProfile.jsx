@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
 import {
-  FaCamera,
-  FaFutbol,
-  FaHome,
-  FaRunning,
-  FaShoppingBag,
-  FaSignOutAlt,
+    FaCamera,
+    FaFutbol,
+    FaHome,
+    FaRunning,
+    FaSignOutAlt,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -19,6 +18,7 @@ const PageProfile = () => {
   const [profileImage, setProfileImage] = useState(() => {
     return localStorage.getItem("profileImage") || null;
   });
+  const [activeSection, setActiveSection] = useState("status"); // Novo estado para controlar seção ativa
   const fileInputRef = useRef(null);
   // ...existing code... (map removed from this page)
   const mapContainerRef = useRef(null);
@@ -166,12 +166,16 @@ const PageProfile = () => {
     }
   };
 
+  const handleSectionChange = (section) => {
+    setActiveSection(section);
+  };
+
+
   const navigationItems = [
-    { icon: FaHome, label: "Home", path: "/" },
-    { icon: FaRunning, label: "Status", path: "/profile" },
-    { icon: FaRunning, label: "Treino", path: "/training" },
-    { icon: FaFutbol, label: "Meus Jogos", path: "/games" },
-    { icon: FaShoppingBag, label: "Compras", path: "/shop" },
+    { icon: FaHome, label: "Home", path: "/", section: null },
+    { icon: FaRunning, label: "Status", path: "/profile", section: "status" },
+    { icon: FaRunning, label: "Treino", path: "/training", section: "treino" },
+    { icon: FaFutbol, label: "Meus Jogos", path: "/profile", section: "meus-jogos" },
   ];
 
   const playerStats = [
@@ -188,6 +192,345 @@ const PageProfile = () => {
     { label: "Assistências", value: "7" },
     { label: "Defesas", value: "3" },
   ];
+
+  // Componente para seção de Status
+  const StatusSection = () => (
+    <>
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">
+          Status da Jogadora
+        </h1>
+
+        <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+          <div className="flex-1">
+            <ChartTooltipDefault />
+          </div>
+
+          <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
+            {playerStats.map((stat, index) => (
+              <div
+                key={index}
+                className="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-white/20"
+              >
+                <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-1">
+                  {stat.value}
+                </div>
+                <div className="text-xs sm:text-sm text-white/70">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {user?.isJogadora && (
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
+            Dados da Jogadora
+          </h2>
+
+          <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Nome Completo
+                </label>
+                <p className="text-white font-medium">{user.nome}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Email
+                </label>
+                <p className="text-white">{user.email}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Telefone
+                </label>
+                <p className="text-white">{user.telefone}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Documento
+                </label>
+                <p className="text-white">
+                  {user.tipoDocumento}: {user.documento}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Data de Nascimento
+                </label>
+                <p className="text-white">
+                  {user.dataNascimento
+                    ? new Date(user.dataNascimento).toLocaleDateString(
+                        "pt-BR"
+                      )
+                    : "-"}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Posição
+                </label>
+                <p className="text-white">{user.posicao}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Altura
+                </label>
+                <p className="text-white">{user.altura}cm</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Peso
+                </label>
+                <p className="text-white">{user.peso}kg</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Nível de Experiência
+                </label>
+                <p className="text-white">{user.experiencia}</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Cidade
+                </label>
+                <p className="text-white">
+                  {user.cidade}, {user.estado}
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-white/70">
+                  Clube Atual
+                </label>
+                <p className="text-white">
+                  {user.clubeAtual || "Não informado"}
+                </p>
+              </div>
+
+              {user.observacoes && (
+                <div className="space-y-2 md:col-span-2 lg:col-span-3">
+                  <label className="text-sm font-medium text-white/70">
+                    Observações
+                  </label>
+                  <p className="text-white">{user.observacoes}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
+          Estatísticas do Campeonato
+        </h2>
+
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          {championshipStats.map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg"
+            >
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
+                {stat.value}
+              </div>
+              <div className="text-white/70 text-sm sm:text-base">
+                {stat.label}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+
+  // Componente para seção Meus Jogos
+  const MyGamesSection = () => {
+    // Dados simulados de jogos
+    const myGames = [
+      {
+        id: 1,
+        date: "2024-01-15",
+        opponent: "Flamengo Feminino",
+        result: "Vitória",
+        score: "3-1",
+        goals: 2,
+        assists: 1,
+        position: "Atacante",
+        status: "Finalizado"
+      },
+      {
+        id: 2,
+        date: "2024-01-08",
+        opponent: "Corinthians Feminino",
+        result: "Empate",
+        score: "2-2",
+        goals: 1,
+        assists: 1,
+        position: "Atacante",
+        status: "Finalizado"
+      },
+      {
+        id: 3,
+        date: "2024-01-22",
+        opponent: "Palmeiras Feminino",
+        result: "Vitória",
+        score: "4-0",
+        goals: 3,
+        assists: 0,
+        position: "Atacante",
+        status: "Finalizado"
+      },
+      {
+        id: 4,
+        date: "2024-01-29",
+        opponent: "São Paulo Feminino",
+        result: "Próximo",
+        score: "-",
+        goals: 0,
+        assists: 0,
+        position: "Atacante",
+        status: "Agendado"
+      },
+      {
+        id: 5,
+        date: "2024-02-05",
+        opponent: "Santos Feminino",
+        result: "Próximo",
+        score: "-",
+        goals: 0,
+        assists: 0,
+        position: "Atacante",
+        status: "Agendado"
+      }
+    ];
+
+    return (
+      <div>
+        <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">
+          Meus Jogos
+        </h1>
+
+        <div className="space-y-4">
+          {myGames.map((game) => (
+            <div
+              key={game.id}
+              className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 hover:bg-white/15 transition-all duration-300"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3">
+                <div className="flex items-center gap-3 mb-2 sm:mb-0">
+                  <div className={`w-3 h-3 rounded-full ${
+                    game.status === 'Finalizado' 
+                      ? game.result === 'Vitória' 
+                        ? 'bg-green-500' 
+                        : game.result === 'Empate'
+                        ? 'bg-yellow-500'
+                        : 'bg-red-500'
+                      : 'bg-blue-500'
+                  }`}></div>
+                  <span className="text-white font-medium">
+                    {new Date(game.date).toLocaleDateString('pt-BR')}
+                  </span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    game.status === 'Finalizado'
+                      ? game.result === 'Vitória'
+                        ? 'bg-green-500/20 text-green-400'
+                        : game.result === 'Empate'
+                        ? 'bg-yellow-500/20 text-yellow-400'
+                        : 'bg-red-500/20 text-red-400'
+                      : 'bg-blue-500/20 text-blue-400'
+                  }`}>
+                    {game.status}
+                  </span>
+                </div>
+                
+                <div className="text-right">
+                  <div className="text-white font-bold text-lg">
+                    {game.score}
+                  </div>
+                  <div className="text-white/70 text-sm">
+                    vs {game.opponent}
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="text-center">
+                  <div className="text-white font-bold text-lg">
+                    {game.goals}
+                  </div>
+                  <div className="text-white/70 text-sm">
+                    Gols
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-white font-bold text-lg">
+                    {game.assists}
+                  </div>
+                  <div className="text-white/70 text-sm">
+                    Assistências
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className="text-white font-bold text-lg">
+                    {game.position}
+                  </div>
+                  <div className="text-white/70 text-sm">
+                    Posição
+                  </div>
+                </div>
+                
+                <div className="text-center">
+                  <div className={`font-bold text-lg ${
+                    game.status === 'Finalizado'
+                      ? game.result === 'Vitória'
+                        ? 'text-green-400'
+                        : game.result === 'Empate'
+                        ? 'text-yellow-400'
+                        : 'text-red-400'
+                      : 'text-blue-400'
+                  }`}>
+                    {game.result}
+                  </div>
+                  <div className="text-white/70 text-sm">
+                    Resultado
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  // Função para renderizar a seção ativa
+  const renderActiveSection = () => {
+    switch (activeSection) {
+      case "status":
+        return <StatusSection />;
+      case "meus-jogos":
+        return <MyGamesSection />;
+      default:
+        return <StatusSection />;
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row">
@@ -239,15 +582,19 @@ const PageProfile = () => {
         <nav className="space-y-2 sm:space-y-3 lg:space-y-4">
           {navigationItems.map((item, index) => {
             const Icon = item.icon;
-            const isActive = item.path === "/profile";
+            const isActive = item.section ? activeSection === item.section : false;
             return (
               <button
                 key={index}
-                onClick={() =>
-                  item.label === "Treino"
-                    ? handleTrainingClick()
-                    : navigate(item.path)
-                }
+                onClick={() => {
+                  if (item.label === "Treino") {
+                    handleTrainingClick();
+                  } else if (item.section) {
+                    handleSectionChange(item.section);
+                  } else {
+                    navigate(item.path);
+                  }
+                }}
                 className={`w-full flex items-center gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-colors text-left ${
                   isActive
                     ? "bg-white/10 text-white"
@@ -275,165 +622,7 @@ const PageProfile = () => {
       </div>
 
       <div className="flex-1 p-4 sm:p-6 lg:p-8">
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-4 sm:mb-6">
-            Status da Jogadora
-          </h1>
-
-          <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
-            <div className="flex-1">
-              <ChartTooltipDefault />
-            </div>
-
-            <div className="w-full lg:w-80 grid grid-cols-2 gap-3 sm:gap-4">
-              {playerStats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="bg-white/10 backdrop-blur-sm rounded-lg sm:rounded-xl p-3 sm:p-4 text-center border border-white/20"
-                >
-                  <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-bold text-white mb-1">
-                    {stat.value}
-                  </div>
-                  <div className="text-xs sm:text-sm text-white/70">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {user?.isJogadora && (
-          <div className="mb-6 sm:mb-8">
-            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
-              Dados da Jogadora
-            </h2>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/20">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Nome Completo
-                  </label>
-                  <p className="text-white font-medium">{user.nome}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Email
-                  </label>
-                  <p className="text-white">{user.email}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Telefone
-                  </label>
-                  <p className="text-white">{user.telefone}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Documento
-                  </label>
-                  <p className="text-white">
-                    {user.tipoDocumento}: {user.documento}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Data de Nascimento
-                  </label>
-                  <p className="text-white">
-                    {user.dataNascimento
-                      ? new Date(user.dataNascimento).toLocaleDateString(
-                          "pt-BR"
-                        )
-                      : "-"}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Posição
-                  </label>
-                  <p className="text-white">{user.posicao}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Altura
-                  </label>
-                  <p className="text-white">{user.altura}cm</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Peso
-                  </label>
-                  <p className="text-white">{user.peso}kg</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Nível de Experiência
-                  </label>
-                  <p className="text-white">{user.experiencia}</p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Cidade
-                  </label>
-                  <p className="text-white">
-                    {user.cidade}, {user.estado}
-                  </p>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-white/70">
-                    Clube Atual
-                  </label>
-                  <p className="text-white">
-                    {user.clubeAtual || "Não informado"}
-                  </p>
-                </div>
-
-                {user.observacoes && (
-                  <div className="space-y-2 md:col-span-2 lg:col-span-3">
-                    <label className="text-sm font-medium text-white/70">
-                      Observações
-                    </label>
-                    <p className="text-white">{user.observacoes}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-4">
-            Estatísticas do Campeonato
-          </h2>
-
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-            {championshipStats.map((stat, index) => (
-              <div
-                key={index}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg sm:rounded-xl p-4 sm:p-6 text-center flex-1 shadow-lg"
-              >
-                <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-2">
-                  {stat.value}
-                </div>
-                <div className="text-white/70 text-sm sm:text-base">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {renderActiveSection()}
       </div>
     </div>
   );
