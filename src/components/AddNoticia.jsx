@@ -2,31 +2,26 @@ import React, { useState } from 'react';
 import Botao from './ui/Botao';
 
 const FormularioNoticias = () => {
-  // Estados para armazenar os valores do formulário
   const [nomeVideo, setNomeVideo] = useState('');
   const [descricaoVideo, setDescricaoVideo] = useState('');
   const [materia, setMateria] = useState('');
-  const [imagem, setImagem] = useState(null); // Para armazenar o arquivo ou URL da imagem
+  const [imagem, setImagem] = useState(null);
 
-  // Funções de manipulação para o submit do formulário e o upload de imagem (simuladas)
   const handleSubmit = (e, acao) => {
     e.preventDefault();
     const dadosNoticia = {
       nomeVideo,
       descricaoVideo,
       materia,
-      imagem: imagem ? imagem.name : 'Nenhuma imagem selecionada', // Exemplo de como usar a informação
-      acao // 'postar' ou 'agendar'
+      imagem: imagem ? imagem.name : 'Nenhuma imagem selecionada',
+      acao
     };
 
     console.log(`Ação: ${acao}`, dadosNoticia);
     alert(`Notícia pronta para ${acao}! Veja o console para os dados.`);
-
-    // Aqui você faria a chamada à API ou lógica de estado global
   };
 
   const handleImagemChange = (e) => {
-    // Armazena o objeto File no estado
     if (e.target.files && e.target.files[0]) {
       setImagem(e.target.files[0]);
     }
@@ -37,11 +32,8 @@ const FormularioNoticias = () => {
       <h2 className="text-2xl font-bold text-white border-b pb-2 mb-4">Adicionar Nova Notícia</h2>
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-        {/* Seção Principal: Nome, Descrição e Imagem */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Coluna Esquerda: Nome e Descrição */}
           <div className="md:col-span-2 space-y-4">
-            {/* Input Nome do Vídeo */}
             <div>
               <label htmlFor="nomeVideo" className="block text-sm font-medium text-white">
                 Nome do Vídeo / Título da Notícia
@@ -57,7 +49,6 @@ const FormularioNoticias = () => {
               />
             </div>
 
-            {/* Textarea Descrição do Vídeo */}
             <div>
               <label htmlFor="descricaoVideo" className="block text-sm font-medium text-white">
                 Descrição Curta
@@ -74,7 +65,6 @@ const FormularioNoticias = () => {
             </div>
           </div>
 
-          {/* Coluna Direita (Imagem) */}
           <div className="md:col-span-1 flex flex-col items-center justify-start border p-4 rounded-md bg-gray-50">
             <label htmlFor="imagemUpload" className="block text-sm font-medium text-gray-700 mb-2">
               Imagem / Thumbnail
@@ -99,7 +89,6 @@ const FormularioNoticias = () => {
           </div>
         </div>
 
-        {/* Campo para a Matéria (abaixo de tudo) */}
         <div>
           <label htmlFor="materia" className="block text-sm font-medium text-white">
             Conteúdo Completo da Matéria
@@ -115,7 +104,6 @@ const FormularioNoticias = () => {
           />
         </div>
 
-        {/* Botões de Ação */}
         <div className="flex justify-end space-x-4 pt-4 border-t border-white">
           <Botao
             onClick={(e) => handleSubmit(e, 'agendar')}

@@ -18,9 +18,8 @@ const PageProfile = () => {
   const [profileImage, setProfileImage] = useState(() => {
     return localStorage.getItem("profileImage") || null;
   });
-  const [activeSection, setActiveSection] = useState("status"); // Novo estado para controlar seção ativa
+  const [activeSection, setActiveSection] = useState("status");
   const fileInputRef = useRef(null);
-  // ...existing code... (map removed from this page)
   const mapContainerRef = useRef(null);
 
   const handleImageUpload = (event) => {
@@ -67,8 +66,6 @@ const PageProfile = () => {
       reader.readAsDataURL(file);
     }
   };
-
-  // map logic removed from this page — moved to a dedicated component
 
   const handleAvatarClick = () => {
     fileInputRef.current?.click();
@@ -193,7 +190,6 @@ const PageProfile = () => {
     { label: "Defesas", value: "3" },
   ];
 
-  // Componente para seção de Status
   const StatusSection = () => (
     <>
       <div className="mb-6 sm:mb-8">
@@ -358,9 +354,7 @@ const PageProfile = () => {
     </>
   );
 
-  // Componente para seção Meus Jogos
   const MyGamesSection = () => {
-    // Dados simulados de jogos
     const myGames = [
       {
         id: 1,
@@ -520,7 +514,6 @@ const PageProfile = () => {
     );
   };
 
-  // Função para renderizar a seção ativa
   const renderActiveSection = () => {
     switch (activeSection) {
       case "status":

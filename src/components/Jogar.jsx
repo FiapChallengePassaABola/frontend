@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PiCourtBasketballBold } from "react-icons/pi";
 import { TbPlayFootball } from "react-icons/tb";
 import Swal from "sweetalert2";
@@ -7,12 +7,17 @@ import { userServiceRealtime } from "../services/userServiceRealtime";
 import InscricaoClube from "./InscricaoClube";
 import InscricaoJogadora from "./InscricaoJogadora";
 import Titulos from "./Titulos";
-import MapNominatim from "../components/MapNominatim";
 
-function Jogar() {
+function Jogar({ onFormStateChange }) {
   const { isAuthenticated, user } = useAuth();
   const [showInscricaoClube, setShowInscricaoClube] = useState(false);
   const [showInscricaoJogadora, setShowInscricaoJogadora] = useState(false);
+
+  useEffect(() => {
+    if (onFormStateChange) {
+      onFormStateChange(showInscricaoClube || showInscricaoJogadora);
+    }
+  }, [showInscricaoClube, showInscricaoJogadora, onFormStateChange]);
 
   const handleInscricaoClube = () => {
     if (!isAuthenticated) {
