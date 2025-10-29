@@ -105,6 +105,12 @@ html {
   .xl\:h-16 {
     height: 3.5rem !important;
   }
+  .xl\:mt-16 {
+    margin-top: 3rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 4.5rem !important;
+  }
 }
 
 @media (max-width: 1600px) {
@@ -155,6 +161,12 @@ html {
   .xl\:h-16 {
     height: 3.25rem !important;
   }
+  .xl\:mt-16 {
+    margin-top: 2.5rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 4rem !important;
+  }
 }
 
 @media (max-width: 1366px) {
@@ -204,6 +216,15 @@ html {
   }
   .xl\:h-16 {
     height: 3rem !important;
+  }
+  .xl\:mt-16 {
+    margin-top: 2rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 3.5rem !important;
+  }
+  .lg\:mb-20 {
+    margin-bottom: 3rem !important;
   }
 }
 

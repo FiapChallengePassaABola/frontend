@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Footer from "../components/Footer";
+import HeaderBar from "../components/HeaderBar";
 import Jogar from "../components/Jogar";
 import MapNominatim from "../components/MapNominatim";
-import Navbar from "../components/NavbarProfessional";
 
 function PageJogar() {
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <div className="min-h-screen flex flex-col pt-24 sm:pt-28">
+      <HeaderBar />
       <div className="flex-1">
         <Jogar onFormStateChange={setIsFormOpen} />
         {!isFormOpen && (

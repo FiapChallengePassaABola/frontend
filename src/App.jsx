@@ -10,6 +10,7 @@ import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
 import PageRegister from "./pages/PageRegister";
+import PageTime from "./pages/PageTime";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
+            <Route path="/time/:id" element={<PageTime />} />
           </Routes>
         </Router>
       </AuthProvider>

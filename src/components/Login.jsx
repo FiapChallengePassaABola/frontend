@@ -139,8 +139,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="p-4 sm:p-6">
+    <div className="min-h-screen flex flex-col pt-24 sm:pt-28">
+      <header className="fixed top-0 left-0 w-full z-50 p-4 sm:p-6 bg-transparent backdrop-blur-md">
         <button 
           onClick={() => navigate('/')}
           className="text-white text-lg sm:text-xl lg:text-2xl hover:text-gray-300 transition-colors flex items-center gap-2"
