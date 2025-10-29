@@ -16,8 +16,8 @@ function ChampionshipRoute() {
           width: "80%",
           height: "100%",
           flexDirection: "column",
+          justifyContent: "space-around",
           alignItems: "center",
-          gap: 4,
         }}
       >
         <Box
