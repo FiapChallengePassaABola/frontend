@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import Botao from './Botao';
+import React, { useState } from "react";
+import Botao from "./Botao";
 
 const FormularioNoticias = () => {
   // Estados para armazenar os valores do formulário
-  const [nomeVideo, setNomeVideo] = useState('');
-  const [descricaoVideo, setDescricaoVideo] = useState('');
-  const [materia, setMateria] = useState('');
+  const [nomeVideo, setNomeVideo] = useState("");
+  const [descricaoVideo, setDescricaoVideo] = useState("");
+  const [materia, setMateria] = useState("");
   const [imagem, setImagem] = useState(null); // Para armazenar o arquivo ou URL da imagem
 
   // Funções de manipulação para o submit do formulário e o upload de imagem (simuladas)
@@ -15,8 +15,8 @@ const FormularioNoticias = () => {
       nomeVideo,
       descricaoVideo,
       materia,
-      imagem: imagem ? imagem.name : 'Nenhuma imagem selecionada', // Exemplo de como usar a informação
-      acao // 'postar' ou 'agendar'
+      imagem: imagem ? imagem.name : "Nenhuma imagem selecionada", // Exemplo de como usar a informação
+      acao, // 'postar' ou 'agendar'
     };
 
     console.log(`Ação: ${acao}`, dadosNoticia);
@@ -34,7 +34,9 @@ const FormularioNoticias = () => {
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-gradient-to-b from-[#13654F] to-[#25896E] rounded-xl shadow-lg space-y-4">
-      <h2 className="text-2xl font-bold text-white border-b pb-2 mb-4">Adicionar Nova Notícia</h2>
+      <h2 className="text-2xl font-bold text-white border-b pb-2 mb-4">
+        Adicionar Nova Notícia
+      </h2>
 
       <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
         {/* Seção Principal: Nome, Descrição e Imagem */}
@@ -43,7 +45,10 @@ const FormularioNoticias = () => {
           <div className="md:col-span-2 space-y-4">
             {/* Input Nome do Vídeo */}
             <div>
-              <label htmlFor="nomeVideo" className="block text-sm font-medium text-white">
+              <label
+                htmlFor="nomeVideo"
+                className="block text-sm font-medium text-white"
+              >
                 Nome do Vídeo / Título da Notícia
               </label>
               <input
@@ -59,7 +64,10 @@ const FormularioNoticias = () => {
 
             {/* Textarea Descrição do Vídeo */}
             <div>
-              <label htmlFor="descricaoVideo" className="block text-sm font-medium text-white">
+              <label
+                htmlFor="descricaoVideo"
+                className="block text-sm font-medium text-white"
+              >
                 Descrição Curta
               </label>
               <textarea
@@ -76,7 +84,10 @@ const FormularioNoticias = () => {
 
           {/* Coluna Direita (Imagem) */}
           <div className="md:col-span-1 flex flex-col items-center justify-start border p-4 rounded-md bg-gray-50">
-            <label htmlFor="imagemUpload" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="imagemUpload"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Imagem / Thumbnail
             </label>
             <input
@@ -101,7 +112,10 @@ const FormularioNoticias = () => {
 
         {/* Campo para a Matéria (abaixo de tudo) */}
         <div>
-          <label htmlFor="materia" className="block text-sm font-medium text-white">
+          <label
+            htmlFor="materia"
+            className="block text-sm font-medium text-white"
+          >
             Conteúdo Completo da Matéria
           </label>
           <textarea
@@ -118,13 +132,13 @@ const FormularioNoticias = () => {
         {/* Botões de Ação */}
         <div className="flex justify-end space-x-4 pt-4 border-t border-white">
           <Botao
-            onClick={(e) => handleSubmit(e, 'agendar')}
+            onClick={(e) => handleSubmit(e, "agendar")}
             className="px-4 py-2 text-sm font-medium "
           >
             Agendar Publicação
           </Botao>
           <Botao
-            onClick={(e) => handleSubmit(e, 'postar')}
+            onClick={(e) => handleSubmit(e, "postar")}
             className="px-4 py-2 text-sm font-medium"
           >
             Postar Agora
