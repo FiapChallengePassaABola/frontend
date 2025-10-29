@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 
-const PlasmaBackground = () => {
+
+const PlasmaBackground = ({color1, color2, color3, color4}) => {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
 
@@ -29,10 +30,10 @@ const PlasmaBackground = () => {
         width / 2, height / 2, Math.max(width, height) / 2
       );
       
-      gradient.addColorStop(0, '#2A052A');
-      gradient.addColorStop(0.3, '#3F0A3F');
-      gradient.addColorStop(0.6, '#1F051F');
-      gradient.addColorStop(1, '#0F030F');
+      gradient.addColorStop(0, color1);
+      gradient.addColorStop(0.3, color2);
+      gradient.addColorStop(0.6, color3);
+      gradient.addColorStop(1, color4);
       
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);

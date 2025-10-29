@@ -1,13 +1,17 @@
-import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../config/firebase';
+import {
+  signOut as firebaseSignOut,
+  onAuthStateChanged,
+  signInWithPopup,
+} from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
+import { auth, googleProvider } from "../config/firebase";
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
@@ -25,9 +29,9 @@ export const AuthProvider = ({ children }) => {
           email: firebaseUser.email,
           displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL,
-          emailVerified: firebaseUser.emailVerified
+          emailVerified: firebaseUser.emailVerified,
         };
-        
+
         setIsAuthenticated(true);
         setUser(userData);
       } else {
@@ -46,9 +50,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = (profileData) => {
-    setUser(prev => ({
+    setUser((prev) => ({
       ...prev,
-      ...profileData
+      ...profileData,
     }));
   };
 
@@ -56,7 +60,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await firebaseSignOut(auth);
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
+      console.error("Erro ao fazer logout:", error);
       throw error;
     }
   };
@@ -67,12 +71,12 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     login,
     logout,
-    updateUserProfile
+    updateUserProfile,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider
+  
+  value={value}>{children}
+  
+  </AuthContext.Provider>;
 };

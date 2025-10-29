@@ -1,9 +1,10 @@
-import '../App.css'
+
 
 function Botao({children, onClick, className = ''}) {
     const base =
     ` relative z-10 overflow-hidden border-2 rounded-2xl font-semibold w-fit cursor-pointer transition border-white
       duration-300 ease-in-out group border-white text-white pl-3 pr-3 hover:border-[#8B5DE4]
+      text-[1vmax]
     `;
     const estilo = `${base} ${className}`;
         
