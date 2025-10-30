@@ -5,6 +5,7 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import quadraIconPng from "./assets/quadraIcon.png";
 import playerIconPng from "./assets/playerIcon.png";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { color } from "motion";
 
 function ChampionshipRoute() {

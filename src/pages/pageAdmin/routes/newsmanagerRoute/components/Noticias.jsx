@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import GaugeMUI from "./GaugeMUI";
 import Botao from "../components/Botao";
 import src1 from "../assets/Foto1.jpg";
 import src2 from "../assets/Foto2.jpg";
@@ -28,7 +29,7 @@ export default function NoticiasComponent() {
             flexDirection: "column",
             backgroundColor: "#1b1b1a",
             gap: 2,
-            padding: 4,
+            padding: 2,
             borderRadius: 4,
           }}
         >
@@ -39,10 +40,16 @@ export default function NoticiasComponent() {
             }}
           >
             <Box flex={1}>
-              <img src={src1} alt="img_de_passa_bola" />
+              <img
+                src={src1}
+                style={{
+                  borderRadius: ".6rem",
+                }}
+                alt="img_de_passa_bola"
+              />
             </Box>
             <Box flex={1}>
-              <img src={src2} alt="img_de_passa_bola" />
+              <GaugeMUI></GaugeMUI>
             </Box>
           </Box>
           <Typography
