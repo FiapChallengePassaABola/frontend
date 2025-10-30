@@ -6,6 +6,9 @@ import {
   Typography,
   IconButton,
 } from "@mui/material";
+import src1 from "./assets/Foto1.jpg";
+import src2 from "./assets/Foto2.jpg";
+
 import CustomButton from "./components/CustomButton";
 import NoticiasComponent from "./components/Noticias";
 import InstagramIcon from "@mui/icons-material/Instagram";
@@ -40,8 +43,24 @@ function NewsManagerRoute() {
             gap: 3, // Adicionando um espaço entre as colunas
           }}
         >
-          <NoticiasComponent />
-          <NoticiasComponent />
+          <NoticiasComponent
+            text="Verdão Detona"
+            description='"A Seleção Brasileira de futebol feminino demonstrou força e
+            eficiência ao golear a Coreia do Sul por 5 a 0 em amistoso
+            preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
+            poderoso e um desempenho coletivo elevado..."'
+            imageSrc={src1}
+            OnClickParams={() => {}}
+          />
+          <NoticiasComponent
+            text="Verdão Detona"
+            description='"A Seleção Brasileira de futebol feminino demonstrou força e
+            eficiência ao golear a Coreia do Sul por 5 a 0 em amistoso
+            preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
+            poderoso e um desempenho coletivo elevado..."'
+            imageSrc={src2}
+            OnClickParams={() => {}}
+          />
         </Box>
         <Box
           sx={{
