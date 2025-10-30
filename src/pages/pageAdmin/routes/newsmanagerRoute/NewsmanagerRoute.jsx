@@ -50,6 +50,8 @@ function NewsManagerRoute() {
             preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
             poderoso e um desempenho coletivo elevado..."'
             imageSrc={src1}
+            valueParam ={ 50}
+            maxParam ={80}
             OnClickParams={() => {}}
           />
           <NoticiasComponent
@@ -59,6 +61,8 @@ function NewsManagerRoute() {
             preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
             poderoso e um desempenho coletivo elevado..."'
             imageSrc={src2}
+            valueParam ={ 20}
+            maxParam ={40}
             OnClickParams={() => {}}
           />
         </Box>

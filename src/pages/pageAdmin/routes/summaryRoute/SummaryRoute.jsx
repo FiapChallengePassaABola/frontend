@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Paper, Typography, Button, styled } from "@mui/material";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
-import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
+import { PieChart, pieClasses } from "@mui/x-charts/PieChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { chartsGridClasses } from "@mui/x-charts/ChartsGrid";
 import { useEffect } from "react";
@@ -16,12 +16,15 @@ const Card = styled(Paper)({
 });
 
 const settings = {
-  value: 50,
+  value: 60,
+  valueMax: 150,
   startAngle: -90,
   endAngle: 90,
 };
 
 export default function SummaryPage() {
+  const value = settings["value"]
+  const valueMax = settings["valueMax"]
   useEffect(() => {
     const chartElement = document.querySelector(".MuiCharts-root");
     if (chartElement) {
@@ -74,8 +77,8 @@ export default function SummaryPage() {
               width: "90%",
               height: "80%",
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems:"center"
             }}
           >
             <Gauge
@@ -108,10 +111,22 @@ export default function SummaryPage() {
                 color: "white",
                 width: "85%",
                 height: "85%",
+                position: "relative"
               })}
-              text={`Meta:`}
+              text={`Meta: ${valueMax}`}
               textDecoration={"white"}
+
             />
+            <Typography
+            sx={{
+              position:"absolute",
+              top: "26%",
+              fontSize: "2.2vmax",
+              fontWeight:"700"
+            }}
+            >
+              {value}
+            </Typography>
           </Card>
         </Box>
         <Box
@@ -144,9 +159,9 @@ export default function SummaryPage() {
               series={[
                 {
                   data: [
-                    { id: 0, value: 10, color: "#FFFF" },
-                    { id: 1, value: 15, color: "#A17AED" },
-                    { id: 2, value: 20, color: "#CEA3E6" },
+                    { id: 0, value: 10, color: "#FFFF", label: "Ainda não feitos" },
+                    { id: 1, value: 15, color: "#A17AED", label: "Concluidos" },
+                    { id: 2, value: 20, color: "#CEA3E6", label: "Em andamento" },
                   ],
                   innerRadius: 50,
                   outerRadius: 100,
@@ -154,6 +169,13 @@ export default function SummaryPage() {
               ]}
               width={200}
               height={200}
+              sx={{
+              [`& .MuiChartsLegend-label`]: {
+                stroke:"white",
+                color:"white"
+              },
+                
+              }}
             />
           </Card>
         </Box>
@@ -227,7 +249,6 @@ export default function SummaryPage() {
             {
               data: [2, 5.5, 2, 8.5, 1.5, 5],
               area: true,
-              label: "string",
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}

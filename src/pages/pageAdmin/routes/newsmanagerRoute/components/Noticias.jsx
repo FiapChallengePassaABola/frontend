@@ -8,6 +8,8 @@ export default function NoticiasComponent({
   description,
   imageSrc,
   OnClickParams,
+  valueParam,
+  maxParam,
 }) {
   return (
     <>
@@ -53,7 +55,10 @@ export default function NoticiasComponent({
               />
             </Box>
             <Box flex={1}>
-              <GaugeMUI></GaugeMUI>
+              <GaugeMUI
+              value={valueParam}
+              max={maxParam}
+              ></GaugeMUI>
             </Box>
           </Box>
           <Typography

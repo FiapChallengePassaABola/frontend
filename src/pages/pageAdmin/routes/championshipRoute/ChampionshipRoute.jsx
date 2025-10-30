@@ -6,11 +6,16 @@ import EditSquareIcon from "@mui/icons-material/EditSquare";
 import quadraIconPng from "./assets/quadraIcon.png";
 import playerIconPng from "./assets/playerIcon.png";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import  useButton  from "./store/state"; 
+import { useEffect } from "react";
 import { color } from "motion";
 
 function ChampionshipRoute() {
+  const { componentState, componentChange } = useButton();
+
   return (
     <>
+    {componentState ? (
       <Container
         sx={{
           display: "flex",
@@ -95,6 +100,8 @@ function ChampionshipRoute() {
                   }}
                 />
               }
+              onClickParams={() => 
+                componentChange(!componentState)}
               text="Quadra"
             />
             <CustomButton
@@ -225,6 +232,16 @@ function ChampionshipRoute() {
           </Box>
         </Box>
       </Container>
+    ):(
+      <Container
+      sx={{
+        backgroundColor: "gray",
+        width: "100%",
+        height:"100%"
+      }}
+      ></Container>
+    )}
+
     </>
   );
 }

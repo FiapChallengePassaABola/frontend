@@ -7,6 +7,7 @@ export default function CustomButton({
   buttonText,
   sxBox = {},
   sxIconButton = {},
+  onClickParams,
 }) {
   return (
     <Box
@@ -34,6 +35,7 @@ export default function CustomButton({
           },
           ...sxIconButton,
         }}
+        onClick={onClickParams}
       >
         {icon}
         {buttonText}
