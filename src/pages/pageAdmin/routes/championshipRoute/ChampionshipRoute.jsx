@@ -9,6 +9,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import  useButton  from "./store/state"; 
 import { useEffect } from "react";
 import { color } from "motion";
+import SignInRoute from "./components/signInChampionship/signInRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
@@ -235,11 +236,17 @@ function ChampionshipRoute() {
     ):(
       <Container
       sx={{
-        backgroundColor: "gray",
-        width: "100%",
-        height:"100%"
+        display:"flex",
+        flexDirection:"column",
+        justifyContent:"center",
+        alignItems:"center",
+        height:"100%",
+        width:"100%"
       }}
-      ></Container>
+      >
+        <SignInRoute></SignInRoute>
+
+      </Container>
     )}
 
     </>

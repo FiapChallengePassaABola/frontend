@@ -1,11 +1,20 @@
-import { Box } from "@mui/material"
+import { Box, Container, Typography } from "@mui/material"
 
 function SignInRoute(){
     return(
         <>
-        <Box>
-            
-        </Box>
+        <Container
+        sx={{
+            width:"90%",
+            height:"90%",
+            display:"flex",
+            flexDirection:"row",
+            gap: 4
+        }}
+        >
+        
+
+        </Container>
         </>
     )
 }
