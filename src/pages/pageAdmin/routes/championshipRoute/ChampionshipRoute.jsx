@@ -101,8 +101,7 @@ function ChampionshipRoute() {
               <CustomButton
                 icon={
                   <img
-                    src={quadraIconPng}
-                    alt="Quadra"
+                    src={playerIconPng}
                     style={{
                       width: "5vw",
                       height: "5vw",
@@ -115,12 +114,12 @@ function ChampionshipRoute() {
                   />
                 }
                 onClickParams={() => componentChange(!componentState)}
-                text="Quadra"
+                text="Jogadores"
               />
               <CustomButton
                 icon={
                   <img
-                    src={playerIconPng}
+                    src={quadraIconPng}
                     alt="Jogador"
                     style={{
                       width: "5vw",
@@ -133,7 +132,7 @@ function ChampionshipRoute() {
                     }}
                   />
                 }
-                text="Jogador"
+                text="Times"
               />
             </Box>
           </Box>

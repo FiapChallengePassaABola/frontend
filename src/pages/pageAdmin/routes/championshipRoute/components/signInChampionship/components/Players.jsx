@@ -62,9 +62,6 @@ function Players() {
             mb: 2,
             color: "white",
             boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-            ":&hover": {
-              scale: 1.02,
-            },
           }}
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>

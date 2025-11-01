@@ -189,7 +189,19 @@ export function ChartTooltipDefault() {
           </button>
         </div>
 
-        <div className="w-full h-[300px]">{renderChart()}</div>
+        <div className="w-full h-[300px] flex flex-col items-center justify-center">
+          {renderChart()}
+          <span
+            style={{
+              color: "white",
+              marginTop: 12,
+              fontWeight: 600,
+              fontSize: "1rem",
+            }}
+          >
+            {chartConfig[active]?.label || "Desempenho"}
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
