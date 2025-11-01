@@ -5,245 +5,250 @@ import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
 import quadraIconPng from "./assets/quadraIcon.png";
 import playerIconPng from "./assets/playerIcon.png";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import useButton from "./store/state";
-import { useEffect } from "react";
-import { color } from "motion";
 import SignInRoute from "./components/signInChampionship/signInRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
 
+  if (componentState == "players") {
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <SignInRoute></SignInRoute>
+      </Container>
+    );
+  } else if (componentState == "teams") {
+    return <div></div>;
+  } else if (componentState == "createCS") {
+    return <div></div>;
+  } else if (componentState == "editCS") {
+    return <div></div>;
+  }
   return (
-    <>
-      {componentState ? (
-        <Container
+    <Container
+      sx={{
+        display: "flex",
+        width: "80%",
+        height: "100%",
+        flexDirection: "column",
+        justifyContent: "space-around",
+        alignItems: "center",
+      }}
+    >
+      <Box
+        sx={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+          gap: 3,
+        }}
+      >
+        <Box
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
             width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+            padding: 0,
+            margin: 0,
           }}
         >
-          <SignInRoute></SignInRoute>
-        </Container>
-      ) : (
-        <Container
+          <Box
+            sx={{
+              width: "35%",
+              height: "0.2px",
+              backgroundColor: "gray",
+            }}
+          ></Box>
+          <Typography
+            sx={{
+              fontSize: "2vmax",
+              fontWeight: "700",
+              color: "white",
+            }}
+          >
+            Ver Inscrições
+          </Typography>
+          <Box
+            sx={{
+              width: "35%",
+              height: "0.2px",
+              backgroundColor: "gray",
+            }}
+          ></Box>
+        </Box>
+        <Box
           sx={{
+            width: "100%",
             display: "flex",
-            width: "80%",
-            height: "100%",
-            flexDirection: "column",
+            flexDirection: "row",
             justifyContent: "space-around",
             alignItems: "center",
+            padding: 2,
+            backgroundColor: "#157259",
+            borderRadius: 2.6,
+          }}
+        >
+          <CustomButton
+            icon={
+              <img
+                src={playerIconPng}
+                style={{
+                  width: "5vw",
+                  height: "5vw",
+                  maxWidth: "88px",
+                  maxHeight: "88px",
+                  minWidth: "32px",
+                  minHeight: "32px",
+                  objectFit: "contain",
+                }}
+              />
+            }
+            onClickParams={() => componentChange("players")}
+            text="Jogadores"
+          />
+          <CustomButton
+            icon={
+              <img
+                src={quadraIconPng}
+                alt="Jogador"
+                style={{
+                  width: "5vw",
+                  height: "5vw",
+                  maxWidth: "88px",
+                  maxHeight: "88px",
+                  minWidth: "32px",
+                  minHeight: "32px",
+                  objectFit: "contain",
+                }}
+              />
+            }
+            text="Times"
+            onClickParams={() => componentChange("teams")}
+          />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          width: "100%",
+          gap: 5,
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+            padding: 0,
+            margin: 0,
           }}
         >
           <Box
             sx={{
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              gap: 3,
+              width: "35%",
+              height: "0.2px",
+              backgroundColor: "gray",
+            }}
+          ></Box>
+          <Typography
+            sx={{
+              fontSize: "2vmax",
+              fontWeight: "700",
+              color: "white",
             }}
           >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 3,
-                padding: 0,
-                margin: 0,
-              }}
-            >
-              <Box
-                sx={{
-                  width: "35%",
-                  height: "0.2px",
-                  backgroundColor: "gray",
-                }}
-              ></Box>
-              <Typography
-                sx={{
-                  fontSize: "2vmax",
-                  fontWeight: "700",
-                  color: "white",
-                }}
-              >
-                Ver Inscrições
-              </Typography>
-              <Box
-                sx={{
-                  width: "35%",
-                  height: "0.2px",
-                  backgroundColor: "gray",
-                }}
-              ></Box>
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "center",
-                padding: 2,
-                backgroundColor: "#157259",
-                borderRadius: 2.6,
-              }}
-            >
-              <CustomButton
-                icon={
-                  <img
-                    src={playerIconPng}
-                    style={{
-                      width: "5vw",
-                      height: "5vw",
-                      maxWidth: "88px",
-                      maxHeight: "88px",
-                      minWidth: "32px",
-                      minHeight: "32px",
-                      objectFit: "contain",
-                    }}
-                  />
-                }
-                onClickParams={() => componentChange(!componentState)}
-                text="Jogadores"
-              />
-              <CustomButton
-                icon={
-                  <img
-                    src={quadraIconPng}
-                    alt="Jogador"
-                    style={{
-                      width: "5vw",
-                      height: "5vw",
-                      maxWidth: "88px",
-                      maxHeight: "88px",
-                      minWidth: "32px",
-                      minHeight: "32px",
-                      objectFit: "contain",
-                    }}
-                  />
-                }
-                text="Times"
-              />
-            </Box>
-          </Box>
+            Campeonatos
+          </Typography>
           <Box
             sx={{
-              width: "100%",
-              gap: 5,
-              justifyContent: "center",
-              display: "flex",
-              flexDirection: "column",
+              width: "35%",
+              height: "0.2px",
+              backgroundColor: "gray",
             }}
-          >
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 3,
-                padding: 0,
-                margin: 0,
-              }}
-            >
-              <Box
+          ></Box>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            gap: 3,
+          }}
+        >
+          <CustomButton
+            sxBox={{
+              backgroundColor: "#157259",
+              borderRadius: 2.6,
+              width: "18%",
+            }}
+            sxIconButton={{
+              border: "0px",
+              width: "100%",
+              height: "100%",
+              fontSize: "1.2vmax",
+              textTransform: "none",
+              color: "white",
+              gap: 2,
+              padding: 1,
+            }}
+            icon={
+              <AddCircleOutlineIcon
                 sx={{
-                  width: "35%",
-                  height: "0.2px",
-                  backgroundColor: "gray",
+                  color: "white",
+                  fontSize: "3.8vmax",
                 }}
-              ></Box>
-              <Typography
+              />
+            }
+            buttonText={"Criar Novo Campeonato"}
+            onClickParams={() => componentChange("createCS")}
+          ></CustomButton>
+          <CustomButton
+            sxBox={{
+              backgroundColor: "#157259",
+              borderRadius: 2.6,
+              width: "18%",
+            }}
+            sxIconButton={{
+              border: "0px",
+              width: "100%",
+              height: "100%",
+              fontSize: "1.2vmax",
+              textTransform: "none",
+              color: "white",
+              gap: 1,
+              padding: 1,
+            }}
+            icon={
+              <EditSquareIcon
                 sx={{
-                  fontSize: "2vmax",
-                  fontWeight: "700",
                   color: "white",
+                  fontSize: "3.8vmax",
                 }}
-              >
-                Campeonatos
-              </Typography>
-              <Box
-                sx={{
-                  width: "35%",
-                  height: "0.2px",
-                  backgroundColor: "gray",
-                }}
-              ></Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "center",
-                gap: 3,
-              }}
-            >
-              <CustomButton
-                sxBox={{
-                  backgroundColor: "#157259",
-                  borderRadius: 2.6,
-                  width: "18%",
-                }}
-                sxIconButton={{
-                  border: "0px",
-                  width: "100%",
-                  height: "100%",
-                  fontSize: "1.2vmax",
-                  textTransform: "none",
-                  color: "white",
-                  gap: 2,
-                  padding: 1,
-                }}
-                icon={
-                  <AddCircleOutlineIcon
-                    sx={{
-                      color: "white",
-                      fontSize: "3.8vmax",
-                    }}
-                  />
-                }
-                buttonText={"Criar Novo Campeonato"}
-              ></CustomButton>
-              <CustomButton
-                sxBox={{
-                  backgroundColor: "#157259",
-                  borderRadius: 2.6,
-                  width: "18%",
-                }}
-                sxIconButton={{
-                  border: "0px",
-                  width: "100%",
-                  height: "100%",
-                  fontSize: "1.2vmax",
-                  textTransform: "none",
-                  color: "white",
-                  gap: 1,
-                  padding: 1,
-                }}
-                icon={
-                  <EditSquareIcon
-                    sx={{
-                      color: "white",
-                      fontSize: "3.8vmax",
-                    }}
-                  />
-                }
-                buttonText={"Editar Campeonatos"}
-              ></CustomButton>
-            </Box>
-          </Box>
-        </Container>
-      )}
-    </>
+              />
+            }
+            buttonText={"Editar Campeonatos"}
+            onClickParams={() => componentChange("editCS")}
+          ></CustomButton>
+        </Box>
+      </Box>
+    </Container>
   );
 }
 
