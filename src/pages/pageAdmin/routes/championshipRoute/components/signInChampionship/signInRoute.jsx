@@ -74,7 +74,6 @@ function SignInRoute() {
     >
       {/* Lado esquerdo */}
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1.5 }}>
-        <SearchBar />
         <Players />
       </Box>
 

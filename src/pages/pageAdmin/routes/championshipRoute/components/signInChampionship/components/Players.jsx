@@ -2,9 +2,11 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ref, get } from "firebase/database";
 import { realtimeDb } from "../../../../../../../config/firebase";
+import SearchBar from "./SearchBar";
 
 function Players() {
   const [jogadorasList, setJogadorasList] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
     const fetchJogadoras = async () => {
@@ -12,10 +14,12 @@ function Players() {
         const dbRef = ref(realtimeDb, "jogadoras");
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
-          const data = snapshot.val();
-          setJogadorasList(Object.values(data));
+          const data = Object.values(snapshot.val());
+          setJogadorasList(data);
+          setFilteredList(data);
         } else {
           setJogadorasList([]);
+          setFilteredList([]);
         }
       } catch (error) {
         console.error("Erro ao buscar jogadoras:", error);
@@ -37,66 +41,71 @@ function Players() {
     return idade;
   };
 
+  const handleSearch = (query) => {
+    if (!query.trim()) {
+      setFilteredList(jogadorasList);
+      return;
+    }
+    const filtered = jogadorasList.filter((j) =>
+      j.nome.toLowerCase().includes(query)
+    );
+    setFilteredList(filtered);
+  };
+
   return (
     <Box
-      sx={{
-        p: 3,
-        backgroundColor: "#157259",
-        borderRadius: 2,
-        height: "100%",
-        overflowY: "auto",
-        ":&hover": {
-          scale: 1.2,
-        },
-      }}
+      sx={{ display: "flex", flexDirection: "column", gap: 2, height: "100%" }}
     >
-      {jogadorasList.map((jogadora, idx) => (
-        <Box
-          key={idx}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderRadius: 2,
-            p: 2,
-            mb: 2,
-            color: "white",
-            boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            {/* Avatar */}
-            <Box
-              sx={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                backgroundColor: "#81C784", // cinza claro/avatar
-              }}
-            />
-            {/* Info da jogadora */}
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
-                {jogadora.nome}{" "}
-                <span style={{ fontWeight: "normal" }}>{jogadora.posicao}</span>
-              </Typography>
-              <Typography variant="body2">
-                Idade: {calcularIdade(jogadora.dataNascimento)} &nbsp;&nbsp;
-                Telefone: {jogadora.telefone}
-              </Typography>
-            </Box>
-          </Box>
+      <SearchBar onSearch={handleSearch} />
 
-          {/* Status */}
+      <Box
+        sx={{
+          p: 3,
+          backgroundColor: "#157259",
+          borderRadius: 2,
+          height: "100%",
+          overflowY: "auto",
+        }}
+      >
+        {filteredList.map((jogadora, idx) => (
           <Box
+            key={idx}
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 1,
+              justifyContent: "space-between",
+              borderRadius: 2,
+              p: 2,
+              mb: 2,
+              color: "white",
+              boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
             }}
-          ></Box>
-        </Box>
-      ))}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box
+                sx={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  backgroundColor: "#81C784",
+                }}
+              />
+              <Box>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold" }}>
+                  {jogadora.nome}{" "}
+                  <span style={{ fontWeight: "normal" }}>
+                    {jogadora.posicao}
+                  </span>
+                </Typography>
+                <Typography variant="body2">
+                  Idade: {calcularIdade(jogadora.dataNascimento)} &nbsp;&nbsp;
+                  Telefone: {jogadora.telefone}
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
     </Box>
   );
 }
