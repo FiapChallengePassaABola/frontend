@@ -1,7 +1,9 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ref, get } from "firebase/database";
 import { realtimeDb } from "../../../../../../../config/firebase";
+import CloseIcon from "@mui/icons-material/Close";
+import DoneIcon from "@mui/icons-material/Done";
 import SearchBar from "./SearchBar";
 
 function Players() {
@@ -101,6 +103,56 @@ function Players() {
                   Idade: {calcularIdade(jogadora.dataNascimento)} &nbsp;&nbsp;
                   Telefone: {jogadora.telefone}
                 </Typography>
+                <Typography variant="body2">
+                  Status:{" "}
+                  <span
+                    style={{
+                      color:
+                        jogadora.status === "aprovada"
+                          ? "lightgreen"
+                          : jogadora.status === "rejeitada"
+                          ? "red"
+                          : "yellow",
+                    }}
+                  >
+                    {jogadora.status?.toUpperCase() || "None"}
+                  </span>
+                </Typography>
+                <Box>
+                  <IconButton
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "1.2vmax",
+                      border: "none",
+                      borderRadius: 0,
+                    }}
+                  >
+                    Rejeitar
+                    <CloseIcon
+                      sx={{
+                        color: "#af3636",
+                      }}
+                    />
+                  </IconButton>
+                  <IconButton
+                    color="white"
+                    sx={{
+                      textTransform: "none",
+                      color: "white",
+                      fontSize: "1.2vmax",
+                      border: "none",
+                      borderRadius: 0,
+                    }}
+                  >
+                    Aprovar
+                    <DoneIcon
+                      sx={{
+                        color: "#3af011",
+                      }}
+                    />
+                  </IconButton>
+                </Box>
               </Box>
             </Box>
           </Box>

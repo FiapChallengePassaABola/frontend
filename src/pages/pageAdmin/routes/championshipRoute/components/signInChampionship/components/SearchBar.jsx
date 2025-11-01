@@ -16,12 +16,6 @@ function SearchBar({ onSearch }) {
 
   return (
     <>
-      <Botao
-        children="Voltar"
-        className="p-1"
-        onClick={() => componentChange(false)}
-      />
-
       <Box
         sx={{
           backgroundColor: "#157259",
@@ -34,6 +28,12 @@ function SearchBar({ onSearch }) {
           justifyContent: "center",
         }}
       >
+        <Botao
+          children="Voltar"
+          className="p-1"
+          onClick={() => componentChange(false)}
+        />
+
         <InputCustom
           text="Buscar"
           className="w-full"
