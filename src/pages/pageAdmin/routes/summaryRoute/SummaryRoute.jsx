@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Paper, Typography, Button, styled } from "@mui/material";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
-import { PieChart, pieArcLabelClasses } from "@mui/x-charts/PieChart";
-import { LineChart,  } from "@mui/x-charts/LineChart";
-import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
+import { PieChart, pieClasses } from "@mui/x-charts/PieChart";
+import { LineChart } from "@mui/x-charts/LineChart";
+import { chartsGridClasses } from "@mui/x-charts/ChartsGrid";
 import { useEffect } from "react";
 import Botao from "./components/Botao";
 
@@ -17,18 +17,20 @@ const Card = styled(Paper)({
 
 const settings = {
   value: 60,
+  valueMax: 150,
   startAngle: -90,
   endAngle: 90,
 };
 
 export default function SummaryPage() {
-  
-    useEffect(() => {
-    const chartElement = document.querySelector('.MuiCharts-root');
+  const value = settings["value"]
+  const valueMax = settings["valueMax"]
+  useEffect(() => {
+    const chartElement = document.querySelector(".MuiCharts-root");
     if (chartElement) {
-      chartElement.style.setProperty('--MuiCharts-axis-line', '#fff');
-      chartElement.style.setProperty('--MuiCharts-axis-tickLabel', '#fff');
-      chartElement.style.setProperty('--MuiCharts-grid-line', '#fff');
+      chartElement.style.setProperty("--MuiCharts-axis-line", "#fff");
+      chartElement.style.setProperty("--MuiCharts-axis-tickLabel", "#fff");
+      chartElement.style.setProperty("--MuiCharts-grid-line", "#fff");
     }
   }, []);
   return (
@@ -75,8 +77,8 @@ export default function SummaryPage() {
               width: "90%",
               height: "80%",
               display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
+              flexDirection: "column",
+              alignItems:"center"
             }}
           >
             <Gauge
@@ -109,10 +111,22 @@ export default function SummaryPage() {
                 color: "white",
                 width: "85%",
                 height: "85%",
+                position: "relative"
               })}
-              text={`Meta:`}
+              text={`Meta: ${valueMax}`}
               textDecoration={"white"}
+
             />
+            <Typography
+            sx={{
+              position:"absolute",
+              top: "26%",
+              fontSize: "2.2vmax",
+              fontWeight:"700"
+            }}
+            >
+              {value}
+            </Typography>
           </Card>
         </Box>
         <Box
@@ -145,9 +159,9 @@ export default function SummaryPage() {
               series={[
                 {
                   data: [
-                    { id: 0, value: 10, color: "#FFFF" },
-                    { id: 1, value: 15, color: "#A17AED" },
-                    { id: 2, value: 20, color: "#CEA3E6" },
+                    { id: 0, value: 10, color: "#FFFF", label: "Ainda não feitos" },
+                    { id: 1, value: 15, color: "#A17AED", label: "Concluidos" },
+                    { id: 2, value: 20, color: "#CEA3E6", label: "Em andamento" },
                   ],
                   innerRadius: 50,
                   outerRadius: 100,
@@ -155,6 +169,13 @@ export default function SummaryPage() {
               ]}
               width={200}
               height={200}
+              sx={{
+              [`& .MuiChartsLegend-label`]: {
+                stroke:"white",
+                color:"white"
+              },
+                
+              }}
             />
           </Card>
         </Box>
@@ -199,66 +220,54 @@ export default function SummaryPage() {
           flex: "1",
           width: "80%",
           display: "flex",
-          flexDirection:"row",
+          flexDirection: "row",
           justifyContent: "center",
-          alignItems:"center",
+          alignItems: "center",
           backgroundColor: "#157259",
           margin: 0,
           padding: 0,
         }}
       >
-       
-       <LineChart
+        <LineChart
           sx={{
-              [`& .${chartsGridClasses.line}`]: {
-                stroke: "#fff", // cor das linhas do grid
-                    },
-              "& .MuiChartsAxis-line": {
-                stroke: "#fff", // cor das linhas do eixo
-              },
-              "& .MuiChartsAxis-tickLabel": {
-                fill: "#fff", // cor dos textos dos ticks
-              },
-              "& .MuiChartsAxis-tick": {
-                stroke: "#fff",
-              },
+            [`& .${chartsGridClasses.line}`]: {
+              stroke: "#fff !important", // grid branco
+            },
+            "& .MuiChartsAxis-line": {
+              stroke: "#fff !important", // eixo branco
+            },
+            "& .MuiChartsAxis-tickLabel": {
+              fill: "#fff !important", // texto branco
+            },
+            "& .MuiChartsAxis-tick": {
+              stroke: "#fff !important",
+            },
           }}
-          xAxis={[{
-             data: [1, 2, 3, 5, 8, 10],
-           }]}
+          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
           grid={{ vertical: true, horizontal: true }}
-
           series={[
             {
               data: [2, 5.5, 2, 8.5, 1.5, 5],
               area: true,
-              label: "string",
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}
           height={240}
           width={850}
-        /> 
-        
+        />
       </Box>
       <Box
-      sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent:"space-between",
-        minWidth:"80%",
-        minHeight:"5%",
-        gap: 4,
-      }}
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          minWidth: "80%",
+          minHeight: "5%",
+          gap: 4,
+        }}
       >
-        <Botao
-          children={"Export Data"}
-        >
-        </Botao>
-        <Botao
-          children={"AI Summary"}
-
-        ></Botao>
+        <Botao children={"Export Data"}></Botao>
+        <Botao children={"AI Summary"}></Botao>
       </Box>
     </Box>
   );

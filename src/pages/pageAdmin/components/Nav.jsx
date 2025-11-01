@@ -39,9 +39,9 @@ export default function NavBar() {
       <Avatar
         sx={{
           bgcolor: "#3b0a45",
-          width: { xs: 60, sm: 130, md: 180 },
-          height: { xs: 60, sm: 130, md: 180 },
-          fontSize: { xs: 28, sm: 26, md: 52 },
+          width: { xs: 60, sm: 130, md: 150 },
+          height: { xs: 60, sm: 130, md: 150 },
+          fontSize: { xs: 22, sm: 20, md: 46 },
           fontWeight: "bold",
           mb: 4,
         }}

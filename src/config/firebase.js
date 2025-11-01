@@ -5,13 +5,13 @@ import { getDatabase } from "firebase/database";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBuiO5_CTxlV1QLy_8Iz01p7hImqX5uNgs",
-  authDomain: "passabola1espi.firebaseapp.com",
-  projectId: "passabola1espi",
-  storageBucket: "passabola1espi.firebasestorage.app",
-  messagingSenderId: "509252638601",
-  appId: "1:509252638601:web:e04821f523ae505c6fb358",
-  measurementId: "G-P3SDNS67F0",
+  apiKey: "AIzaSyAjYgQipDJ5Sn1efoDV1b2iTdBDRn2Jwi4",
+  authDomain: "passabola-9654f.firebaseapp.com",
+  databaseURL: "https://passabola-9654f-default-rtdb.firebaseio.com",
+  projectId: "passabola-9654f",
+  storageBucket: "passabola-9654f.firebasestorage.app",
+  messagingSenderId: "544206042913",
+  appId: "1:544206042913:web:d0fb00b57ba638dc12b060",
 };
 
 const app = initializeApp(firebaseConfig);
