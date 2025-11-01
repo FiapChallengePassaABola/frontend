@@ -23,8 +23,8 @@ const settings = {
 };
 
 export default function SummaryPage() {
-  const value = settings["value"]
-  const valueMax = settings["valueMax"]
+  const value = settings["value"];
+  const valueMax = settings["valueMax"];
   useEffect(() => {
     const chartElement = document.querySelector(".MuiCharts-root");
     if (chartElement) {
@@ -78,7 +78,7 @@ export default function SummaryPage() {
               height: "80%",
               display: "flex",
               flexDirection: "column",
-              alignItems:"center"
+              alignItems: "center",
             }}
           >
             <Gauge
@@ -111,19 +111,18 @@ export default function SummaryPage() {
                 color: "white",
                 width: "85%",
                 height: "85%",
-                position: "relative"
+                position: "relative",
               })}
               text={`Meta: ${valueMax}`}
               textDecoration={"white"}
-
             />
             <Typography
-            sx={{
-              position:"absolute",
-              top: "26%",
-              fontSize: "2.2vmax",
-              fontWeight:"700"
-            }}
+              sx={{
+                position: "absolute",
+                top: "26%",
+                fontSize: "2.2vmax",
+                fontWeight: "700",
+              }}
             >
               {value}
             </Typography>
@@ -159,9 +158,19 @@ export default function SummaryPage() {
               series={[
                 {
                   data: [
-                    { id: 0, value: 10, color: "#FFFF", label: "Ainda não feitos" },
+                    {
+                      id: 0,
+                      value: 10,
+                      color: "#FFFF",
+                      label: "Ainda não feitos",
+                    },
                     { id: 1, value: 15, color: "#A17AED", label: "Concluidos" },
-                    { id: 2, value: 20, color: "#CEA3E6", label: "Em andamento" },
+                    {
+                      id: 2,
+                      value: 20,
+                      color: "#CEA3E6",
+                      label: "Em andamento",
+                    },
                   ],
                   innerRadius: 50,
                   outerRadius: 100,
@@ -170,11 +179,10 @@ export default function SummaryPage() {
               width={200}
               height={200}
               sx={{
-              [`& .MuiChartsLegend-label`]: {
-                stroke:"white",
-                color:"white"
-              },
-                
+                [`& .MuiChartsLegend-label`]: {
+                  stroke: "white",
+                  color: "white",
+                },
               }}
             />
           </Card>
