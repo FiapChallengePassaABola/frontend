@@ -1,8 +1,10 @@
 import { Box, Typography, Button, styled, Avatar } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function NavBar() {
+  const navigate = useNavigate();
   const ButtonNavBar = styled(NavLink)(() => ({
     color: "#fff",
     justifyContent: "flex-start",
@@ -28,10 +30,11 @@ export default function NavBar() {
         backgroundColor: "#101110",
         width: { xs: "60vw", sm: "30vw", md: "20vw" },
         minHeight: "100vh",
-        maxHeight:"100%",
+        maxHeight: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        // justifyContent: "space-around",
         paddingTop: "2rem",
         color: "white",
       }}
@@ -68,6 +71,18 @@ export default function NavBar() {
           Copa Passa a Bola
         </ButtonNavBar>
       </Box>
+      <Button
+        onClick={() => {
+          navigate("/");
+        }}
+        sx={{
+          marginTop: "auto",
+          marginBottom: "2rem",
+          color: "white",
+        }}
+      >
+        Voltar
+      </Button>
     </Box>
   );
 }
