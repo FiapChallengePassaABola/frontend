@@ -42,6 +42,7 @@ function App() {
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </Router>
       </AuthProvider>
