@@ -7,6 +7,7 @@ import quadraIconPng from "./assets/quadraIcon.png";
 import playerIconPng from "./assets/playerIcon.png";
 import useButton from "./store/state";
 import SignInRoute from "./components/signInChampionship/signInRoute";
+import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
@@ -29,7 +30,7 @@ function ChampionshipRoute() {
   } else if (componentState == "createCS") {
     return <div></div>;
   } else if (componentState == "editCS") {
-    return <div></div>;
+    return <EditChampionShipRoute></EditChampionShipRoute>;
   }
   return (
     <Container
