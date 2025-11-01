@@ -15,7 +15,6 @@ import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
 import PageRegister from "./pages/PageRegister";
-import PageTime from "./pages/PageTime";
 import AdminPage from "./pages/pageAdmin";
 import "./index.css";
 import SummaryPage from "./pages/pageAdmin/routes/summaryRoute/SummaryRoute";
@@ -42,7 +41,11 @@ function App() {
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
-            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/admin" element={<AdminPage />}>
+              <Route path="summary" index element={<SummaryPage />} />
+              <Route path="championship" element={<ChampionshipRoute />} />
+              <Route path="news_manager" element={<NewsManagerRoute />} />
+            </Route>
           </Routes>
         </Router>
       </AuthProvider>
