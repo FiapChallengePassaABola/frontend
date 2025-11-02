@@ -5,6 +5,7 @@ import {
   update,
   get,
   child,
+  set,
 } from "firebase/database";
 
 import { realtimeDb } from "../../../../../../config/firebase";
@@ -41,3 +42,16 @@ export const AddIt = async (clubeId, csId) => {
     console.error("Erro ao aprovar clube:", error);
   }
 };
+
+export function criarCampeonato(novoCampeonato) {
+  // novoCampeonato é um objeto com dados do campeonato
+  const campeonatoRef = ref(realtimeDb, "campeonatos/" + novoCampeonato.id);
+
+  set(campeonatoRef, novoCampeonato)
+    .then(() => {
+      console.log("Campeonato criado com sucesso!");
+    })
+    .catch((error) => {
+      console.error("Erro ao criar campeonato:", error);
+    });
+}

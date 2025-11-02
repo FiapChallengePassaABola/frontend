@@ -14,12 +14,15 @@ import { useState, useEffect } from "react";
 import useButton from "../../store/state";
 import { getTeams } from "./store";
 import AddIcon from "@mui/icons-material/Add";
+import { criarCampeonato } from "./store";
+import { v4 as uuidv4 } from "uuid"; // Importa a função para gerar UUID
 
 function CreateChampionShip() {
   const [championShipTeams, setChampionShipTeams] = useState([]);
   const { componentChange } = useButton();
   const [valor, setValor] = useState("4Times");
   const [formState, setFormState] = useState({
+    id: uuidv4(),
     nome: "",
     tipo: "4Times",
     clubes: Array(4).fill(null),
@@ -46,6 +49,10 @@ function CreateChampionShip() {
             ]
           : formState.clubes,
     });
+  };
+
+  const handleCreateChampionShip = () => {
+    criarCampeonato(formState);
   };
 
   const handleAddClub = (clubeName) => {
@@ -371,7 +378,7 @@ function CreateChampionShip() {
             color: "white",
             fontWeight: "bold",
           }}
-          onClick={() => alert("Adicionar time ao chaveamento!")}
+          onClick={() => handleCreateChampionShip()}
         >
           Adicionar Campeonato
         </Button>
