@@ -9,6 +9,7 @@ import useButton from "./store/state";
 import SignInRoute from "./components/signInChampionship/signInRoute";
 import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
 import TeamsRoute from "./components/teamsChampionship/TeamsRoute";
+import TesteRoute from "./components/teste/TesteRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
@@ -32,6 +33,8 @@ function ChampionshipRoute() {
     return <div></div>;
   } else if (componentState == "editCS") {
     return <EditChampionShipRoute></EditChampionShipRoute>;
+  } else if (componentState == "teste") {
+    return <TesteRoute/>;
   }
   return (
     <Container
@@ -247,6 +250,35 @@ function ChampionshipRoute() {
             }
             buttonText={"Editar Campeonatos"}
             onClickParams={() => componentChange("editCS")}
+          ></CustomButton>
+
+          {/* -------------- */}
+          <CustomButton
+            sxBox={{
+              backgroundColor: "#157259",
+              borderRadius: 2.6,
+              width: "18%",
+            }}
+            sxIconButton={{
+              border: "0px",
+              width: "100%",
+              height: "100%",
+              fontSize: "1.2vmax",
+              textTransform: "none",
+              color: "white",
+              gap: 1,
+              padding: 1,
+            }}
+            icon={
+              <EditSquareIcon
+                sx={{
+                  color: "white",
+                  fontSize: "3.8vmax",
+                }}
+              />
+            }
+            buttonText={"Teste"}
+            onClickParams={() => componentChange("teste")}
           ></CustomButton>
         </Box>
       </Box>
