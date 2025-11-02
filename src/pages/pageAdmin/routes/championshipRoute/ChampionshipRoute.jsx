@@ -8,6 +8,7 @@ import playerIconPng from "./assets/playerIcon.png";
 import useButton from "./store/state";
 import SignInRoute from "./components/signInChampionship/signInRoute";
 import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
+import TeamsRoute from "./components/teamsChampionship/TeamsRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
@@ -26,7 +27,7 @@ function ChampionshipRoute() {
       </Container>
     );
   } else if (componentState == "teams") {
-    return <div></div>;
+    return <TeamsRoute></TeamsRoute>;
   } else if (componentState == "createCS") {
     return <div></div>;
   } else if (componentState == "editCS") {
