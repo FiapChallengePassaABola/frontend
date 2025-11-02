@@ -5,17 +5,14 @@ function EditChampionshipRoute() {
   const [name, setName] = useState("Campeonato Teste");
   const [isEditing, setIsEditing] = useState(false);
 
-  // Ativa o modo de edição
   function handleEdit() {
     setIsEditing(true);
   }
 
-  // Sai do modo de edição (tanto blur quanto Enter)
   function finishEditing() {
     setIsEditing(false);
   }
 
-  // Detecta a tecla pressionada
   function handleKeyDown(e) {
     if (e.key === "Enter") {
       finishEditing();
@@ -24,7 +21,6 @@ function EditChampionshipRoute() {
 
   return (
     <div>
-      {/* Title */}
       <div className="flex flex-col items-center m-10">
         <div className="flex items-center justify-center">
           {isEditing ? (
