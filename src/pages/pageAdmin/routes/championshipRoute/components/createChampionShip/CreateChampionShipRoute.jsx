@@ -359,7 +359,7 @@ function CreateChampionShip() {
           sx={{ width: "100%" }}
         >
           {formState.clubes.map((clube, index) => (
-            <Times key={index} name={clube} />
+            <Times key={index} name={clube} cor={"transparent"} />
           ))}
         </Box>
 
