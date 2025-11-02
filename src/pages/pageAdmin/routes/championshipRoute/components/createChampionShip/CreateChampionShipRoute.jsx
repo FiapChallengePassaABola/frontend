@@ -7,24 +7,90 @@ import {
   MenuItem,
   Divider,
   Button,
+  IconButton,
+  TextField,
 } from "@mui/material";
+import { useState, useEffect } from "react";
 import useButton from "../../store/state";
+import { getTeams } from "./store";
+import AddIcon from "@mui/icons-material/Add";
+
 function CreateChampionShip() {
+  const [championShipTeams, setChampionShipTeams] = useState([]);
   const { componentChange } = useButton();
+  const [valor, setValor] = useState("4Times");
+  const [formState, setFormState] = useState({
+    nome: "",
+    tipo: "4Times",
+    clubes: Array(4).fill(null),
+  });
+
+  const handleChange = (event) => {
+    const tipo = event.target.value;
+    setValor(tipo);
+    setFormState({
+      ...formState,
+      tipo,
+      clubes:
+        tipo === "4Times"
+          ? formState.clubes.slice(0, 4)
+          : tipo === "8Times"
+          ? [
+              ...formState.clubes.slice(0, 8),
+              ...Array(8 - formState.clubes.slice(0, 8).length).fill(null),
+            ]
+          : tipo === "16Times"
+          ? [
+              ...formState.clubes.slice(0, 16),
+              ...Array(16 - formState.clubes.slice(0, 16).length).fill(null),
+            ]
+          : formState.clubes,
+    });
+  };
+
+  const handleAddClub = (clubeName) => {
+    // preenche o primeiro slot vazio
+    const emptyIndex = formState.clubes.findIndex((c) => !c);
+    if (emptyIndex !== -1) {
+      const newClubes = [...formState.clubes];
+      newClubes[emptyIndex] = clubeName;
+      setFormState({ ...formState, clubes: newClubes });
+
+      // remove o clube da lista de clubes disponíveis
+      setChampionShipTeams((prev) =>
+        prev.filter((clube) => clube.nome !== clubeName)
+      );
+    }
+  };
+
+  const [refresh, setRefresh] = useState(0);
+
+  useEffect(() => {
+    const fetchTeams = async () => {
+      try {
+        const dbRef = await getTeams();
+        if (dbRef) {
+          const clubesArr = Object.entries(dbRef).map(([key, value]) => ({
+            ...value,
+            id: key,
+          }));
+          setChampionShipTeams(clubesArr);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar clubes:", error);
+      }
+    };
+    fetchTeams();
+  }, [refresh]);
+
   return (
     <Box
       display="flex"
       flexDirection="column"
-      sx={{
-        minHeight: "100vh",
-        width: "100%",
-        overflowX: "hidden",
-      }}
+      sx={{ minHeight: "100vh", width: "100%", overflowX: "hidden" }}
     >
       <Button
-        onClick={() => {
-          componentChange(false);
-        }}
+        onClick={() => componentChange(false)}
         sx={{
           display: "flex",
           alignItems: "start",
@@ -38,28 +104,47 @@ function CreateChampionShip() {
       >
         Voltar
       </Button>
-      {/* Cabeçalho */}
+
       <Box
         display="flex"
         flexDirection="column"
         alignItems="center"
         padding={4}
       >
-        {/* Título */}
         <Box
           display="flex"
           flexDirection="row"
           justifyContent={"space-between"}
-          sx={{
-            width: "88%",
-          }}
+          sx={{ width: "88%" }}
+          gap={8}
         >
-          <Typography variant="h3" fontWeight="bold" color="#D9D9D9">
-            Campeonato Passa a bola
-          </Typography>
+          <TextField
+            value={formState.nome}
+            onChange={(e) =>
+              setFormState({ ...formState, nome: e.target.value })
+            }
+            placeholder="Nome do Campeonato"
+            variant="standard" // você pode usar "outlined" ou "filled" se preferir
+            InputProps={{
+              style: {
+                color: "#D9D9D9",
+                fontWeight: "bold",
+                fontSize: "2rem", // equivalente a um h3
+              },
+            }}
+            sx={{
+              width: "100%",
+              "& .MuiInput-underline:before": {
+                borderBottom: "1px solid #828282",
+              },
+              "& .MuiInput-underline:after": {
+                borderBottom: "2px solid #288F73",
+              },
+            }}
+          />
           <Box display="flex" justifyContent="flex-end">
             <Select
-              defaultValue="4Times"
+              value={valor}
               sx={{
                 background: "#288F73",
                 color: "white",
@@ -68,6 +153,7 @@ function CreateChampionShip() {
                 borderRadius: "12px",
                 "& .MuiSvgIcon-root": { color: "white" },
               }}
+              onChange={handleChange}
             >
               <MenuItem value="4Times">4 Times</MenuItem>
               <MenuItem value="8Times">8 Times</MenuItem>
@@ -76,17 +162,8 @@ function CreateChampionShip() {
             </Select>
           </Box>
         </Box>
-        <Divider
-          sx={{
-            width: "100%",
-            backgroundColor: "#828282",
-            height: "1px",
-            mt: 2,
-          }}
-        />
-        {/* Select do formato */}
       </Box>
-      {/* Divs de Times e Jogadoras Livres acima */}
+
       <Box
         sx={{
           display: "flex",
@@ -96,8 +173,8 @@ function CreateChampionShip() {
           flexWrap: "wrap",
         }}
       >
+        {/* Lista de Times */}
         <Box sx={{ flex: 1, minWidth: 280, mr: 2 }}>
-          {/* Times */}
           <Box
             sx={{
               background: "#157259",
@@ -107,6 +184,8 @@ function CreateChampionShip() {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
+              maxHeight: "50vh",
+              overflowY: "scroll",
             }}
           >
             <Typography
@@ -127,11 +206,60 @@ function CreateChampionShip() {
                 mb: 2,
               }}
             />
-            {/* ...pode adicionar lista de times aqui... */}
+            {championShipTeams.length === 0 && (
+              <Typography sx={{ color: "white", mt: 2 }}>
+                Nenhum clube encontrado.
+              </Typography>
+            )}
+            {championShipTeams.map((clube) => {
+              if (clube.status === "aprovado" || clube.status === "aprovada") {
+                return (
+                  <Box
+                    key={clube.id}
+                    sx={{
+                      background: "#1e8c6b",
+                      borderRadius: 2,
+                      p: 2,
+                      mb: 1,
+                      width: "100%",
+                      color: "white",
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Box display={"flex"} flexDirection={"column"}>
+                      <Typography
+                        sx={{
+                          textTransform: "none",
+                          fontSize: "1.1rem",
+                          fontWeight: 0,
+                        }}
+                      >
+                        <span style={{ fontWeight: "bold" }}>Nome: </span>
+                        {clube.nome}
+                      </Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: "1rem" }}>
+                      {clube.estado}
+                    </Typography>
+                    <Typography sx={{ fontSize: "1rem" }}>
+                      {clube.telefone}
+                    </Typography>
+                    <IconButton onClick={() => handleAddClub(clube.nome)}>
+                      <AddIcon sx={{ color: "white" }} />
+                    </IconButton>
+                  </Box>
+                );
+              }
+              return null;
+            })}
           </Box>
         </Box>
+
+        {/* Jogadoras Livres */}
         <Box sx={{ flex: 1, minWidth: 280, ml: 2 }}>
-          {/* Jogadoras Livres */}
           <Box
             sx={{
               background: "#157259",
@@ -161,11 +289,56 @@ function CreateChampionShip() {
                 mb: 2,
               }}
             />
-            {/* ...pode adicionar lista de jogadoras aqui... */}
+            {(() => {
+              const jogadorasAprovadas = championShipTeams
+                .flatMap((clube) =>
+                  clube.jogadoras
+                    ? Object.entries(clube.jogadoras).map(([id, jogadora]) => ({
+                        ...jogadora,
+                        id,
+                      }))
+                    : []
+                )
+                .filter(
+                  (j) => j.status === "aprovada" || j.status === "aprovado"
+                );
+              if (jogadorasAprovadas.length === 0) {
+                return (
+                  <Typography sx={{ color: "white", mt: 2 }}>
+                    Nenhuma jogadora aprovada encontrada.
+                  </Typography>
+                );
+              }
+              return jogadorasAprovadas.map((j) => (
+                <Box
+                  key={j.id}
+                  sx={{
+                    background: "#1e8c6b",
+                    borderRadius: 2,
+                    p: 1,
+                    mb: 1,
+                    width: "100%",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography sx={{ fontWeight: "bold", fontSize: "1rem" }}>
+                    {j.nome}
+                  </Typography>
+                  <Typography sx={{ fontSize: "0.9rem" }}>
+                    {j.posicao}
+                  </Typography>
+                </Box>
+              ));
+            })()}
           </Box>
         </Box>
       </Box>
-      {/* Chaveamento ocupa toda a tela */}
+
+      {/* Chaveamento */}
       <Box
         sx={{
           flex: 1,
@@ -177,42 +350,34 @@ function CreateChampionShip() {
           gap: 4,
         }}
       >
-        {/* Linha 1: 4 times */}
         <Box
           display="flex"
           flexDirection="row"
           justifyContent="center"
+          flexWrap="wrap"
           gap={2}
           sx={{ width: "100%" }}
         >
-          <Times name="Time 1" points="3" />
-          <Times name="Time 2" points="6" />
-          <Times name="Time 3" points="6" />
-          <Times name="Time 4" points="6" />
+          {formState.clubes.map((clube, index) => (
+            <Times key={index} name={clube} />
+          ))}
         </Box>
-        {/* Linha 2: 2 times */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
-          gap={2}
-          sx={{ width: "100%" }}
+
+        <Button
+          variant="contained"
+          sx={{
+            mt: 2,
+            background: "#288F73",
+            color: "white",
+            fontWeight: "bold",
+          }}
+          onClick={() => alert("Adicionar time ao chaveamento!")}
         >
-          <Times name="Time 5" points="9" />
-          <Times name="Time 6" points="12" />
-        </Box>
-        {/* Linha 3: 1 time centralizado */}
-        <Box
-          display="flex"
-          flexDirection="row"
-          justifyContent="center"
-          gap={2}
-          sx={{ width: "100%" }}
-        >
-          <Times name="Time Campeão" points="15" />
-        </Box>
+          Adicionar Campeonato
+        </Button>
       </Box>
     </Box>
   );
 }
+
 export default CreateChampionShip;

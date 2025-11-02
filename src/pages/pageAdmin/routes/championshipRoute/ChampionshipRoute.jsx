@@ -10,10 +10,8 @@ import SignInRoute from "./components/signInChampionship/signInRoute";
 import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
 import TeamsRoute from "./components/teamsChampionship/TeamsRoute";
 import CreateChampionShip from "./components/createChampionShip/CreateChampionShipRoute";
-
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
-
   if (componentState == "players") {
     return (
       <Container
