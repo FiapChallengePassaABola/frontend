@@ -1,53 +1,20 @@
-import { useState } from "react";
-import edit from "../../assets/edit.png";
+import Titulo from "./components/Titulo";
+
 
 function EditChampionshipRoute() {
-  const [name, setName] = useState("Campeonato Teste");
-  const [isEditing, setIsEditing] = useState(false);
-
-  function handleEdit() {
-    setIsEditing(true);
-  }
-
-  function finishEditing() {
-    setIsEditing(false);
-  }
-
-  function handleKeyDown(e) {
-    if (e.key === "Enter") {
-      finishEditing();
-    }
-  }
 
   return (
     <div>
-      <div className="flex flex-col items-center m-10">
-        <div className="flex items-center justify-center">
-          {isEditing ? (
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              onBlur={finishEditing}
-              onKeyDown={handleKeyDown}
-              autoFocus
-              className="text-5xl font-bold text-[#D9D9D9] bg-transparent border-b border-gray-500 focus:outline-none px-8 text-center"
-            />
-          ) : (
-            <h1 className="text-5xl font-bold text-[#D9D9D9] px-8">
-              {name}
-            </h1>
-          )}
-
-          <button onClick={handleEdit}>
-            <img src={edit} alt="edit" className="w-[2.8rem]" />
-          </button>
+      {/* Titulo */}
+      <Titulo/>
+      {/* Adcionar Times */}
+      <div className="flex flex-col items-center justify-center">
+        <h1 className="text-white text-3xl">Adcionar Times</h1>
+        <div className="flex items-center my-5">
+          <input type="text" className="bg-white rounded-sm p-3 text-2xl"/>
+          <button className="bg-[#288F73] text-4xl w-10 h-10 text-white rounded-md flex items-center justify-center ml-4">+</button>
         </div>
-        <div className="bg-[#828282] w-1/2 h-[1px] mt-7"></div>
       </div>
-
-
-
 
     </div>
   );
