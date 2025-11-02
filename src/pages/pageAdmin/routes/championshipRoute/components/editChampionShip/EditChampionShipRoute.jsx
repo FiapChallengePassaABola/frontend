@@ -1,54 +1,113 @@
-import edit from "../../assets/edit.png"
+import edit from "../../assets/edit.png";
 import Times from "./components/Times";
-
+import {
+  Box,
+  Typography,
+  Select,
+  MenuItem,
+  Divider,
+  Button,
+} from "@mui/material";
+import useButton from "../../store/state";
 function EditChampionShipRoute() {
-  return(
-  <div>
-    <div className="flex flex-col items-center justify-center m-12">
-    <div className="flex">
-      {/* Title */}
-      <div className="flex items-center justify-center">
-        <h1 className="text-5xl font-bold text-[#D9D9D9] px-15">Campeonato Passa a bola</h1>
-        <img src={edit} alt="edit" className="w-[2.8rem]"/>
-      </div>
+  const { componentChange } = useButton();
+  return (
+    <Box display="flex" flexDirection="column">
+      <Button
+        onClick={() => {
+          componentChange(false);
+        }}
+        sx={{
+          display: "flex",
+          alignItems: "start",
+          justifyContent: "start",
+          maxWidth: "15%",
+          color: "white",
+          fontWeight: "bold",
+          fontSize: "1rem",
+          textTransform: "none",
+        }}
+      >
+        Voltar
+      </Button>
+      {/* Cabeçalho */}
+      <Box
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        padding={4}
+        mb={2}
+      >
+        {/* Título */}
+        <Box display="flex" flexDirection="row" gap={8}>
+          <Typography variant="h3" fontWeight="bold" color="#D9D9D9">
+            Campeonato Passa a bola
+          </Typography>
 
-      {/* Select do formato */}
-      <div className="flex justify-end mx-8 absolute top-16 right-0 ">
-        <select name="formato" id="" className="bg-[#288F73] p-4 text-white text-2xl font-bold rounded-xl">
-          <option value="4Times">4 Times</option>
-          <option value="8Times">8 Times</option>
-          <option value="16Times">16 Times</option>
-          <option value="pontosCorridos">Pontos corridos</option>
-        </select>
-      </div>
-    </div>
-    <div className="bg-[#828282] w-1/2 h-[1px] mt-7 "></div>
-    </div>
-    {/* 4 Times */}
-    <div className="flex items-center justify-center h-150">
-      <div className="flex items-center justify-around w-[80%]">
-        <div>
-          <div className="flex flex-col mb-15">
-            <Times name="nome foda" points="3"/>
-            <Times name="nome foda2" points="6"/>
-          </div>
+          <Box display="flex" justifyContent="flex-end">
+            <Select
+              defaultValue="4Times"
+              sx={{
+                background: "#288F73",
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "1rem",
+                borderRadius: "12px",
+                "& .MuiSvgIcon-root": { color: "white" },
+              }}
+            >
+              <MenuItem value="4Times">4 Times</MenuItem>
+              <MenuItem value="8Times">8 Times</MenuItem>
+              <MenuItem value="16Times">16 Times</MenuItem>
+              <MenuItem value="pontosCorridos">Pontos corridos</MenuItem>
+            </Select>
+          </Box>
+        </Box>
+        <Divider
+          sx={{
+            width: "100%",
+            backgroundColor: "#828282",
+            height: "1px",
+            mt: 2,
+          }}
+        />
+        {/* Select do formato */}
+      </Box>
 
-          <div className="flex flex-col">
-            <Times name="nome foda3" points="6"/>
-            <Times name="nome foda4" points="6"/>
-          </div>
-        </div>
+      {/* 4 Times */}
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{ minHeight: "150px" }}
+      >
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-around"
+          sx={{ width: "80%" }}
+        >
+          <Box>
+            <Box display="flex" flexDirection="column" mb={4}>
+              <Times name="nome foda" points="3" />
+              <Times name="nome foda2" points="6" />
+            </Box>
+            <Box display="flex" flexDirection="column">
+              <Times name="nome foda3" points="6" />
+              <Times name="nome foda4" points="6" />
+            </Box>
+          </Box>
 
-        <div className="flex flex-col">
-          <Times name="nome foda3" points="6"/>
-          <Times name="nome foda4" points="6"/>
-        </div>
+          <Box display="flex" flexDirection="column">
+            <Times name="nome foda3" points="6" />
+            <Times name="nome foda4" points="6" />
+          </Box>
 
-        <Times name="nome foda4" points="6"/>
-      </div>
-    </div>
-  </div>
-  ) ;
+          <Times name="nome foda4" points="6" />
+        </Box>
+      </Box>
+    </Box>
+  );
 }
 
 export default EditChampionShipRoute;
