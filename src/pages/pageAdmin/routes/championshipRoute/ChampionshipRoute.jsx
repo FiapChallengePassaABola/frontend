@@ -9,6 +9,7 @@ import useButton from "./store/state";
 import SignInRoute from "./components/signInChampionship/signInRoute";
 import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
 import TeamsRoute from "./components/teamsChampionship/TeamsRoute";
+import CreateChampionShip from "./components/createChampionShip/CreateChampionShipRoute";
 
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
@@ -29,7 +30,7 @@ function ChampionshipRoute() {
   } else if (componentState == "teams") {
     return <TeamsRoute></TeamsRoute>;
   } else if (componentState == "createCS") {
-    return <div></div>;
+    return <CreateChampionShip></CreateChampionShip>;
   } else if (componentState == "editCS") {
     return <EditChampionShipRoute></EditChampionShipRoute>;
   }
