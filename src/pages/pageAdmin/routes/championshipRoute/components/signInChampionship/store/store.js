@@ -1,24 +1,33 @@
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, update } from "firebase/database";
 
 const db = getDatabase();
 
-const Reject = (jogadora) => {
-  const playersRef = ref(db, "jogadoras");
-  onValue(playersRef, (snapshot) => {
-    const data = [];
-    snapshot.forEach((childSnapshot) => {
-      const key = childSnapshot.key;
-      const jogadora = childSnapshot.val();
-      if (key == "status") {
-      }
-    });
-
-    console.log(data); // array com todos os registros
-  });
-
-  jogadora.status = "rejeitada";
+export const Reject = async (jogadoraId) => {
+  try {
+    const path = `jogadoras/${jogadoraId}`;
+    const playerRef = ref(db, path);
+    console.log(
+      "[Reject] Atualizando status para 'rejeitada' no caminho:",
+      path
+    );
+    await update(playerRef, { status: "rejeitada" });
+    console.log("Jogadora rejeitada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao rejeitar jogadora:", error);
+  }
 };
 
-const Approved = (jogadora) => {
-  jogadora.status = "approved";
+export const Approved = async (jogadoraId) => {
+  try {
+    const path = `jogadoras/${jogadoraId}`;
+    const playerRef = ref(db, path);
+    console.log(
+      "[Approved] Atualizando status para 'aprovada' no caminho:",
+      path
+    );
+    await update(playerRef, { status: "aprovada" });
+    console.log("Jogadora aprovada com sucesso!");
+  } catch (error) {
+    console.error("Erro ao aprovar jogadora:", error);
+  }
 };
