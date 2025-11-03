@@ -25,6 +25,12 @@ const settings = {
 export default function SummaryPage() {
   const value = settings["value"];
   const valueMax = settings["valueMax"];
+  const [chartDimensions, setChartDimensions] = React.useState({
+    width: 1000,
+    height: 450,
+  });
+  const chartContainerRef = React.useRef(null);
+
   useEffect(() => {
     const chartElement = document.querySelector(".MuiCharts-root");
     if (chartElement) {
@@ -32,6 +38,25 @@ export default function SummaryPage() {
       chartElement.style.setProperty("--MuiCharts-axis-tickLabel", "#fff");
       chartElement.style.setProperty("--MuiCharts-grid-line", "#fff");
     }
+  }, []);
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (chartContainerRef.current) {
+        const container = chartContainerRef.current;
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+        setChartDimensions({
+          width: Math.max(width - 40, 300), // -40 para margem
+          height: Math.max(height - 40, 200), // -40 para margem
+        });
+      }
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
+    return () => window.removeEventListener("resize", updateDimensions);
   }, []);
   return (
     <Box
@@ -222,36 +247,32 @@ export default function SummaryPage() {
         ></Box>
       </Box>
       <Box
+        ref={chartContainerRef}
         sx={{
-          width: { xs: "95%", sm: "90%", md: "80%" },
-          height: { xs: "500px", sm: "550px", md: "600px" },
+          width: "100%",
+          height: "400px",
           backgroundColor: "#157259",
           borderRadius: 2,
-          p: { xs: 1, sm: 2, md: 3 },
-          overflow: "auto",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          "& > *": {
-            minWidth: "100%",
-            minHeight: "100%",
-          },
+          mt: 3,
+          mb: 3,
         }}
       >
         <LineChart
           sx={{
             [`& .${chartsGridClasses.line}`]: {
-              stroke: "#fff !important", // grid branco
+              stroke: "#fff !important",
             },
             "& .MuiChartsAxis-line": {
-              stroke: "#fff !important", // eixo branco
+              stroke: "#fff !important",
             },
             "& .MuiChartsAxis-tickLabel": {
-              fill: "#fff !important", // texto branco
+              fill: "#fff !important",
             },
             "& .MuiChartsAxis-tick": {
               stroke: "#fff !important",
             },
+            width: "100%",
+            height: "100%",
           }}
           xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
           grid={{ vertical: true, horizontal: true }}
@@ -262,9 +283,14 @@ export default function SummaryPage() {
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}
-          height={450}
-          width={1000}
-          margin={{ left: 50, right: 50, top: 30, bottom: 50 }}
+          height={400}
+          width={1200}
+          margin={{
+            left: 60,
+            right: 60,
+            top: 40,
+            bottom: 40,
+          }}
         />
       </Box>
       <Box
