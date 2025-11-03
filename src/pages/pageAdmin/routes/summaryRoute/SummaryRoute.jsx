@@ -42,18 +42,18 @@ export default function SummaryPage() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 1,
-        padding: 0,
+        gap: { xs: 2, md: 3 },
+        padding: { xs: 1, sm: 2, md: 3 },
       }}
     >
       <Box
         sx={{
           display: "flex",
-          flexDirection: "row",
+          flexDirection: { xs: "column", md: "row" },
           justifyContent: "center",
-          width: "80%",
-          height: "42%",
-          gap: 3,
+          width: "100%",
+          maxWidth: "1200px",
+          gap: { xs: 2, md: 3 },
         }}
       >
         <Box
@@ -84,10 +84,7 @@ export default function SummaryPage() {
             <Gauge
               {...settings}
               cornerRadius="50%"
-              sx={(theme) => ({
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: 40,
-                },
+              sx={{
                 [`& .${gaugeClasses.valueArc}`]: {
                   fill: "#8B5DE4",
                 },
@@ -95,33 +92,33 @@ export default function SummaryPage() {
                   fill: "#FEFFFE",
                 },
                 [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: 40,
+                  fontSize: { xs: "24px", sm: "32px", md: "40px" },
                   fill: "#ffffff",
-                  transform: "translate(0px, -60px)",
+                  transform: "translateY(-60px)",
                 },
                 [`& .${gaugeClasses.text}`]: {
-                  fill: "#ffffff", // cor do texto adicional ("Goal")
+                  fill: "#ffffff",
                   fontWeight: 600,
-                  transform: "translate(0px, 40px)",
+                  fontSize: { xs: "16px", sm: "20px", md: "24px" },
+                  transform: "translateY(40px)",
                 },
                 "& text": {
                   fill: "#ffffff !important",
-                  fontSize: "2vmax",
                 },
-                color: "white",
-                width: "85%",
-                height: "85%",
-                position: "relative",
-              })}
+                width: { xs: "100%", sm: "90%", md: "85%" },
+                height: { xs: "200px", sm: "250px", md: "300px" },
+                margin: "auto",
+              }}
               text={`Meta: ${valueMax}`}
               textDecoration={"white"}
             />
             <Typography
               sx={{
-                position: "absolute",
-                top: "26%",
-                fontSize: "2.2vmax",
+                position: "relative",
+                top: "-50%",
+                fontSize: { xs: "1.8rem", sm: "2rem", md: "2.2rem" },
                 fontWeight: "700",
+                textAlign: "center",
               }}
             >
               {value}
@@ -149,9 +146,10 @@ export default function SummaryPage() {
             sx={{
               display: "flex",
               justifyContent: "center",
-              flexDirection: "column",
-              width: "90%",
-              height: "80%",
+              alignItems: "center",
+              width: { xs: "95%", sm: "90%" },
+              height: { xs: "250px", sm: "300px", md: "350px" },
+              position: "relative",
             }}
           >
             <PieChart
@@ -176,8 +174,8 @@ export default function SummaryPage() {
                   outerRadius: 100,
                 },
               ]}
-              width={200}
-              height={200}
+              width={300}
+              height={300}
               sx={{
                 [`& .MuiChartsLegend-label`]: {
                   stroke: "white",
@@ -225,15 +223,19 @@ export default function SummaryPage() {
       </Box>
       <Box
         sx={{
-          flex: "1",
-          width: "80%",
+          width: { xs: "95%", sm: "90%", md: "80%" },
+          height: { xs: "500px", sm: "550px", md: "600px" },
+          backgroundColor: "#157259",
+          borderRadius: 2,
+          p: { xs: 1, sm: 2, md: 3 },
+          overflow: "auto",
           display: "flex",
-          flexDirection: "row",
           justifyContent: "center",
           alignItems: "center",
-          backgroundColor: "#157259",
-          margin: 0,
-          padding: 0,
+          "& > *": {
+            minWidth: "100%",
+            minHeight: "100%",
+          },
         }}
       >
         <LineChart
@@ -260,8 +262,9 @@ export default function SummaryPage() {
               color: "rgba(177, 108, 229, 0.63)",
             },
           ]}
-          height={240}
-          width={850}
+          height={450}
+          width={1000}
+          margin={{ left: 50, right: 50, top: 30, bottom: 50 }}
         />
       </Box>
       <Box

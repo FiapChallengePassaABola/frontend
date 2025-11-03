@@ -97,32 +97,6 @@ function CreateChampionShip() {
     }
   };
 
-  const handleRemoveClub = (index) => {
-    const removedClub = formState.clubes[index];
-    const newClubes = [...formState.clubes];
-    newClubes[index] = null;
-    setFormState({ ...formState, clubes: newClubes });
-
-    // Adiciona o clube de volta à lista de clubes disponíveis
-    if (removedClub) {
-      const clube = championShipTeams.find(c => c.nome === removedClub);
-      if (!clube) {
-        // Procura o clube nos dados originais
-        getTeams().then(dbRef => {
-          if (dbRef) {
-            const clubeOriginal = Object.entries(dbRef)
-              .map(([key, value]) => ({ ...value, id: key }))
-              .find(c => c.nome === removedClub);
-            
-            if (clubeOriginal) {
-              setChampionShipTeams(prev => [...prev, clubeOriginal]);
-            }
-          }
-        });
-      }
-    }
-  };
-
   const [refresh, setRefresh] = useState(0);
 
   useEffect(() => {
@@ -427,12 +401,7 @@ function CreateChampionShip() {
           }}
         >
           {formState.clubes.map((clube, index) => (
-            <Times 
-              key={index} 
-              name={clube} 
-              cor={"transparent"} 
-              onRemove={clube ? () => handleRemoveClub(index) : null}
-            />
+            <Times key={index} name={clube} cor={"transparent"} />
           ))}
         </Box>
 
