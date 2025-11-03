@@ -27,20 +27,23 @@ function NewsManagerRoute() {
   return (
     <>
       <Container
+        maxWidth="xl"
         sx={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: 1,
+          gap: { xs: 2, sm: 3 },
+          p: { xs: 1, sm: 2 },
         }}
       >
         <Box
           sx={{
             width: "100%",
             display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between", // Para garantir que os componentes se ajustem lado a lado
-            gap: 3, // Adicionando um espaço entre as colunas
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: { xs: 2, sm: 3 },
           }}
         >
           <NoticiasComponent
@@ -85,10 +88,11 @@ function NewsManagerRoute() {
           ></Box>
           <Typography
             sx={{
-              fontSize: "2vmax",
+              fontSize: { xs: "1.5rem", sm: "2rem" },
               fontWeight: "700",
               color: "white",
-              marginBottom: 2,
+              marginBottom: { xs: 1, sm: 2 },
+              textAlign: "center",
             }}
           >
             Novo Post
@@ -103,14 +107,15 @@ function NewsManagerRoute() {
         </Box>
         <Box
           sx={{
-            width: "80%",
+            width: { xs: "95%", sm: "90%", md: "80%" },
             borderRadius: 2,
             backgroundColor: "#19745c",
             display: "flex",
-            flexDirection: "row",
-            padding: 2,
-            gap: 3,
+            flexDirection: { xs: "column", sm: "row" },
+            padding: { xs: 1.5, sm: 2 },
+            gap: { xs: 2, sm: 3 },
             justifyContent: "space-around",
+            alignItems: "center",
           }}
         >
           <CustomButton
@@ -118,7 +123,7 @@ function NewsManagerRoute() {
               <InstagramIcon
                 sx={{
                   color: "white",
-                  fontSize: "5vmax",
+                  fontSize: { xs: "3rem", sm: "4rem", md: "5rem" },
                 }}
               />
             }
@@ -129,7 +134,7 @@ function NewsManagerRoute() {
               <AddCircleOutlineIcon
                 sx={{
                   color: "white",
-                  fontSize: "5vmax",
+                  fontSize: { xs: "3rem", sm: "4rem", md: "5rem" },
                 }}
               />
             }
@@ -140,7 +145,7 @@ function NewsManagerRoute() {
               <YouTubeIcon
                 sx={{
                   color: "white",
-                  fontSize: "5vmax",
+                  fontSize: { xs: "3rem", sm: "4rem", md: "5rem" },
                 }}
               />
             }

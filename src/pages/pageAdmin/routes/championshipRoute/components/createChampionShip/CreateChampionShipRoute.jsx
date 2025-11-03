@@ -52,6 +52,33 @@ function CreateChampionShip() {
   };
 
   const handleCreateChampionShip = () => {
+    // Verifica se há nome do campeonato
+    if (!formState.nome.trim()) {
+      alert("Por favor, insira um nome para o campeonato.");
+      return;
+    }
+
+    // Verifica se todos os times necessários estão preenchidos
+    const requiredTeams =
+      formState.tipo === "4Times"
+        ? 4
+        : formState.tipo === "8Times"
+        ? 8
+        : formState.tipo === "16Times"
+        ? 16
+        : 0;
+
+    const filledTeams = formState.clubes.filter(
+      (clube) => clube !== null
+    ).length;
+
+    if (filledTeams < requiredTeams) {
+      alert(
+        `Por favor, adicione todos os ${requiredTeams} times necessários para este tipo de campeonato.`
+      );
+      return;
+    }
+
     criarCampeonato(formState);
   };
 
@@ -67,6 +94,32 @@ function CreateChampionShip() {
       setChampionShipTeams((prev) =>
         prev.filter((clube) => clube.nome !== clubeName)
       );
+    }
+  };
+
+  const handleRemoveClub = (index) => {
+    const removedClub = formState.clubes[index];
+    const newClubes = [...formState.clubes];
+    newClubes[index] = null;
+    setFormState({ ...formState, clubes: newClubes });
+
+    // Adiciona o clube de volta à lista de clubes disponíveis
+    if (removedClub) {
+      const clube = championShipTeams.find(c => c.nome === removedClub);
+      if (!clube) {
+        // Procura o clube nos dados originais
+        getTeams().then(dbRef => {
+          if (dbRef) {
+            const clubeOriginal = Object.entries(dbRef)
+              .map(([key, value]) => ({ ...value, id: key }))
+              .find(c => c.nome === removedClub);
+            
+            if (clubeOriginal) {
+              setChampionShipTeams(prev => [...prev, clubeOriginal]);
+            }
+          }
+        });
+      }
     }
   };
 
@@ -363,10 +416,23 @@ function CreateChampionShip() {
           justifyContent="center"
           flexWrap="wrap"
           gap={2}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& > *": {
+              // Aplica estilos a todos os filhos diretos
+              minWidth: "200px", // Largura mínima fixa
+              minHeight: "60px", // Altura mínima fixa
+              flex: "0 0 auto", // Impede o crescimento ou encolhimento
+            },
+          }}
         >
           {formState.clubes.map((clube, index) => (
-            <Times key={index} name={clube} cor={"transparent"} />
+            <Times 
+              key={index} 
+              name={clube} 
+              cor={"transparent"} 
+              onRemove={clube ? () => handleRemoveClub(index) : null}
+            />
           ))}
         </Box>
 
