@@ -1,8 +1,10 @@
 import { Box, Typography, Button, styled, Avatar } from "@mui/material";
 import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 export default function NavBar() {
+  const navigate = useNavigate();
   const ButtonNavBar = styled(NavLink)(() => ({
     color: "#fff",
     justifyContent: "flex-start",
@@ -15,25 +17,24 @@ export default function NavBar() {
       color: "#b388ff",
     },
     "&.active": {
-      borderBottom: ".6rem solid #b388ff",
+      borderBottom: ".4rem solid #b388ff",
       width: "80%",
       color: "#8D34F9",
       fontWeight: "bold",
     },
   }));
 
-  const [button, setButton] = useState(false);
-
   return (
     <Box
       sx={{
         backgroundColor: "#101110",
         width: { xs: "60vw", sm: "30vw", md: "20vw" },
-        height: "100vh",
-        position: "fixed",
+        minHeight: "100vh",
+        maxHeight: "100%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
+        // justifyContent: "space-around",
         paddingTop: "2rem",
         color: "white",
       }}
@@ -41,9 +42,9 @@ export default function NavBar() {
       <Avatar
         sx={{
           bgcolor: "#3b0a45",
-          width: { xs: 80, sm: 150, md: 240 },
-          height: { xs: 80, sm: 150, md: 240 },
-          fontSize: { xs: 28, sm: 26, md: 62 },
+          width: { xs: 60, sm: 130, md: 150 },
+          height: { xs: 60, sm: 130, md: 150 },
+          fontSize: { xs: 22, sm: 20, md: 46 },
           fontWeight: "bold",
           mb: 4,
         }}
@@ -60,19 +61,28 @@ export default function NavBar() {
           gap: 2,
         }}
       >
-        <ButtonNavBar
-          sx={{ marginTop: "25%", width: "80%" }}
-          to="/admin/summary"
-        >
+        <ButtonNavBar sx={{ marginTop: "25%", width: "80%" }} to="summary">
           Relatório do Site
         </ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }} to="/admin/news_manager">
+        <ButtonNavBar sx={{ width: "80%" }} to="news_manager">
           Gerenciar Notícias
         </ButtonNavBar>
-        <ButtonNavBar sx={{ width: "80%" }} to="/admin/championship">
+        <ButtonNavBar sx={{ width: "80%" }} to="championship">
           Copa Passa a Bola
         </ButtonNavBar>
       </Box>
+      <Button
+        onClick={() => {
+          navigate("/");
+        }}
+        sx={{
+          marginTop: "auto",
+          marginBottom: "2rem",
+          color: "white",
+        }}
+      >
+        Voltar
+      </Button>
     </Box>
   );
 }

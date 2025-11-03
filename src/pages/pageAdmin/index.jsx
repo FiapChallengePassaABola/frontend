@@ -1,25 +1,21 @@
-import NavBar from "./components/Nav";
-import { Container } from "@mui/material";
-import PlasmaBackground from "../../components/PlasmaBackground";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-} from "react-router-dom";
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Nav from "./components/Nav";
+import { Box } from "@mui/material";
 
-function AdminPage() {
+export default function AdminPage() {
   return (
-    <>
-      <PlasmaBackground
-        color1={"#0E261F"}
-        color2={"#0E392B"}
-        color3={"#0C2C22"}
-        color4={"#041C14"}
-      />
-
-      <NavBar />
-    </>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "linear-gradient(180deg,#07110a,#05221a)",
+      }}
+    >
+      <Nav />
+      <Box component="main" sx={{ flex: 1, p: { xs: 1, md: 2 } }}>
+        <Outlet />
+      </Box>
+    </Box>
   );
 }
-
-export default AdminPage;
