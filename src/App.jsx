@@ -1,4 +1,9 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import ErrorBoundary from "./components/ErrorBoundary";
 import PlasmaBackground from "./components/PlasmaBackground";
 import { AuthProvider } from "./contexts/AuthContext";
@@ -10,14 +15,23 @@ import PageLogin from "./pages/PageLogin";
 import PageNoticias from "./pages/PageNoticias";
 import PageProfile from "./pages/PageProfile";
 import PageRegister from "./pages/PageRegister";
-import PageTime from "./pages/PageTime";
+import AdminPage from "./pages/pageAdmin";
+import "./index.css";
+import SummaryPage from "./pages/pageAdmin/routes/summaryRoute/SummaryRoute";
+import NewsManagerRoute from "./pages/pageAdmin/routes/newsmanagerRoute/NewsmanagerRoute";
+import ChampionshipRoute from "./pages/pageAdmin/routes/championshipRoute/ChampionshipRoute";
 
 function App() {
   return (
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          <PlasmaBackground />
+          <PlasmaBackground
+            color1={"#2A052A"}
+            color2={"#3F0A3F"}
+            color3={"#1F051F"}
+            color4={"#0F030F"}
+          />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/campeonato" element={<PageCampeonato />} />
@@ -27,12 +41,16 @@ function App() {
             <Route path="/register" element={<PageRegister />} />
             <Route path="/profile" element={<PageProfile />} />
             <Route path="/jogos" element={<PageJogos />} />
-            <Route path="/time/:id" element={<PageTime />} />
+            <Route path="/admin" element={<AdminPage />}>
+              <Route path="summary" index element={<SummaryPage />} />
+              <Route path="championship" element={<ChampionshipRoute />} />
+              <Route path="news_manager" element={<NewsManagerRoute />} />
+            </Route>
           </Routes>
         </Router>
       </AuthProvider>
     </ErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;
