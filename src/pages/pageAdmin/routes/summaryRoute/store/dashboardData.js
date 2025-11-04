@@ -18,18 +18,18 @@ export const matchesMocked = [
 export const activeUsers = [
   {
     period: "june",
-    users: 100,
+    users: 40,
   },
   {
     period: "july",
-    users: 80,
+    users: 90,
   },
   {
     period: "august",
-    users: 50,
+    users: 20,
   },
   {
     period: "september",
-    users: 30,
+    users: 50,
   },
 ];

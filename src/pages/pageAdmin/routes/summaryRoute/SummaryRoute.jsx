@@ -6,6 +6,11 @@ import { LineChart } from "@mui/x-charts/LineChart";
 import { chartsGridClasses } from "@mui/x-charts/ChartsGrid";
 import { useEffect } from "react";
 import Botao from "./components/Botao";
+import {
+  signUpsMocked,
+  matchesMocked,
+  activeUsers,
+} from "./store/dashboardData";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -15,16 +20,11 @@ const Card = styled(Paper)({
   boxShadow: "none",
 });
 
-const settings = {
-  value: 60,
-  valueMax: 150,
-  startAngle: -90,
-  endAngle: 90,
-};
-
 export default function SummaryPage() {
-  const value = settings["value"];
-  const valueMax = settings["valueMax"];
+  const [value] = React.useState(signUpsMocked[0].signUps);
+  const [valueMax, setValueMax] = React.useState(signUpsMocked[0].goal);
+  const [isEditingGoal, setIsEditingGoal] = React.useState(false);
+  const [newGoal, setNewGoal] = React.useState("");
   const [chartDimensions, setChartDimensions] = React.useState({
     width: 1000,
     height: 450,
@@ -99,15 +99,92 @@ export default function SummaryPage() {
           </Typography>
           <Card
             sx={{
-              width: "90%",
-              height: "80%",
+              width: { xs: "95%", sm: "90%" },
+              height: { xs: "250px", sm: "300px", md: "350px" },
               display: "flex",
               flexDirection: "column",
-              alignItems: "center",
+              alignItems: "start",
+              position: "relative",
             }}
           >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                width: "100%",
+                mb: 2,
+              }}
+            >
+              {isEditingGoal ? (
+                <>
+                  <input
+                    type="number"
+                    value={newGoal}
+                    onChange={(e) => setNewGoal(e.target.value)}
+                    style={{
+                      background: "rgba(255, 255, 255, 0.1)",
+                      border: "1px solid rgba(255, 255, 255, 0.3)",
+                      borderRadius: "4px",
+                      padding: "8px",
+                      color: "white",
+                      width: "80px",
+                    }}
+                  />
+                  <Button
+                    onClick={() => {
+                      if (newGoal && !isNaN(newGoal)) {
+                        setValueMax(Number(newGoal));
+                        setIsEditingGoal(false);
+                        setNewGoal("");
+                      }
+                    }}
+                    sx={{
+                      color: "white",
+                      borderColor: "white",
+                      "&:hover": {
+                        borderColor: "#8B5DE4",
+                        color: "#8B5DE4",
+                      },
+                    }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Salvar
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Typography>Meta: {valueMax}</Typography>
+                  <Button
+                    onClick={() => {
+                      setIsEditingGoal(true);
+                      setNewGoal(valueMax.toString());
+                    }}
+                    sx={{
+                      color: "white",
+                      borderColor: "white",
+                      minWidth: "30px",
+                      padding: "2px",
+                      "&:hover": {
+                        borderColor: "#8B5DE4",
+                        color: "#8B5DE4",
+                      },
+                    }}
+                    variant="outlined"
+                    size="small"
+                  >
+                    ✎
+                  </Button>
+                </>
+              )}
+            </Box>
+
             <Gauge
-              {...settings}
+              value={value}
+              valueMax={valueMax}
+              startAngle={-90}
+              endAngle={90}
               cornerRadius="50%"
               sx={{
                 [`& .${gaugeClasses.valueArc}`]: {
@@ -117,14 +194,14 @@ export default function SummaryPage() {
                   fill: "#FEFFFE",
                 },
                 [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: { xs: "24px", sm: "32px", md: "40px" },
+                  fontSize: { xs: "1.2vmax", sm: "2vmax" },
                   fill: "#ffffff",
                   transform: "translateY(-60px)",
                 },
                 [`& .${gaugeClasses.text}`]: {
                   fill: "#ffffff",
                   fontWeight: 600,
-                  fontSize: { xs: "16px", sm: "20px", md: "24px" },
+                  fontSize: { xs: ".8vmax", sm: "1vmax" },
                   transform: "translateY(40px)",
                 },
                 "& text": {
@@ -134,20 +211,9 @@ export default function SummaryPage() {
                 height: { xs: "200px", sm: "250px", md: "300px" },
                 margin: "auto",
               }}
-              text={`Meta: ${valueMax}`}
+              text={`Contas: ${value}`}
               textDecoration={"white"}
             />
-            <Typography
-              sx={{
-                position: "relative",
-                top: "-50%",
-                fontSize: { xs: "1.8rem", sm: "2rem", md: "2.2rem" },
-                fontWeight: "700",
-                textAlign: "center",
-              }}
-            >
-              {value}
-            </Typography>
           </Card>
         </Box>
         <Box
@@ -183,14 +249,22 @@ export default function SummaryPage() {
                   data: [
                     {
                       id: 0,
-                      value: 10,
+                      value:
+                        matchesMocked[0].matches -
+                        matchesMocked[0].completed -
+                        matchesMocked[0].onHold,
                       color: "#FFFF",
                       label: "Ainda não feitos",
                     },
-                    { id: 1, value: 15, color: "#A17AED", label: "Concluidos" },
+                    {
+                      id: 1,
+                      value: matchesMocked[0].completed,
+                      color: "#A17AED",
+                      label: "Concluídos",
+                    },
                     {
                       id: 2,
-                      value: 20,
+                      value: matchesMocked[0].onHold,
                       color: "#CEA3E6",
                       label: "Em andamento",
                     },
@@ -249,16 +323,19 @@ export default function SummaryPage() {
       <Box
         ref={chartContainerRef}
         sx={{
-          width: "100%",
-          height: "400px",
+          width: "80%",
           backgroundColor: "#157259",
           borderRadius: 2,
-          mt: 3,
-          mb: 3,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          overflow: "hidden",
         }}
       >
         <LineChart
           sx={{
+            width: "100% !important",
+            height: "100% !important",
             [`& .${chartsGridClasses.line}`]: {
               stroke: "#fff !important",
             },
@@ -271,26 +348,24 @@ export default function SummaryPage() {
             "& .MuiChartsAxis-tick": {
               stroke: "#fff !important",
             },
-            width: "100%",
-            height: "100%",
           }}
-          xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
+          xAxis={[
+            {
+              data: activeUsers.map((item) => item.period),
+              scaleType: "band",
+            },
+          ]}
           grid={{ vertical: true, horizontal: true }}
           series={[
             {
-              data: [2, 5.5, 2, 8.5, 1.5, 5],
+              data: activeUsers.map((item) => item.users),
               area: true,
               color: "rgba(177, 108, 229, 0.63)",
+              label: "Usuários Ativos",
             },
           ]}
-          height={400}
-          width={1200}
-          margin={{
-            left: 60,
-            right: 60,
-            top: 40,
-            bottom: 40,
-          }}
+          width={chartDimensions.width}
+          height={chartDimensions.height}
         />
       </Box>
       <Box
