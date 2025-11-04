@@ -23,7 +23,8 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
     experiencia: "",
     clubeAtual: "",
     observacoes: "",
-    status: "Pendente",
+    status: "pendente",
+    pontos: 0,
   });
   const [errors, setErrors] = useState({});
 

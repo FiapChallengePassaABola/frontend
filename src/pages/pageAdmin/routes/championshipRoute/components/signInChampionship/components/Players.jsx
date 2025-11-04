@@ -105,7 +105,12 @@ function Players() {
             onChange={handleChange}
             textColor="inherit"
             indicatorColor="primary"
-            sx={{ mb: 2 }}
+            sx={{
+              mb: 2,
+              "& .MuiTabs-indicator": {
+                backgroundColor: "#B388FF", // aqui sim funciona!
+              },
+            }}
           >
             <Tab
               label="Pendentes"

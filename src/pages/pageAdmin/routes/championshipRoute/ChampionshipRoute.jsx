@@ -8,10 +8,10 @@ import playerIconPng from "./assets/playerIcon.png";
 import useButton from "./store/state";
 import SignInRoute from "./components/signInChampionship/signInRoute";
 import EditChampionShipRoute from "./components/editChampionShip/EditChampionShipRoute";
-
+import TeamsRoute from "./components/teamsChampionship/TeamsRoute";
+import CreateChampionShip from "./components/createChampionShip/CreateChampionShipRoute";
 function ChampionshipRoute() {
   const { componentState, componentChange } = useButton();
-
   if (componentState == "players") {
     return (
       <Container
@@ -26,9 +26,9 @@ function ChampionshipRoute() {
       </Container>
     );
   } else if (componentState == "teams") {
-    return <div></div>;
+    return <TeamsRoute></TeamsRoute>;
   } else if (componentState == "createCS") {
-    return <div></div>;
+    return <CreateChampionShip></CreateChampionShip>;
   } else if (componentState == "editCS") {
     return <EditChampionShipRoute></EditChampionShipRoute>;
   }

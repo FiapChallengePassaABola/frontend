@@ -54,11 +54,16 @@ export default function NoticiasComponent({
                 alt="img_de_passa_bola"
               />
             </Box>
-            <Box flex={1}>
-              <GaugeMUI
-              value={valueParam}
-              max={maxParam}
-              ></GaugeMUI>
+            <Box
+              flex={1}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+              }}
+            >
+              <GaugeMUI value={valueParam} max={maxParam} />
             </Box>
           </Box>
           <Typography

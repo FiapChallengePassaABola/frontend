@@ -1,13 +1,14 @@
 import { Box, Container, Typography } from "@mui/material";
 import Players from "./components/Players";
-import SearchBar from "./components/SearchBar";
-import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useEffect, useState } from "react";
 import { ref, get } from "firebase/database";
 import { realtimeDb } from "../../../../../../config/firebase";
 import useButton from "../../store/state";
+
 import Botao from "./components/Botao";
+import * as React from "react";
+import SearchBar from "./components/SearchBar";
 
 function SignInRoute() {
   const { componentChange } = useButton();
