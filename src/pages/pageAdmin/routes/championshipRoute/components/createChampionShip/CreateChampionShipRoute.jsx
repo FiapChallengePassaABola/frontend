@@ -52,6 +52,33 @@ function CreateChampionShip() {
   };
 
   const handleCreateChampionShip = () => {
+    // Verifica se há nome do campeonato
+    if (!formState.nome.trim()) {
+      alert("Por favor, insira um nome para o campeonato.");
+      return;
+    }
+
+    // Verifica se todos os times necessários estão preenchidos
+    const requiredTeams =
+      formState.tipo === "4Times"
+        ? 4
+        : formState.tipo === "8Times"
+        ? 8
+        : formState.tipo === "16Times"
+        ? 16
+        : 0;
+
+    const filledTeams = formState.clubes.filter(
+      (clube) => clube !== null
+    ).length;
+
+    if (filledTeams < requiredTeams) {
+      alert(
+        `Por favor, adicione todos os ${requiredTeams} times necessários para este tipo de campeonato.`
+      );
+      return;
+    }
+
     criarCampeonato(formState);
   };
 
@@ -363,7 +390,15 @@ function CreateChampionShip() {
           justifyContent="center"
           flexWrap="wrap"
           gap={2}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            "& > *": {
+              // Aplica estilos a todos os filhos diretos
+              minWidth: "200px", // Largura mínima fixa
+              minHeight: "60px", // Altura mínima fixa
+              flex: "0 0 auto", // Impede o crescimento ou encolhimento
+            },
+          }}
         >
           {formState.clubes.map((clube, index) => (
             <Times key={index} name={clube} cor={"transparent"} />
