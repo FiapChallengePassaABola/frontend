@@ -42,7 +42,7 @@ export const AddIt = async (clubeId, csId) => {
     console.error("Erro ao aprovar clube:", error);
   }
 };
-W;
+
 export function criarCampeonato(novoCampeonato) {
   const campeonatoRef = ref(realtimeDb, "campeonatos/" + novoCampeonato.id);
 
