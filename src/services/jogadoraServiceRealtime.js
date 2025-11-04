@@ -297,5 +297,57 @@ export const jogadoraServiceRealtime = {
       console.error('Erro ao atualizar status da jogadora:', error);
       throw error;
     }
+  },
+
+  async getAllJogadoras() {
+    return this.getJogadoras();
+  },
+
+  async getJogadorasByClube(clubeId) {
+    try {
+      if (!realtimeDb) {
+        throw new Error('Firebase Realtime Database não está configurado');
+      }
+      
+      const jogadorasRef = ref(realtimeDb, COLLECTION_NAME);
+      const clubeQuery = query(jogadorasRef, orderByChild('clubeId'), equalTo(clubeId));
+      const snapshot = await get(clubeQuery);
+      
+      if (snapshot.exists()) {
+        const jogadoras = [];
+        snapshot.forEach((childSnapshot) => {
+          jogadoras.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
+        
+        return jogadoras;
+      }
+      
+      return [];
+    } catch (error) {
+      console.error('Erro ao buscar jogadoras por clube:', error);
+      throw error;
+    }
+  },
+
+  async convidarJogadoraParaClube(jogadoraId, clubeId) {
+    try {
+      if (!realtimeDb) {
+        throw new Error('Firebase Realtime Database não está configurado');
+      }
+      
+      const jogadoraRef = ref(realtimeDb, `${COLLECTION_NAME}/${jogadoraId}/clubeId`);
+      await set(jogadoraRef, clubeId);
+      
+      const updatedAtRef = ref(realtimeDb, `${COLLECTION_NAME}/${jogadoraId}/updatedAt`);
+      await set(updatedAtRef, new Date().toISOString());
+      
+      return true;
+    } catch (error) {
+      console.error('Erro ao convidar jogadora para clube:', error);
+      throw error;
+    }
   }
 };

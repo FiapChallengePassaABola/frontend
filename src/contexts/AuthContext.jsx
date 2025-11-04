@@ -1,6 +1,7 @@
 import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
+import { get, ref } from 'firebase/database';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../config/firebase';
+import { auth, realtimeDb } from '../config/firebase';
 
 const AuthContext = createContext();
 
@@ -18,18 +19,54 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        const userData = {
-          uid: firebaseUser.uid,
-          email: firebaseUser.email,
-          displayName: firebaseUser.displayName,
-          photoURL: firebaseUser.photoURL,
-          emailVerified: firebaseUser.emailVerified
-        };
-        
-        setIsAuthenticated(true);
-        setUser(userData);
+        try {
+          const userRef = ref(realtimeDb, `users/${firebaseUser.uid}`);
+          const snapshot = await get(userRef);
+          
+          const jogadoraRef = ref(realtimeDb, `user_profiles/${firebaseUser.uid}/jogadora`);
+          const jogadoraSnapshot = await get(jogadoraRef);
+          const isJogadora = jogadoraSnapshot.exists();
+          
+          let userData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            photoURL: firebaseUser.photoURL,
+            emailVerified: firebaseUser.emailVerified,
+            isJogadora: isJogadora,
+            isAdmin: false // default
+          };
+
+          if (snapshot.exists()) {
+            const dbData = snapshot.val();
+            userData = {
+              ...userData,
+              nome: dbData.displayName || dbData.nome || firebaseUser.displayName || 'Usuário',
+              isAdmin: dbData.isAdmin || false
+            };
+          } else {
+            userData.nome = firebaseUser.displayName || 'Usuário';
+          }
+          
+          setIsAuthenticated(true);
+          setUser(userData);
+        } catch (error) {
+          console.error('Erro ao buscar dados do usuário:', error);
+          const userData = {
+            uid: firebaseUser.uid,
+            email: firebaseUser.email,
+            displayName: firebaseUser.displayName,
+            nome: firebaseUser.displayName || 'Usuário',
+            photoURL: firebaseUser.photoURL,
+            emailVerified: firebaseUser.emailVerified,
+            isJogadora: false,
+            isAdmin: false
+          };
+          setIsAuthenticated(true);
+          setUser(userData);
+        }
       } else {
         setIsAuthenticated(false);
         setUser(null);

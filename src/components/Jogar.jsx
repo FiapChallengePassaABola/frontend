@@ -4,7 +4,7 @@ import { TbPlayFootball } from "react-icons/tb";
 import Swal from "sweetalert2";
 import { useAuth } from "../contexts/AuthContext";
 import { userServiceRealtime } from "../services/userServiceRealtime";
-import InscricaoClube from "./InscricaoClube";
+import FluxoInscricaoClube from "./FluxoInscricaoClube";
 import InscricaoJogadora from "./InscricaoJogadora";
 import Titulos from "./Titulos";
 
@@ -88,11 +88,8 @@ function Jogar({ onFormStateChange }) {
       </div>
 
       {showInscricaoClube && (
-        <InscricaoClube
+        <FluxoInscricaoClube
           onClose={() => setShowInscricaoClube(false)}
-          onSuccess={() => {
-            setShowInscricaoClube(false);
-          }}
         />
       )}
 
