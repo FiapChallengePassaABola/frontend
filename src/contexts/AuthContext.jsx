@@ -1,4 +1,4 @@
-import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth'; 
+import { signOut as firebaseSignOut, onAuthStateChanged } from 'firebase/auth';
 import { get, ref } from 'firebase/database';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, realtimeDb } from '../config/firebase';

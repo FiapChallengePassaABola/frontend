@@ -1,12 +1,12 @@
 import {
-  equalTo,
-  get,
-  orderByChild,
-  push,
-  query,
-  ref,
-  remove,
-  set,
+    equalTo,
+    get,
+    orderByChild,
+    push,
+    query,
+    ref,
+    remove,
+    set,
 } from "firebase/database";
 import { realtimeDb } from "../config/firebase";
 
