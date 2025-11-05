@@ -10,9 +10,10 @@ import {
   Typography,
 } from "@mui/material";
 
-function TabelaPontos() {
+function TabelaPontos(props) {
+  const { selectedChampId } = props || {};
   const [championships, setChampionships] = useState([]);
-  const [selectedChamp, setSelectedChamp] = useState("");
+  const [selectedChamp, setSelectedChamp] = useState(selectedChampId || "");
   const [teams, setTeams] = useState([]);
 
   const emojis = [
@@ -55,7 +56,7 @@ function TabelaPontos() {
         setChampionships(lista);
 
         // Define o primeiro campeonato como padrão
-        if (lista.length > 0 && !selectedChamp) {
+        if (lista.length > 0 && !selectedChamp && !selectedChampId) {
           setSelectedChamp(lista[0].id);
         }
       }
@@ -66,8 +67,10 @@ function TabelaPontos() {
 
   // 🔹 Atualiza os times conforme o campeonato selecionado
   useEffect(() => {
-    if (!selectedChamp) return;
-    const campeonato = championships.find((c) => c.id === selectedChamp);
+    // if parent passed selectedChampId, use it
+    const effectiveSelected = selectedChampId || selectedChamp;
+    if (!effectiveSelected) return;
+    const campeonato = championships.find((c) => c.id === effectiveSelected);
     if (campeonato) {
       const clubes = campeonato.clubes.map((clube, index) => ({
         id: index,
@@ -93,56 +96,64 @@ function TabelaPontos() {
 
       setTeams(clubes);
     }
-  }, [selectedChamp, championships]);
+  }, [selectedChamp, championships, selectedChampId]);
 
   return (
-    <Box className="w-full max-w-7xl mx-auto">
+    <Box
+      className="w-full mx-auto"
+      sx={{
+        ...props,
+      }}
+    >
       {/* SELECTOR DE CAMPEONATOS */}
-      <Box
-        display="flex"
-        justifyContent="start"
-        alignItems="start"
-        mt={3}
-        mb={2}
-      >
-        <FormControl sx={{ minWidth: 250 }}>
-          <InputLabel sx={{ color: "white" }}>
-            Selecione o Campeonato
-          </InputLabel>
-          <Select
-            value={selectedChamp}
-            label="Selecione o Campeonato"
-            onChange={(e) => setSelectedChamp(e.target.value)}
-            sx={{
-              color: "white",
-              ".MuiOutlinedInput-notchedOutline": {
-                borderColor: "white",
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#8B5DE4",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "#8B5DE4",
-              },
-              "& .MuiSvgIcon-root": {
+      {/* show selector only when parent doesn't force a championship */}
+      {!selectedChampId && (
+        <Box
+          display="flex"
+          justifyContent="start"
+          alignItems="start"
+          mt={3}
+          mb={2}
+        >
+          <FormControl sx={{ minWidth: 250 }}>
+            <InputLabel sx={{ color: "white" }}>
+              Selecione o Campeonato
+            </InputLabel>
+            <Select
+              value={selectedChamp}
+              label="Selecione o Campeonato"
+              onChange={(e) => setSelectedChamp(e.target.value)}
+              sx={{
                 color: "white",
-              },
-              "&.Mui-focused": {
-                color: "#8B5DE4",
-              },
-              "&.Mui-focused .MuiSelect-select": {
-                color: "#8B5DE4",
-              },
-            }}
-          >
-            {championships.map((c) => (
-              <MenuItem key={c.id} value={c.id}>
-                {c.nome}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
+                ".MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#8B5DE4",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#8B5DE4",
+                },
+                "& .MuiSvgIcon-root": {
+                  color: "white",
+                },
+                "&.Mui-focused": {
+                  color: "#8B5DE4",
+                },
+                "&.Mui-focused .MuiSelect-select": {
+                  color: "#8B5DE4",
+                },
+              }}
+            >
+              {championships.map((c) => (
+                <MenuItem key={c.id} value={c.id}>
+                  {c.nome}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      )}
 
       {/* SE NÃO TIVER SELECIONADO NENHUM */}
       {!selectedChamp ? (
@@ -153,7 +164,11 @@ function TabelaPontos() {
         <div className="rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden ring-1 ring-white/10 bg-[#140913]/80">
           <div className="px-4 sm:px-6 lg:px-8 py-4 bg-gradient-to-r from-emerald-700/70 to-lime-700/70 border-b border-white/10">
             <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white text-center">
-              {championships.find((c) => c.id === selectedChamp)?.nome}
+              {
+                championships.find(
+                  (c) => c.id === (selectedChampId || selectedChamp)
+                )?.nome
+              }
             </h2>
           </div>
 
