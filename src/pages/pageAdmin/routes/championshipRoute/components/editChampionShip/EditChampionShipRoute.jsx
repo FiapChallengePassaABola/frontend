@@ -254,6 +254,17 @@ const recomputeClubStats = (campeonatoOrig, chaveamento) => {
 /* ---------- Component ---------- */
 
 export default function BracketPrototype() {
+  const roundLabel = (id) => {
+    const [round, match] = id.split("-"); // ['r0', 'm1']
+
+    // Extrai os números depois das letras
+    const roundNumber = round.replace("r", "");
+    const matchNumber = match.replace("m", "");
+    return `Round ${parseInt(roundNumber) + 1} - Match ${parseInt(
+      matchNumber
+    )}`;
+  };
+
   const [campeonatos, setCampeonatos] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [campeonato, setCampeonato] = useState(null);
@@ -414,7 +425,7 @@ export default function BracketPrototype() {
             color: "white",
             borderColor: "white",
             textTransform: "none",
-            fontSize: "1rem",
+            fontSize: "16px",
             fontWeight: 500,
           }}
         >
@@ -445,7 +456,7 @@ export default function BracketPrototype() {
         </Typography>
         <Divider
           color="gray"
-          sx={{ mb: 2, width: "80%", height: "1px" }}
+          sx={{ mb: 2, width: "80%", height: ".0625rem" }}
         ></Divider>
       </Box>
       <Box
@@ -489,7 +500,7 @@ export default function BracketPrototype() {
               },
               "& .MuiSelect-select": {
                 color: "white",
-                padding: "10px 14px",
+                padding: ".625rem .875rem",
               },
               "& .MuiSvgIcon-root": {
                 color: "white",
@@ -510,8 +521,8 @@ export default function BracketPrototype() {
           sx={{
             background: "#5b2c68",
             borderColor: "white",
-            border: "2px solid",
-            padding: "8px 16px",
+            border: ".125rem solid",
+            padding: ".5rem 1rem",
           }}
         >
           (Re)Gerar Chaveamento
@@ -523,8 +534,8 @@ export default function BracketPrototype() {
           sx={{
             background: "#5b2c68",
             borderColor: "white",
-            border: "2px solid",
-            padding: "8px 16px",
+            border: ".125rem solid",
+            padding: ".5rem 1rem",
           }}
         >
           Salvar Placar e Atualizar Campeonato
@@ -563,17 +574,32 @@ export default function BracketPrototype() {
                   key={m.id}
                   sx={{
                     mb: 2,
-                    p: 2,
+                    padding: "16px 38.4px",
                     background: m.timeA ? "#157259" : "transparent",
-                    border: "1px solid white",
+                    border: ".0625rem solid white",
                     color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 1,
                   }}
                 >
-                  <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                    {m.id}
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mb: 1,
+                      textAlign: "center",
+                    }}
+                  >
+                    {roundLabel(m.id)}
                   </Typography>
 
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                    gap={1}
+                    mb={1}
+                  >
                     <Typography sx={{ width: 120 }}>
                       {m.timeA ? `Clube: ${m.timeA}` : "——"}
                     </Typography>
@@ -590,12 +616,18 @@ export default function BracketPrototype() {
                       sx={{
                         width: 80,
                         borderRadius: 1,
-                        border: "1px solid white",
+                        border: ".0625rem solid white",
+                        input: { color: "white" },
                       }}
                     />
                   </Box>
 
-                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={"space-between"}
+                    mb={1}
+                  >
                     <Typography sx={{ width: 120 }}>
                       {m.timeB ? `Clube: ${m.timeB}` : "——"}
                     </Typography>
@@ -609,18 +641,29 @@ export default function BracketPrototype() {
                       onChange={(e) =>
                         handleUpdateMatchScore(pi, mi, "B", e.target.value)
                       }
-                      sx={{ width: 80, border: "1px solid white" }}
+                      sx={{
+                        width: 80,
+                        border: ".0625rem solid white",
+                        input: { color: "white" },
+                      }}
                     />
                   </Box>
 
                   <Box
                     display="flex"
-                    gap={1}
+                    gap={4}
                     justifyContent="space-between"
                     alignItems="center"
                   >
                     <Typography>
-                      Vencedor: {m.vencedor ?? "Em aguardo"}
+                      {m.vencedor ? (
+                        <>
+                          Vencedor:{" "}
+                          <span style={{ color: "#98ff8e" }}>{m.vencedor}</span>
+                        </>
+                      ) : (
+                        "Vencedor: ——"
+                      )}
                     </Typography>
 
                     <Box>
@@ -633,9 +676,11 @@ export default function BracketPrototype() {
                         }}
                         sx={{
                           textTransform: "none",
-                          fontSize: "1rem",
-                          padding: "4px 8px",
-                          color: "#98ff8e",
+                          fontSize: "16px",
+                          padding: ".25rem .5rem",
+                          color: "white",
+                          backgroundColor: "#5b2c68",
+                          border: ".0625rem solid white",
                         }}
                       >
                         Salvar partida
@@ -649,7 +694,7 @@ export default function BracketPrototype() {
         </Box>
       )}
 
-      <Box>
+      <Box margin={"5%"}>
         <TabelaPontos selectedChampId={selectedId} />
       </Box>
     </Box>
