@@ -115,11 +115,24 @@ function TabelaPontos() {
             onChange={(e) => setSelectedChamp(e.target.value)}
             sx={{
               color: "white",
-              ".MuiOutlinedInput-notchedOutline": { borderColor: "white" },
+              ".MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
               "&:hover .MuiOutlinedInput-notchedOutline": {
                 borderColor: "#8B5DE4",
               },
-              "& .MuiSvgIcon-root": { color: "white" },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#8B5DE4",
+              },
+              "& .MuiSvgIcon-root": {
+                color: "white",
+              },
+              "&.Mui-focused": {
+                color: "#8B5DE4",
+              },
+              "&.Mui-focused .MuiSelect-select": {
+                color: "#8B5DE4",
+              },
             }}
           >
             {championships.map((c) => (
