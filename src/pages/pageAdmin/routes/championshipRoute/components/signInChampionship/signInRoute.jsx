@@ -1,13 +1,18 @@
 import { Box, Container, Typography } from "@mui/material";
 import Players from "./components/Players";
-import SearchBar from "./components/SearchBar";
-import * as React from "react";
 import { PieChart } from "@mui/x-charts/PieChart";
 import { useEffect, useState } from "react";
 import { ref, get } from "firebase/database";
 import { realtimeDb } from "../../../../../../config/firebase";
+import useButton from "../../store/state";
+
+import Botao from "./components/Botao";
+import * as React from "react";
+import SearchBar from "./components/SearchBar";
 
 function SignInRoute() {
+  const { componentChange } = useButton();
+
   const [series, setSeries] = useState([
     {
       data: [{ label: "Carregando", value: 1 }],
@@ -66,14 +71,21 @@ function SignInRoute() {
     <Container
       sx={{
         width: "100%",
-        height: "90%",
         display: "flex",
         flexDirection: "row",
         gap: 4,
+        maxHeight: "90vh",
       }}
     >
       {/* Lado esquerdo */}
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, flex: 1.5 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          flex: 1.5,
+        }}
+      >
         <Players />
       </Box>
 
@@ -87,6 +99,8 @@ function SignInRoute() {
           borderRadius: 5,
           backgroundColor: "#157259",
           p: 3,
+          maxHeight: "70%",
+          overflowY: "scroll",
         }}
       >
         <Typography variant="h6" sx={{ color: "white", mb: 2 }}>

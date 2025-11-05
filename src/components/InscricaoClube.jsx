@@ -15,6 +15,7 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
     email: user?.email || "",
     telefone: "",
     observacoes: "",
+    responsavelId: user?.uid || "",
   });
   const [errors, setErrors] = useState({});
 
@@ -162,8 +163,7 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
         icon: "success",
         confirmButtonText: "OK",
       }).then(() => {
-        onSuccess?.();
-        onClose();
+        onSuccess?.(resultado.id);
       });
     } catch (error) {
       console.error("Erro ao inscrever clube:", error);
