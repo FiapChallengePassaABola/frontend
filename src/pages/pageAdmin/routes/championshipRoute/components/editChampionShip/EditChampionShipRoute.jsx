@@ -15,6 +15,7 @@ import {
 import { ref, onValue, get, set } from "firebase/database";
 import { realtimeDb } from "../../../../../../config/firebase"; // ajuste conforme seu projeto
 import useButton from "../../store/state";
+import TabelaPontos from "../../../../../../components/campeonato/TabelaPontos";
 
 /* ---------- Helpers ---------- */
 
@@ -574,7 +575,7 @@ export default function BracketPrototype() {
 
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Typography sx={{ width: 120 }}>
-                      {m.timeA ?? "——"}
+                      {m.timeA ? `Clube: ${m.timeA}` : "——"}
                     </Typography>
                     <TextField
                       size="small"
@@ -596,7 +597,7 @@ export default function BracketPrototype() {
 
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Typography sx={{ width: 120 }}>
-                      {m.timeB ?? "——"}
+                      {m.timeB ? `Clube: ${m.timeB}` : "——"}
                     </Typography>
                     <TextField
                       size="small"
@@ -648,23 +649,8 @@ export default function BracketPrototype() {
         </Box>
       )}
 
-      <Box mt={4}>
-        <Typography variant="h6">Clubes (no campeonato)</Typography>
-        <Box mt={1}>
-          {(campeonato?.clubes || []).map((c, i) => (
-            <Box key={i} display="flex" gap={2} alignItems="center" mb={0.5}>
-              <Typography sx={{ width: 240 }}>{c.nome}</Typography>
-              <Typography>J: {c.gamesPlayed ?? 0}</Typography>
-              <Typography>V: {c.wins ?? 0}</Typography>
-              <Typography>E: {c.draws ?? 0}</Typography>
-              <Typography>D: {c.losses ?? 0}</Typography>
-              <Typography>GP: {c.goalsFor ?? 0}</Typography>
-              <Typography>GC: {c.goalsAgainst ?? 0}</Typography>
-              <Typography>SG: {c.goalDifference ?? 0}</Typography>
-              <Typography>Pts: {c.points ?? 0}</Typography>
-            </Box>
-          ))}
-        </Box>
+      <Box>
+        <TabelaPontos selectedChampId={selectedId} />
       </Box>
     </Box>
   );
