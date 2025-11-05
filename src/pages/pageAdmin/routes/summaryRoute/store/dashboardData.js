@@ -9,7 +9,7 @@ export const signUpsMocked = [
 export const matchesMocked = [
   {
     period: "month",
-    matches: 6,
+    matches: 10,
     completed: 4,
     onHold: 2,
   },
@@ -17,19 +17,27 @@ export const matchesMocked = [
 
 export const activeUsers = [
   {
-    period: "june",
-    users: 40,
+    period: "abril",
+    users: 30,
   },
   {
-    period: "july",
-    users: 90,
+    period: "maio",
+    users: 10,
   },
   {
-    period: "august",
+    period: "junho",
+    users: 35,
+  },
+  {
+    period: "julho",
+    users: 50,
+  },
+  {
+    period: "agosto",
     users: 20,
   },
   {
-    period: "september",
+    period: "setembro",
     users: 50,
   },
 ];

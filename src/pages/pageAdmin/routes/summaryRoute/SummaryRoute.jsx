@@ -27,7 +27,7 @@ export default function SummaryPage() {
   const [newGoal, setNewGoal] = React.useState("");
   const [chartDimensions, setChartDimensions] = React.useState({
     width: 1000,
-    height: 450,
+    height: 350,
   });
   const chartContainerRef = React.useRef(null);
 
@@ -323,7 +323,7 @@ export default function SummaryPage() {
       <Box
         ref={chartContainerRef}
         sx={{
-          width: "80%",
+          width: "90%",
           backgroundColor: "#157259",
           borderRadius: 2,
           display: "flex",
