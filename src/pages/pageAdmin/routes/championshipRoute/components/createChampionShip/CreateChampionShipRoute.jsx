@@ -11,6 +11,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useState, useEffect } from "react";
+import useFormCT from "./state";
+import CreateTeamRoute from "./components/modalCreateTeam/CreateTeamRoute";
 import useButton from "../../store/state";
 import { getTeams } from "./store";
 import AddIcon from "@mui/icons-material/Add";
@@ -22,6 +24,7 @@ import { realtimeDb } from "../../../../../../config/firebase";
 function CreateChampionShip() {
   const [championShipTeams, setChampionShipTeams] = useState([]);
   const { componentChange } = useButton();
+  const { componentCT, setComponentCT } = useFormCT();
   const [valor, setValor] = useState("4Times");
   const [jogadorasList, setJogadorasList] = useState([]);
   const [formState, setFormState] = useState({
@@ -150,6 +153,11 @@ function CreateChampionShip() {
     };
     fetchTeams();
   }, [refresh]);
+
+  // Se o estado de criação estiver ativado, renderiza a rota/composto CreateTeamRoute
+  if (componentCT) {
+    return <CreateTeamRoute />;
+  }
 
   return (
     <Box
@@ -399,6 +407,7 @@ function CreateChampionShip() {
               fontWeight: "bold",
               border: "1px solid white",
             }}
+            onClick={() => setComponentCT(true)}
           >
             Criar Time
           </Button>
