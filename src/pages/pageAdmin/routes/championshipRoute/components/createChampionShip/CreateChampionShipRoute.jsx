@@ -16,17 +16,41 @@ import { getTeams } from "./store";
 import AddIcon from "@mui/icons-material/Add";
 import { criarCampeonato } from "./store";
 import { v4 as uuidv4 } from "uuid"; // Importa a função para gerar UUID
+import { ref, get } from "firebase/database";
+import { realtimeDb } from "../../../../../../config/firebase";
 
 function CreateChampionShip() {
   const [championShipTeams, setChampionShipTeams] = useState([]);
   const { componentChange } = useButton();
   const [valor, setValor] = useState("4Times");
+  const [jogadorasList, setJogadorasList] = useState([]);
   const [formState, setFormState] = useState({
     id: uuidv4(),
     nome: "",
     tipo: "4Times",
     clubes: Array(4).fill(null),
   });
+
+  useEffect(() => {
+    const fetchJogadoras = async () => {
+      try {
+        const snapshot = await get(ref(realtimeDb, "jogadoras"));
+        if (!snapshot.exists()) {
+          setSeries([{ data: [{ label: "Sem dados", value: 1 }] }]);
+          return;
+        }
+
+        const jogadorasList = Object.values(snapshot.val());
+        setJogadorasList(jogadorasList);
+        console.log(jogadorasList);
+      } catch (error) {
+        console.error("Erro ao buscar jogadoras:", error);
+      }
+    };
+
+    // ✅ chamada fora da função
+    fetchJogadoras();
+  }, []);
 
   const handleChange = (event) => {
     const tipo = event.target.value;
@@ -303,7 +327,16 @@ function CreateChampionShip() {
         </Box>
 
         {/* Jogadoras Livres */}
-        <Box sx={{ flex: 1, minWidth: 280, ml: 2 }}>
+        <Box
+          sx={{
+            flex: 1,
+            minWidth: 280,
+            ml: 2,
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "column",
+          }}
+        >
           <Box
             sx={{
               background: "#157259",
@@ -333,27 +366,9 @@ function CreateChampionShip() {
                 mb: 2,
               }}
             />
-            {(() => {
-              const jogadorasAprovadas = championShipTeams
-                .flatMap((clube) =>
-                  clube.jogadoras
-                    ? Object.entries(clube.jogadoras).map(([id, jogadora]) => ({
-                        ...jogadora,
-                        id,
-                      }))
-                    : []
-                )
-                .filter(
-                  (j) => j.status === "aprovada" || j.status === "aprovado"
-                );
-              if (jogadorasAprovadas.length === 0) {
-                return (
-                  <Typography sx={{ color: "white", mt: 2 }}>
-                    Nenhuma jogadora aprovada encontrada.
-                  </Typography>
-                );
-              }
-              return jogadorasAprovadas.map((j) => (
+            {jogadorasList
+              .filter((j) => j.status === "aprovado" || j.status === "aprovada")
+              .map((j) => (
                 <Box
                   key={j.id}
                   sx={{
@@ -376,9 +391,17 @@ function CreateChampionShip() {
                     {j.posicao}
                   </Typography>
                 </Box>
-              ));
-            })()}
+              ))}
           </Box>
+          <Button
+            sx={{
+              color: "white",
+              fontWeight: "bold",
+              border: "1px solid white",
+            }}
+          >
+            Criar Time
+          </Button>
         </Box>
       </Box>
 
@@ -412,9 +435,8 @@ function CreateChampionShip() {
         >
           {formState.clubes.map((clube, index) => (
             <Times
-              key={index}
-              cor={"transparent"}
-              name={clube ? clube.nome : "Vazio"}
+              key={clube ? clube.id || `empty-${index}` : `empty-${index}`}
+              name={clube?.nome}
             />
           ))}
         </Box>

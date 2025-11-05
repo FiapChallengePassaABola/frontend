@@ -433,7 +433,7 @@ export default function BracketPrototype() {
         </Button>
 
         <Typography variant="h5" gutterBottom color="white">
-          Chaveamento
+          Pagina de Chaveamento
         </Typography>
       </Box>
       <Box
@@ -588,6 +588,11 @@ export default function BracketPrototype() {
                     sx={{
                       mb: 1,
                       textAlign: "center",
+                      fontWeight: "bold",
+                      fontSize: "1.2rem",
+                      borderBottom: ".0625rem solid white",
+                      paddingBottom: 0.5,
+                      marginBottom: "10%",
                     }}
                   >
                     {roundLabel(m.id)}
