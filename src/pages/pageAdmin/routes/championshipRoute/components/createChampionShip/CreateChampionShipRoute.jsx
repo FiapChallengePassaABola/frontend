@@ -87,7 +87,17 @@ function CreateChampionShip() {
     const emptyIndex = formState.clubes.findIndex((c) => !c);
     if (emptyIndex !== -1) {
       const newClubes = [...formState.clubes];
-      newClubes[emptyIndex] = clubeName;
+      newClubes[emptyIndex] = {
+        nome: clubeName,
+        points: 0,
+        gamesPlayed: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        goalsFor: 0,
+        goalsAgainst: 0,
+        goalDifference: 0,
+      };
       setFormState({ ...formState, clubes: newClubes });
 
       // remove o clube da lista de clubes disponíveis
@@ -401,7 +411,11 @@ function CreateChampionShip() {
           }}
         >
           {formState.clubes.map((clube, index) => (
-            <Times key={index} name={clube} cor={"transparent"} />
+            <Times
+              key={index}
+              cor={"transparent"}
+              name={clube ? clube.nome : "Vazio"}
+            />
           ))}
         </Box>
 
