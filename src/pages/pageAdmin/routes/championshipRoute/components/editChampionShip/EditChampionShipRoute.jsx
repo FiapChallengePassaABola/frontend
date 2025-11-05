@@ -1,5 +1,5 @@
 // BracketPrototype.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   Box,
   Typography,
@@ -260,6 +260,8 @@ export default function BracketPrototype() {
   const [loading, setLoading] = useState(true);
   const { componentChange } = useButton();
   const [title, setTitle] = useState("Chaveamento");
+  const fasesContainerRef = useRef(null);
+  const [maxColHeight, setMaxColHeight] = useState(0);
   const handleChange = (toEdit) => {
     componentChange(toEdit);
   };
@@ -313,6 +315,30 @@ export default function BracketPrototype() {
     };
     load();
   }, [selectedId]);
+
+  // compute maximum column height whenever chaveamento changes or window resizes
+  useEffect(() => {
+    const updateMax = () => {
+      const container = fasesContainerRef.current;
+      if (!container) return setMaxColHeight(0);
+      // only consider direct children (the phase columns)
+      const children = Array.from(container.children).filter(
+        (n) => n.nodeType === 1
+      );
+      if (!children.length) return setMaxColHeight(0);
+      const heights = children.map((c) => c.offsetHeight || 0);
+      const max = Math.max(...heights);
+      setMaxColHeight(max);
+    };
+
+    // run after next paint to ensure layout computed
+    const id = setTimeout(updateMax, 50);
+    window.addEventListener("resize", updateMax);
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("resize", updateMax);
+    };
+  }, [chaveamento]);
 
   const handleSaveChaveamento = async (newChaveamento) => {
     if (!selectedId || !campeonato) return;
@@ -421,14 +447,52 @@ export default function BracketPrototype() {
           sx={{ mb: 2, width: "80%", height: "1px" }}
         ></Divider>
       </Box>
-      <Box display="flex" gap={2} alignItems="center" mb={2}>
+      <Box
+        display="flex"
+        gap={2}
+        alignItems="center"
+        mb={2}
+        sx={{
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-around",
+          marginBottom: "5%",
+        }}
+      >
         <FormControl sx={{ minWidth: 300 }}>
-          <InputLabel>Campeonato</InputLabel>
+          <InputLabel
+            sx={{
+              color: "white",
+              "&.Mui-focused": {
+                color: "white",
+              },
+            }}
+          >
+            Campeonato
+          </InputLabel>
           <Select
             value={selectedId}
             label="Campeonato"
             onChange={(e) => {
               setSelectedId(e.target.value);
+            }}
+            sx={{
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderColor: "white",
+                borderWidth: 2,
+              },
+              "& .MuiSelect-select": {
+                color: "white",
+                padding: "10px 14px",
+              },
+              "& .MuiSvgIcon-root": {
+                color: "white",
+              },
             }}
           >
             {campeonatos.map((c) => (
@@ -439,38 +503,78 @@ export default function BracketPrototype() {
           </Select>
         </FormControl>
 
-        <Button variant="contained" onClick={handleGenerateAgain}>
+        <Button
+          variant="contained"
+          onClick={handleGenerateAgain}
+          sx={{
+            background: "#5b2c68",
+            borderColor: "white",
+            border: "2px solid",
+            padding: "8px 16px",
+          }}
+        >
           (Re)Gerar Chaveamento
         </Button>
-        <Button variant="contained" color="success" onClick={handleSaveAll}>
-          Salvar Placar e Atualizar DB
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleSaveAll}
+          sx={{
+            background: "#5b2c68",
+            borderColor: "white",
+            border: "2px solid",
+            padding: "8px 16px",
+          }}
+        >
+          Salvar Placar e Atualizar Campeonato
         </Button>
       </Box>
-
-      <Box mb={2}>
-        <Typography variant="subtitle1">
-          Campeonato: {campeonato?.nome} ({campeonato?.tipo || "—"})
-        </Typography>
-      </Box>
-
       {!chaveamento ? (
         <Paper sx={{ p: 2 }}>Sem chaveamento</Paper>
       ) : (
-        <Box display="flex" gap={4} overflow="auto" alignItems="flex-start">
+        // container ref used to measure children heights
+        <Box
+          ref={fasesContainerRef}
+          display="flex"
+          gap={4}
+          overflow="auto"
+          alignItems="stretch"
+          justifyContent={"center"}
+        >
           {chaveamento.fases.map((fase, pi) => (
-            <Box key={pi} minWidth={260}>
-              <Typography variant="h6" align="center" gutterBottom>
-                {fase.nome}
-              </Typography>
+            <Box
+              key={pi}
+              minWidth={260}
+              sx={{
+                // ensure each column is at least as tall as the tallest column
+                minHeight: maxColHeight ? `${maxColHeight}px` : undefined,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch",
+                justifyContent: "center",
+                padding: 2,
+                borderRadius: 2,
+                gap: 2,
+              }}
+            >
               {fase.partidas.map((m, mi) => (
-                <Paper key={m.id} sx={{ mb: 2, p: 2 }}>
+                <Paper
+                  key={m.id}
+                  sx={{
+                    mb: 2,
+                    p: 2,
+                    background: m.timeA ? "#157259" : "transparent",
+                    border: "1px solid white",
+                    color: "white",
+                  }}
+                >
                   <Typography variant="subtitle2" sx={{ mb: 1 }}>
                     {m.id}
                   </Typography>
 
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Typography sx={{ width: 120 }}>
-                      {m.timeA ?? "— (bye)"}
+                      {m.timeA ?? "——"}
                     </Typography>
                     <TextField
                       size="small"
@@ -482,13 +586,17 @@ export default function BracketPrototype() {
                       onChange={(e) =>
                         handleUpdateMatchScore(pi, mi, "A", e.target.value)
                       }
-                      sx={{ width: 80 }}
+                      sx={{
+                        width: 80,
+                        borderRadius: 1,
+                        border: "1px solid white",
+                      }}
                     />
                   </Box>
 
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <Typography sx={{ width: 120 }}>
-                      {m.timeB ?? "— (bye)"}
+                      {m.timeB ?? "——"}
                     </Typography>
                     <TextField
                       size="small"
@@ -500,7 +608,7 @@ export default function BracketPrototype() {
                       onChange={(e) =>
                         handleUpdateMatchScore(pi, mi, "B", e.target.value)
                       }
-                      sx={{ width: 80 }}
+                      sx={{ width: 80, border: "1px solid white" }}
                     />
                   </Box>
 
@@ -510,7 +618,9 @@ export default function BracketPrototype() {
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography>Vencedor: {m.vencedor ?? "—"}</Typography>
+                    <Typography>
+                      Vencedor: {m.vencedor ?? "Em aguardo"}
+                    </Typography>
 
                     <Box>
                       <Button
@@ -519,6 +629,12 @@ export default function BracketPrototype() {
                           // save this single match -> recompute everything
                           const copy = JSON.parse(JSON.stringify(chaveamento));
                           await handleSaveChaveamento(copy);
+                        }}
+                        sx={{
+                          textTransform: "none",
+                          fontSize: "1rem",
+                          padding: "4px 8px",
+                          color: "#98ff8e",
                         }}
                       >
                         Salvar partida
