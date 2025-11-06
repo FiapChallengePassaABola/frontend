@@ -19,6 +19,7 @@ import {
   activeUsers,
 } from "./store/dashboardData";
 import { exportToExcel } from "./store/store";
+import useAiASummary from "./store/state";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -38,6 +39,7 @@ export default function SummaryPage() {
     height: 350,
   });
   const chartContainerRef = React.useRef(null);
+  const { addText } = useAiASummary();
 
   useEffect(() => {
     const chartElement = document.querySelector(".MuiCharts-root");
@@ -339,6 +341,7 @@ export default function SummaryPage() {
             alignItems: "center",
             justifyContent: "center",
             overflow: "hidden",
+            mb: 3,
           }}
         >
           <LineChart
@@ -377,20 +380,20 @@ export default function SummaryPage() {
             height={chartDimensions.height}
           />
         </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            minWidth: "80%",
+            minHeight: "5%",
+            gap: 4,
+          }}
+        >
+          <Botao children={"Export Data"} onClick={exportToExcel}></Botao>
+          <Botao children={"AI Summary"}></Botao>
+        </Box>
       </Container>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          minWidth: "80%",
-          minHeight: "5%",
-          gap: 4,
-        }}
-      >
-        <Botao children={"Export Data"} onClick={exportToExcel}></Botao>
-        <Botao children={"AI Summary"}></Botao>
-      </Box>
     </Box>
   );
 }
