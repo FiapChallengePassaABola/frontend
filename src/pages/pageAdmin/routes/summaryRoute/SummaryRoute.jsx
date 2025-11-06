@@ -323,7 +323,7 @@ export default function SummaryPage() {
       <Box
         ref={chartContainerRef}
         sx={{
-          width: "90%",
+          width: "95%",
           backgroundColor: "#157259",
           borderRadius: 2,
           display: "flex",

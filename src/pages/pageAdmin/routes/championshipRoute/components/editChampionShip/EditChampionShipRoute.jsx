@@ -558,8 +558,6 @@ export default function BracketPrototype() {
               key={pi}
               minWidth={260}
               sx={{
-                // ensure each column is at least as tall as the tallest column
-                minHeight: maxColHeight ? `${maxColHeight}px` : undefined,
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "stretch",
