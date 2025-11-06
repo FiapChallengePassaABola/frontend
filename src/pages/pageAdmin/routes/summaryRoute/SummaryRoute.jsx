@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Paper, Typography, Button, styled } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  styled,
+  Container,
+} from "@mui/material";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { PieChart, pieClasses } from "@mui/x-charts/PieChart";
 import { LineChart } from "@mui/x-charts/LineChart";
@@ -11,6 +18,7 @@ import {
   matchesMocked,
   activeUsers,
 } from "./store/dashboardData";
+import { exportToExcel } from "./store/store";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -320,54 +328,56 @@ export default function SummaryPage() {
           }}
         ></Box>
       </Box>
-      <Box
-        ref={chartContainerRef}
-        sx={{
-          width: "90%",
-          backgroundColor: "#157259",
-          borderRadius: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
-        <LineChart
+      <Container>
+        <Box
+          ref={chartContainerRef}
           sx={{
-            width: "100% !important",
-            height: "100% !important",
-            [`& .${chartsGridClasses.line}`]: {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-line": {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-tickLabel": {
-              fill: "#fff !important",
-            },
-            "& .MuiChartsAxis-tick": {
-              stroke: "#fff !important",
-            },
+            backgroundColor: "#157259",
+            width: "100%",
+            borderRadius: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
           }}
-          xAxis={[
-            {
-              data: activeUsers.map((item) => item.period),
-              scaleType: "band",
-            },
-          ]}
-          grid={{ vertical: true, horizontal: true }}
-          series={[
-            {
-              data: activeUsers.map((item) => item.users),
-              area: true,
-              color: "rgba(177, 108, 229, 0.63)",
-              label: "Usuários Ativos",
-            },
-          ]}
-          width={chartDimensions.width}
-          height={chartDimensions.height}
-        />
-      </Box>
+        >
+          <LineChart
+            sx={{
+              width: "100% !important",
+              height: "100% !important",
+              [`& .${chartsGridClasses.line}`]: {
+                stroke: "#fff !important",
+              },
+              "& .MuiChartsAxis-line": {
+                stroke: "#fff !important",
+              },
+              "& .MuiChartsAxis-tickLabel": {
+                fill: "#fff !important",
+              },
+              "& .MuiChartsAxis-tick": {
+                stroke: "#fff !important",
+              },
+            }}
+            xAxis={[
+              {
+                data: activeUsers.map((item) => item.period),
+                scaleType: "band",
+              },
+            ]}
+            grid={{ vertical: true, horizontal: true }}
+            series={[
+              {
+                data: activeUsers.map((item) => item.users),
+                area: true,
+                color: "rgba(177, 108, 229, 0.63)",
+                label: "Usuários Ativos",
+              },
+            ]}
+            width={chartDimensions.width}
+            height={chartDimensions.height}
+          />
+        </Box>
+      </Container>
       <Box
         sx={{
           display: "flex",
@@ -378,7 +388,7 @@ export default function SummaryPage() {
           gap: 4,
         }}
       >
-        <Botao children={"Export Data"}></Botao>
+        <Botao children={"Export Data"} onClick={exportToExcel}></Botao>
         <Botao children={"AI Summary"}></Botao>
       </Box>
     </Box>
