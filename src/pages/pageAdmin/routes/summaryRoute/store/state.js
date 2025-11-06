@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 const useAiSummary = create((set) => ({
-  aiSummary: "Blablablbalbalblalba",
+  aiSummary: "",
   addText: (text) => set(() => ({ aiSummary: text })),
   removeSummary: () => set({ aiSummary: "" }),
 }));
