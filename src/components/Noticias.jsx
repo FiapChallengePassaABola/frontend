@@ -1,11 +1,10 @@
 import { FaChevronCircleDown } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import VideoYT from "../assets/VideoYT.jpg";
 import Foto1 from "../assets/Foto1.jpg";
 import Foto2 from "../assets/Foto2.jpg";
 import Foto3 from "../assets/Foto3.jpg";
 import Foto4 from "../assets/Foto4.jpg";
-import Foto5 from "../assets/Foto5.jpg";
+import VideoYT from "../assets/VideoYT.jpg";
 import CardNoticias from "./CardNoticias";
 import Titulos from "./Titulos";
 
@@ -60,7 +59,7 @@ function Noticias() {
         onClick={() => {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
-        className="mt-6 -mb-4 sm:-mb-6 lg:-mb-8 xl:-mb-16"
+        className="mt-8 mb-12 sm:mt-10 sm:mb-16 lg:mt-12 lg:mb-20 xl:mt-16 xl:mb-24"
       >
         <FaChevronCircleDown
           size={32}

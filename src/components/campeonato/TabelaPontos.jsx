@@ -242,5 +242,4 @@ function TabelaPontos(props) {
     </Box>
   );
 }
-
 export default TabelaPontos;

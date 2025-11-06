@@ -1,24 +1,24 @@
 import { useState } from "react";
 import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  XAxis,
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip as ReTooltip,
-  LineChart,
-  Line,
-  CartesianGrid,
-  YAxis,
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Line,
+    LineChart,
+    Pie,
+    PieChart,
+    Tooltip as ReTooltip,
+    ResponsiveContainer,
+    XAxis,
+    YAxis,
 } from "recharts";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "./card";
 import { ChartTooltip, ChartTooltipContent } from "./chart";
 
@@ -111,7 +111,6 @@ export function ChartTooltipDefault() {
       );
     }
 
-    // default resumo (stacked bars)
     return (
       <ResponsiveContainer width="100%" height="100%">
         <BarChart

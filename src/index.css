@@ -22,16 +22,214 @@
 
 html {
   scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+@media (max-width: 1919px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1600px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1366px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1024px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1919px) {
+  .xl\:m-40 {
+    margin: 6rem !important;
+  }
+  .xl\:m-20 {
+    margin: 3rem !important;
+  }
+  .xl\:mb-20 {
+    margin-bottom: 3rem !important;
+  }
+  .xl\:mb-16 {
+    margin-bottom: 2.5rem !important;
+  }
+  .xl\:py-16 {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+  }
+  .lg\:m-20 {
+    margin: 2.5rem !important;
+  }
+  .xl\:space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2rem !important;
+  }
+  .xl\:w-\[30rem\] {
+    width: 26rem !important;
+  }
+  .xl\:h-\[20rem\] {
+    height: 18rem !important;
+  }
+  .xl\:w-\[150px\] {
+    width: 130px !important;
+  }
+  .xl\:h-\[150px\] {
+    height: 130px !important;
+  }
+  .xl\:text-3xl {
+    font-size: 1.75rem !important;
+  }
+  .xl\:mx-16 {
+    margin-left: 2.5rem !important;
+    margin-right: 2.5rem !important;
+  }
+  .xl\:w-16 {
+    width: 3.5rem !important;
+  }
+  .xl\:h-16 {
+    height: 3.5rem !important;
+  }
+  .xl\:mt-16 {
+    margin-top: 3rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 4.5rem !important;
+  }
+}
+
+@media (max-width: 1600px) {
+  .xl\:m-40 {
+    margin: 4rem !important;
+  }
+  .xl\:m-20 {
+    margin: 2.5rem !important;
+  }
+  .xl\:mb-20 {
+    margin-bottom: 2.5rem !important;
+  }
+  .xl\:mb-16 {
+    margin-bottom: 2rem !important;
+  }
+  .xl\:py-16 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  .lg\:m-20 {
+    margin: 2rem !important;
+  }
+  .xl\:space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.5rem !important;
+  }
+  .xl\:w-\[30rem\] {
+    width: 24rem !important;
+  }
+  .xl\:h-\[20rem\] {
+    height: 17rem !important;
+  }
+  .xl\:w-\[150px\] {
+    width: 120px !important;
+  }
+  .xl\:h-\[150px\] {
+    height: 120px !important;
+  }
+  .xl\:text-3xl {
+    font-size: 1.6rem !important;
+  }
+  .xl\:mx-16 {
+    margin-left: 2.25rem !important;
+    margin-right: 2.25rem !important;
+  }
+  .xl\:w-16 {
+    width: 3.25rem !important;
+  }
+  .xl\:h-16 {
+    height: 3.25rem !important;
+  }
+  .xl\:mt-16 {
+    margin-top: 2.5rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 4rem !important;
+  }
+}
+
+@media (max-width: 1366px) {
+  .xl\:m-40 {
+    margin: 3rem !important;
+  }
+  .xl\:m-20 {
+    margin: 2rem !important;
+  }
+  .xl\:mb-20 {
+    margin-bottom: 2rem !important;
+  }
+  .xl\:mb-16 {
+    margin-bottom: 1.5rem !important;
+  }
+  .xl\:py-16 {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
+  .lg\:m-20 {
+    margin: 1.5rem !important;
+  }
+  .xl\:space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1rem !important;
+  }
+  .xl\:w-\[30rem\] {
+    width: 22rem !important;
+  }
+  .xl\:h-\[20rem\] {
+    height: 16rem !important;
+  }
+  .xl\:w-\[150px\] {
+    width: 110px !important;
+  }
+  .xl\:h-\[150px\] {
+    height: 110px !important;
+  }
+  .xl\:text-3xl {
+    font-size: 1.5rem !important;
+  }
+  .xl\:mx-16 {
+    margin-left: 2rem !important;
+    margin-right: 2rem !important;
+  }
+  .xl\:w-16 {
+    width: 3rem !important;
+  }
+  .xl\:h-16 {
+    height: 3rem !important;
+  }
+  .xl\:mt-16 {
+    margin-top: 2rem !important;
+  }
+  .xl\:mb-24 {
+    margin-bottom: 3.5rem !important;
+  }
+  .lg\:mb-20 {
+    margin-bottom: 3rem !important;
+  }
 }
 
 *:focus-visible {
   outline: 2px solid #521e2b;
   outline-offset: 2px;
   border-radius: 4px;
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 body {

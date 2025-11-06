@@ -90,6 +90,7 @@ export const clubeServiceRealtime = {
 
       const novoClube = {
         ...clubeData,
+        responsavelId: clubeData.responsavelId || clubeData.email, // Usar email como fallback se não tiver responsavelId
         dataInscricao: new Date().toISOString(),
         status: "pendente",
         createdAt: new Date().toISOString(),
@@ -97,7 +98,8 @@ export const clubeServiceRealtime = {
         csId: "none",
       };
 
-      console.log("Dados do clube a serem salvos:", novoClube);
+      console.log('Dados do clube a serem salvos:', novoClube);
+      console.log('ResponsavelId sendo salvo:', novoClube.responsavelId);
 
       await set(novoClubeRef, novoClube);
 
@@ -245,4 +247,64 @@ export const clubeServiceRealtime = {
       throw error;
     }
   },
+
+  async getClubeByResponsavel(responsavelId) {
+    try {
+      if (!realtimeDb) {
+        throw new Error('Firebase Realtime Database não está configurado');     
+      }
+
+      const clubesRef = ref(realtimeDb, COLLECTION_NAME);
+      const responsavelQuery = query(clubesRef, orderByChild('responsavelId'), equalTo(responsavelId));                                                         
+      const snapshot = await get(responsavelQuery);
+
+      if (snapshot.exists()) {
+        const clubeData = snapshot.val();
+        const clubeId = Object.keys(clubeData)[0];
+        return {
+          id: clubeId,
+          ...clubeData[clubeId]
+        };
+      }
+
+      return null;
+    } catch (error) {
+      console.error('Erro ao buscar clube por responsável:', error);
+      throw error;
+    }
+  },
+
+  async getAllClubes() {
+    return this.getClubes();
+  },
+
+  async criarDesafio(clubeDesafianteId, clubeDesafiadoId) {
+    try {
+      if (!realtimeDb) {
+        throw new Error('Firebase Realtime Database não está configurado');     
+      }
+
+      const desafiosRef = ref(realtimeDb, 'desafios');
+      const novoDesafioRef = push(desafiosRef);
+
+      const desafio = {
+        clubeDesafianteId,
+        clubeDesafiadoId,
+        status: 'pendente',
+        dataDesafio: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+
+      await set(novoDesafioRef, desafio);
+
+      return {
+        id: novoDesafioRef.key,
+        ...desafio
+      };
+    } catch (error) {
+      console.error('Erro ao criar desafio:', error);
+      throw error;
+    }
+  }
 };

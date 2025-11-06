@@ -1,4 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 function TimesChaveamento({ team, isWinner = false, position = 0 }) {
+  const navigate = useNavigate();
+
   const mockTeams = [
     { id: 1, name: "Flamengo", points: 15, logo: "🦅", image: null },
     { id: 2, name: "Palmeiras", points: 12, logo: "🌿", image: null },
@@ -16,15 +20,20 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }) {
     return "bg-[#13061A] border-white/20";
   };
 
+  const handleClick = () => {
+    navigate(`/time/${currentTeam.id}`);
+  };
+
   return (
-    <div
+    <button
+      onClick={handleClick}
       className={`
             ${getPositionColor(position)}
             w-full h-10 sm:h-12 lg:h-14 rounded-lg sm:rounded-xl 
             p-2 sm:p-3 flex items-center justify-between
             border-2 transition-all duration-300 hover:scale-105
             ${isWinner ? "ring-2 ring-green-700 ring-opacity-50" : ""}
-            shadow-lg m-1
+            shadow-lg m-1 cursor-pointer hover:bg-[#1f0c28]
         `}
     >
       <div className="flex items-center space-x-2 sm:space-x-3">
@@ -51,7 +60,7 @@ function TimesChaveamento({ team, isWinner = false, position = 0 }) {
           <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
         )}
       </div>
-    </div>
+    </button>
   );
 }
 export default TimesChaveamento;

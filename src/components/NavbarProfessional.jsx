@@ -23,9 +23,12 @@ function NavbarProfessional() {
     }, []);
 
     const handleUserClick = () => {
+        console.log('handleUserClick chamado, isAuthenticated:', isAuthenticated);
         if (isAuthenticated) {
+            console.log('Navegando para /profile');
             navigate('/profile');
         } else {
+            console.log('Navegando para /login');
             navigate('/login');
         }
     };
@@ -62,7 +65,7 @@ function NavbarProfessional() {
         { name: 'NOTÍCIAS', path: '/noticias' },
         { name: 'CAMPEONATO', path: '/campeonato' },
         { name: 'JOGAR', path: '/jogar' },
-        { name: 'YOUTUBE', path: '/youtube' }
+        { name: 'YOUTUBE', path: 'https://www.youtube.com/@passabola', isExternal: true }
     ];
 
     const isActive = (path) => location.pathname === path;
@@ -89,20 +92,33 @@ function NavbarProfessional() {
                     <div className="hidden md:block">
                         <div className="ml-10 flex items-baseline space-x-8">
                             {navItems.map((item) => (
-                                <Link
-                                    key={item.name}
-                                    to={item.path}
-                                    className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 group ${
-                                        isActive(item.path)
-                                            ? 'text-white'
-                                            : 'text-white hover:text-gray-300'
-                                    }`}
-                                >
-                                    {item.name}
-                                    <span className={`absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 ${
-                                        isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
-                                    }`}></span>
-                                </Link>
+                                item.isExternal ? (
+                                    <a
+                                        key={item.name}
+                                        href={item.path}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="relative px-3 py-2 text-sm font-medium transition-all duration-300 group text-white hover:text-gray-300"
+                                    >
+                                        {item.name}
+                                        <span className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 scale-x-0 group-hover:scale-x-100"></span>
+                                    </a>
+                                ) : (
+                                    <Link
+                                        key={item.name}
+                                        to={item.path}
+                                        className={`relative px-3 py-2 text-sm font-medium transition-all duration-300 group ${
+                                            isActive(item.path)
+                                                ? 'text-white'
+                                                : 'text-white hover:text-gray-300'
+                                        }`}
+                                    >
+                                        {item.name}
+                                        <span className={`absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary-500 to-accent-500 transition-all duration-300 ${
+                                            isActive(item.path) ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
+                                        }`}></span>
+                                    </Link>
+                                )
                             ))}
                         </div>
                     </div>
@@ -112,25 +128,24 @@ function NavbarProfessional() {
                             {isAuthenticated ? (
                                 <div className="flex items-center space-x-4">
                                     <div className="flex items-center space-x-3">
-                                        <div className="text-right">
-                                            <p className="text-sm font-medium text-white">
-                                                Olá, {user?.nome || 'Usuário'}
-                                            </p>
-                                            <p className="text-xs text-gray-300">
-                                                {user?.isJogadora ? 'Jogadora' : 'Administrador'}
-                                            </p>
-                                        </div>
-                                        <div className="relative">
-                                            <button
-                                                onClick={handleUserClick}
-                                                className="flex items-center space-x-2 bg-dark-800/50 hover:bg-dark-700/70 px-4 py-2 rounded-xl border border-dark-600/50 hover:border-primary-500/50 transition-all duration-300 group"
-                                            >
-                                                <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
-                                                    <AiOutlineUser className="w-4 h-4 text-white" />
-                                                </div>
-                                                <span className="text-white group-hover:text-gray-300 transition-colors duration-300">Perfil</span>
-                                            </button>
-                                        </div>
+                                        <button
+                                            onClick={handleUserClick}
+                                            className="flex items-center space-x-3 bg-dark-800/50 hover:bg-dark-700/70 px-4 py-2 rounded-xl border border-dark-600/50 hover:border-primary-500/50 transition-all duration-300 group"
+                                        >
+                                            <div className="text-right">
+                                                <p className="text-sm font-medium text-white group-hover:text-gray-300 transition-colors duration-300">
+                                                    Olá, {user?.nome || user?.displayName || 'Usuário'}
+                                                </p>
+                                                {(user?.isJogadora || user?.isAdmin) && (
+                                                    <p className="text-xs text-gray-300 group-hover:text-gray-400 transition-colors duration-300">
+                                                        {user?.isJogadora ? 'Jogadora' : user?.isAdmin ? 'Administrador' : ''}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div className="w-8 h-8 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                                                <AiOutlineUser className="w-4 h-4 text-white" />
+                                            </div>
+                                        </button>
                                     </div>
                                     <button
                                         onClick={handleLogout}
@@ -170,36 +185,60 @@ function NavbarProfessional() {
                 <div className="md:hidden">
                     <div className="px-2 pt-2 pb-3 space-y-1 bg-dark-900/95 backdrop-blur-xl border-t border-dark-700/50">
                         {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                to={item.path}
-                                className={`block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 ${
-                                    isActive(item.path)
-                                        ? 'text-white bg-primary-600/10'
-                                        : 'text-white hover:text-gray-300 hover:bg-dark-800/50'
-                                }`}
-                                onClick={() => setIsMenuOpen(false)}
-                            >
-                                {item.name}
-                            </Link>
+                            item.isExternal ? (
+                                <a
+                                    key={item.name}
+                                    href={item.path}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 text-white hover:text-gray-300 hover:bg-dark-800/50"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.name}
+                                </a>
+                            ) : (
+                                <Link
+                                    key={item.name}
+                                    to={item.path}
+                                    className={`block px-3 py-2 rounded-xl text-base font-medium transition-all duration-300 ${
+                                        isActive(item.path)
+                                            ? 'text-white bg-primary-600/10'
+                                            : 'text-white hover:text-gray-300 hover:bg-dark-800/50'
+                                    }`}
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    {item.name}
+                                </Link>
+                            )
                         ))}
                         <div className="border-t border-dark-700/50 pt-4 pb-3">
                             {isAuthenticated ? (
-                                <div className="flex items-center px-3">
+                                <button
+                                    onClick={() => {
+                                        handleUserClick();
+                                        setIsMenuOpen(false);
+                                    }}
+                                    className="w-full flex items-center px-3 py-3 hover:bg-dark-800/50 rounded-xl transition-all duration-300 group"
+                                >
                                     <div className="flex-shrink-0">
-                                        <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
+                                        <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                                             <AiOutlineUser className="w-5 h-5 text-white" />
                                         </div>
                                     </div>
-                                    <div className="ml-3">
-                                        <div className="text-base font-medium text-white">
-                                            {user?.nome || 'Usuário'}
+                                    <div className="ml-3 text-left">
+                                        <div className="text-base font-medium text-white group-hover:text-gray-300 transition-colors duration-300">
+                                            {user?.nome || user?.displayName || 'Usuário'}
                                         </div>
-                                        <div className="text-sm font-medium text-gray-300">
+                                        <div className="text-sm font-medium text-gray-300 group-hover:text-gray-400 transition-colors duration-300">
                                             {user?.email}
                                         </div>
+                                        {(user?.isJogadora || user?.isAdmin) && (
+                                            <div className="text-xs text-gray-400 mt-1 group-hover:text-gray-500 transition-colors duration-300">
+                                                {user?.isJogadora ? 'Jogadora' : user?.isAdmin ? 'Administrador' : ''}
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
+                                </button>
                             ) : (
                                 <button
                                     onClick={() => {

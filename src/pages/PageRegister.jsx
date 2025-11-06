@@ -123,8 +123,8 @@ const PageRegister = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="min-h-screen flex flex-col pt-24 sm:pt-28">
+      <header className="fixed top-0 left-0 w-full z-50 p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-transparent backdrop-blur-md">
         <button
           onClick={() => navigate("/")}
           className="text-white text-base sm:text-xl lg:text-2xl
