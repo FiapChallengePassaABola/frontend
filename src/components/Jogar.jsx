@@ -88,9 +88,7 @@ function Jogar({ onFormStateChange }) {
       </div>
 
       {showInscricaoClube && (
-        <FluxoInscricaoClube
-          onClose={() => setShowInscricaoClube(false)}
-        />
+        <FluxoInscricaoClube onClose={() => setShowInscricaoClube(false)} />
       )}
 
       {showInscricaoJogadora && (

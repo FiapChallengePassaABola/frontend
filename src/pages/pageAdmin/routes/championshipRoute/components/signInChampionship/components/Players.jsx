@@ -68,7 +68,6 @@ function Players() {
     setFilteredList(filtered);
   };
 
-  // Funções para aprovar/rejeitar e atualizar a lista
   const handleApprove = async (id) => {
     await Approved(id);
     setRefresh((r) => r + 1);
@@ -78,12 +77,12 @@ function Players() {
     setRefresh((r) => r + 1);
   };
 
-  // Filtragem por status para cada tab
   const pendentes = filteredList.filter(
     (j) => !j.status || j.status === "pendente"
   );
   const aprovadas = filteredList.filter((j) => j.status === "aprovada");
   const rejeitadas = filteredList.filter((j) => j.status === "rejeitada");
+  const onClube = filteredList.filter((j) => j.status === "on-clube");
 
   return (
     <Box
@@ -108,32 +107,21 @@ function Players() {
             sx={{
               mb: 2,
               "& .MuiTabs-indicator": {
-                backgroundColor: "#B388FF", // aqui sim funciona!
+                backgroundColor: "#B388FF",
               },
             }}
           >
+            <Tab label="Pendentes" value="pendente" sx={{ color: "yellow" }} />
             <Tab
-              label="Pendentes"
-              value="pendente"
-              sx={{
-                color: "yellow",
-              }}
-            />
-            <Tab
-              sx={{
-                color: "lightgreen",
-              }}
+              sx={{ color: "lightgreen" }}
               label="Aprovadas"
               value="aprovada"
             />
-            <Tab
-              sx={{
-                color: "red",
-              }}
-              label="Rejeitadas"
-              value="rejeitada"
-            />
+            <Tab sx={{ color: "red" }} label="Rejeitadas" value="rejeitada" />
+            <Tab sx={{ color: "#00e5ff" }} label="No Clube" value="on-clube" />
           </TabList>
+
+          {/* PENDENTES */}
           <TabPanel value="pendente" sx={{ p: 0 }}>
             {pendentes.map((jogadora, idx) => (
               <Box
@@ -181,13 +169,10 @@ function Players() {
                           textTransform: "none",
                           color: "white",
                           fontSize: "1.2vmax",
-                          border: "none",
-                          borderRadius: 0,
                         }}
                         onClick={() => handleReject(jogadora.id)}
                       >
-                        Rejeitar
-                        <CloseIcon sx={{ color: "#af3636" }} />
+                        Rejeitar <CloseIcon sx={{ color: "#af3636" }} />
                       </IconButton>
                       <IconButton
                         color="white"
@@ -195,13 +180,10 @@ function Players() {
                           textTransform: "none",
                           color: "white",
                           fontSize: "1.2vmax",
-                          border: "none",
-                          borderRadius: 0,
                         }}
                         onClick={() => handleApprove(jogadora.id)}
                       >
-                        Aprovar
-                        <DoneIcon sx={{ color: "#3af011" }} />
+                        Aprovar <DoneIcon sx={{ color: "#3af011" }} />
                       </IconButton>
                     </Box>
                   </Box>
@@ -209,6 +191,8 @@ function Players() {
               </Box>
             ))}
           </TabPanel>
+
+          {/* APROVADAS */}
           <TabPanel value="aprovada" sx={{ p: 0 }}>
             {aprovadas.map((jogadora, idx) => (
               <Box
@@ -255,6 +239,8 @@ function Players() {
               </Box>
             ))}
           </TabPanel>
+
+          {/* REJEITADAS */}
           <TabPanel value="rejeitada" sx={{ p: 0 }}>
             {rejeitadas.map((jogadora, idx) => (
               <Box
@@ -300,6 +286,64 @@ function Players() {
                 </Box>
               </Box>
             ))}
+          </TabPanel>
+
+          {/* ON-CLUBE */}
+          <TabPanel value="on-clube" sx={{ p: 0 }}>
+            {onClube.length === 0 ? (
+              <Typography sx={{ color: "white" }}>
+                Nenhuma jogadora no clube ainda.
+              </Typography>
+            ) : (
+              onClube.map((jogadora, idx) => (
+                <Box
+                  key={idx}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    borderRadius: 2,
+                    p: 2,
+                    mb: 2,
+                    color: "white",
+                    boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
+                    backgroundColor: "#125d46",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Box
+                      sx={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: "50%",
+                        backgroundColor: "#00e5ff",
+                      }}
+                    />
+                    <Box>
+                      <Typography
+                        variant="subtitle1"
+                        sx={{ fontWeight: "bold" }}
+                      >
+                        {jogadora.nome}{" "}
+                        <span style={{ fontWeight: "normal" }}>
+                          {jogadora.posicao}
+                        </span>
+                      </Typography>
+                      <Typography variant="body2">
+                        Idade: {calcularIdade(jogadora.dataNascimento)}{" "}
+                        &nbsp;&nbsp; Telefone: {jogadora.telefone}
+                      </Typography>
+                      <Typography variant="body2">
+                        Status:{" "}
+                        <span style={{ color: "#00e5ff" }}>
+                          {jogadora.status?.toUpperCase() || "ON-CLUBE"}
+                        </span>
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              ))
+            )}
           </TabPanel>
         </TabContext>
       </Box>

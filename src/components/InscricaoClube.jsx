@@ -1,11 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useAuth } from "../contexts/AuthContext";
 import { clubeServiceRealtime } from "../services/clubeServiceRealtime";
 import PlasmaBackground from "./PlasmaBackground";
+import { Box, IconButton, Typography } from "@mui/material";
+import { realtimeDb } from "../config/firebase";
+import { ref, get, set, update } from "firebase/database";
+import JogadoraComponent from "./RenderJogadoras";
+import CloseIcon from "@mui/icons-material/Close";
 
 const InscricaoClube = ({ onClose, onSuccess }) => {
   const { user } = useAuth();
+  const [jogadorasList, setJogadorasList] = useState([]);
+  const [membrosList, setMembrosList] = useState([]); // array of member objects
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
@@ -16,6 +23,7 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
     telefone: "",
     observacoes: "",
     responsavelId: user?.uid || "",
+    membros: [], // will hold array of member objects (dictionaries)
   });
   const [errors, setErrors] = useState({});
 
@@ -48,6 +56,112 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
     "SE",
     "TO",
   ];
+
+  useEffect(() => {
+    const fetchPlayers = async () => {
+      try {
+        const snapshot = await get(ref(realtimeDb, "jogadoras"));
+        if (snapshot.exists()) {
+          // preserve the keys as id so we can reference them later
+          const obj = snapshot.val();
+          const list = Object.entries(obj).map(([key, val]) => ({
+            id: key,
+            ...val,
+          }));
+          setJogadorasList(list);
+        } else {
+          console.log("Nenhuma jogadora encontrada");
+        }
+      } catch (err) {
+        console.error("Erro ao buscar jogadoras:", err);
+      }
+    };
+    fetchPlayers();
+  }, []);
+
+  const handleAddJogadoraAoClube = async (jogadora) => {
+    try {
+      // build a member object (dictionary) with useful fields
+      const newMember = {
+        id: jogadora?.id || null,
+        userId: jogadora?.userId || null,
+        nome: jogadora?.nome || jogadora?.email || "Sem nome",
+        email: jogadora?.email || null,
+        posicao: jogadora?.posicao || null,
+        telefone: jogadora?.telefone || null,
+      };
+
+      // avoid duplicates by id, userId or email
+      const alreadyAdded = membrosList.some((m) => {
+        if (m.id && newMember.id) return m.id === newMember.id;
+        if (m.userId && newMember.userId) return m.userId === newMember.userId;
+        if (m.email && newMember.email) return m.email === newMember.email;
+        return m.nome === newMember.nome; // fallback
+      });
+
+      if (alreadyAdded) {
+        Swal.fire({
+          title: "Aviso",
+          text: "Esta jogadora já foi adicionada ao clube.",
+          icon: "info",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      // add to local membrosList (objects) and to formData.membros (dictionaries)
+      // add to local membrosList (objects) and to formData.membros (dictionaries)
+      setMembrosList((prev) => [...prev, newMember]);
+      setFormData((prev) => ({
+        ...prev,
+        membros: [...prev.membros, newMember],
+      }));
+
+      // remove jogadora da lista visível
+      setJogadorasList((prev) =>
+        prev.filter(
+          (j) =>
+            j.id !== jogadora.id &&
+            j.userId !== jogadora.userId &&
+            j.email !== jogadora.email
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao adicionar jogadora ao clube:", error);
+      Swal.fire({
+        title: "Erro!",
+        text: "Não foi possível adicionar a jogadora.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const handleRemoveMember = (jogadora) => {
+    // remove da lista de membros
+    setMembrosList((prev) =>
+      prev.filter((m) => m.id !== jogadora.id && m.email !== jogadora.email)
+    );
+    setFormData((prev) => ({
+      ...prev,
+      membros: prev.membros.filter(
+        (m) => m.id !== jogadora.id && m.email !== jogadora.email
+      ),
+    }));
+
+    // adiciona novamente à lista de jogadoras disponíveis,
+    // garantindo que tenha status "aprovada" e que não gere duplicatas
+    setJogadorasList((prev) => {
+      const alreadyExists = prev.some(
+        (j) =>
+          (j.id && jogadora.id && j.id === jogadora.id) ||
+          (j.email && jogadora.email && j.email === jogadora.email) ||
+          (j.userId && jogadora.userId && j.userId === jogadora.userId)
+      );
+      if (alreadyExists) return prev;
+      return [{ ...jogadora, status: "aprovada" }, ...prev];
+    });
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -155,6 +269,58 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
 
       console.log("Criando clube no Firebase...");
       const resultado = await clubeServiceRealtime.createClube(formData);
+
+      // Salva as jogadoras dentro do clube recém-criado no banco (membros como array de dicionários)
+      const clubeRef = ref(realtimeDb, `clubes/${resultado.id}/membros`);
+      await set(clubeRef, formData.membros);
+
+      console.log("Membros adicionados ao clube com sucesso!");
+
+      // Atualiza o status das jogadoras para "on-clube"
+      try {
+        const jogadorasSnap = await get(ref(realtimeDb, "jogadoras"));
+        if (jogadorasSnap.exists()) {
+          const jogadorasObj = jogadorasSnap.val();
+          // build lookup tables
+          const lookupById = {};
+          const lookupByEmail = {};
+          for (const [key, val] of Object.entries(jogadorasObj)) {
+            if (val.userId) lookupById[val.userId] = key;
+            if (val.email) lookupByEmail[val.email] = key;
+          }
+
+          // iterate members and update corresponding jogadora node
+          for (const member of formData.membros) {
+            let jogadoraKey = null;
+            if (member.id && jogadorasObj[member.id]) jogadoraKey = member.id;
+            else if (member.userId && lookupById[member.userId])
+              jogadoraKey = lookupById[member.userId];
+            else if (member.email && lookupByEmail[member.email])
+              jogadoraKey = lookupByEmail[member.email];
+
+            if (jogadoraKey) {
+              const jogadoraRef = ref(realtimeDb, `jogadoras/${jogadoraKey}`);
+              // update status and clubeAtual and updatedAt
+              await update(jogadoraRef, {
+                status: "on-clube",
+                clubeAtual: formData.nome,
+                updatedAt: new Date().toISOString(),
+              });
+            } else {
+              console.warn(
+                `Não encontrou jogadora para atualizar (nome/email/userId):`,
+                member
+              );
+            }
+          }
+        } else {
+          console.warn("Nenhuma jogadora encontrada para atualizar status.");
+        }
+      } catch (errUpdate) {
+        console.error("Erro ao atualizar status das jogadoras:", errUpdate);
+        // não interrompe o fluxo principal de criação do clube
+      }
+
       console.log("Clube criado com sucesso:", resultado);
 
       Swal.fire({
@@ -175,13 +341,72 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
       });
     } finally {
       setIsLoading(false);
+      onClose();
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 gap-5">
       <PlasmaBackground />
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto relative z-10">
+      {membrosList.length > 0 && (
+        <Box
+          sx={{
+            height: "90%",
+            minWidth: "20%",
+            background: "transparent",
+            border: "1px solid white",
+            borderRadius: 4,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              height: "90%",
+              width: "100%",
+              borderRadius: 4,
+              background: "transparent",
+              padding: 4,
+            }}
+          >
+            {membrosList.map((membro, index) => (
+              <Box
+                key={membro.id ?? membro.email ?? membro.nome + index}
+                sx={{
+                  border: "1px solid white",
+                  padding: "1rem 1rem",
+                  borderRadius: 4,
+                  mt: 1,
+                  color: "white",
+                  background: "#592b78",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography>{membro.nome}</Typography>
+                <IconButton
+                  onClick={() => handleRemoveMember(membro)}
+                  aria-label="Remover membro"
+                >
+                  <CloseIcon
+                    sx={{
+                      color: "white",
+                      borderRadius: 4,
+                      border: "1px solid white",
+                      fontSize: "2rem",
+                      padding: 0.4,
+                    }}
+                  />
+                </IconButton>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
+      <div className="bg-white rounded-lg w-[60%] max-h-[90vh] overflow-y-auto relative z-10">
         <div className="p-6">
           <div className="relative mb-6">
             <div className="flex flex-col items-center">
@@ -344,6 +569,22 @@ const InscricaoClube = ({ onClose, onSuccess }) => {
                 placeholder="Informações adicionais sobre o clube..."
               />
             </div>
+            <Box
+              sx={{
+                overflowY: "scroll",
+                maxHeight: "26vh",
+              }}
+            >
+              {jogadorasList.map((jogadora) =>
+                jogadora.status === "aprovada" ? (
+                  <JogadoraComponent
+                    key={jogadora.id}
+                    jogadora={jogadora}
+                    onClickParam={handleAddJogadoraAoClube}
+                  />
+                ) : null
+              )}
+            </Box>
 
             <div className="flex justify-end space-x-4 pt-4">
               <button

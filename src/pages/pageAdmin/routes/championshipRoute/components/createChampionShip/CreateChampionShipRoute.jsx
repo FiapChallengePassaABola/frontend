@@ -424,6 +424,7 @@ function CreateChampionShip() {
           justifyContent: "center",
           alignItems: "center",
           gap: 4,
+          marginTop: "5%",
         }}
       >
         <Box
