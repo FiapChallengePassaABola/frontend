@@ -6,7 +6,7 @@ function Botao({ children, onClick, className = "" }) {
   const estilo = `${base} ${className}`;
 
   return (
-    <button className={estilo.trim()} onClick={onClick}>
+    <button className={estilo.trim()} onClick={() => onClick()}>
       <span
         className={`
                 absolute inset-0 
