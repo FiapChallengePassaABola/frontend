@@ -6,7 +6,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 
 // NOTE: kept inline token as in your file
-const TOKEN = "UwzcHFUMNHoMRSQwHDsjQmCIAtOlWhATOY";
+const TOKEN = "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";
 const MODEL = "sshleifer/distilbart-cnn-12-6";
 
 const PORT = 3001;
@@ -257,7 +257,7 @@ function generateLocalFallbackSummary(data) {
       ? `Sign-ups decreased by ${Math.abs(signUpTrend)} since the first period.`
       : `Sign-ups remained stable compared to the first period.`;
 
-  return `Quick summary (local fallback): ${data.length} periods analyzed — total of ${totalUsers} active users, ${totalMatches} matches, and ${totalSignUps} sign-ups. ${trendText}`;
+  return `Quick summary: ${data.length} periods analyzed — total of ${totalUsers} active users, ${totalMatches} matches, and ${totalSignUps} sign-ups. ${trendText}`;
 }
 
 app.listen(PORT, () =>

@@ -55,12 +55,9 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
   if (!finalSummary) {
     try {
       finalSummary = await generateAiSummaryText(combined);
-      // generateAiSummaryText já atualiza o Zustand; mas mantemos finalSummary localmente
     } catch (err) {
       console.warn("Erro ao gerar resumo via IA:", err);
-      // fallback local simples
       finalSummary = generateLocalFallbackSummary(combined);
-      // salvar fallback também na store
       useAiASummary.setState({ aiSummary: finalSummary });
     }
   }
@@ -84,11 +81,10 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
 
   worksheet.columns = baseColumns;
 
-  // 4️⃣ Adicionar linha de cabeçalho explicitamente (com os textos dos headers)
+  // 4️⃣ Cabeçalho
   const headerValues = worksheet.columns.map((c) => c.header || "");
   worksheet.addRow(headerValues);
 
-  // estilo do cabeçalho (linha 1)
   const headerRow = worksheet.getRow(1);
   headerRow.eachCell((cell) => {
     cell.font = { bold: true, color: { argb: "FFFFFFFF" } };
@@ -100,34 +96,28 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
     cell.alignment = { vertical: "middle", horizontal: "center" };
   });
 
-  // 5️⃣ Adicionar as linhas de dados
+  // 5️⃣ Dados
   combined.forEach((row) => worksheet.addRow(row));
 
-  // 6️⃣ Inserir resumo da IA na ÚLTIMA linha possível (após os dados)
+  // 6️⃣ Resumo IA
   if (finalSummary) {
-    // posição da nova linha de resumo: uma linha após a última já existente
     const summaryRowIndex = worksheet.rowCount + 1;
-
-    // adiciona a linha com o label na primeira célula e o texto na segunda (temporário)
     const nCols = Math.max(worksheet.columns.length, 1);
     const rowPlaceholders = new Array(nCols).fill("");
-    rowPlaceholders[0] = "Resumo IA:"; // primeira coluna
-    rowPlaceholders[1] = finalSummary; // a célula que será a top-left da área mesclada
+    rowPlaceholders[0] = "Resumo IA:";
+    rowPlaceholders[1] = finalSummary;
     worksheet.addRow(rowPlaceholders);
 
-    // Se só existe 1 coluna, não faz merge — escreve o resumo na coluna 1 ao lado do label (concatena)
     if (nCols === 1) {
       const cell = worksheet.getCell(summaryRowIndex, 1);
       cell.value = `Resumo IA: ${finalSummary}`;
       cell.alignment = { wrapText: true, vertical: "top", horizontal: "left" };
       cell.font = { italic: true };
     } else {
-      // Mescla da coluna 2 até a última coluna na linha de resumo
       const startCol = 2;
       const endCol = nCols;
       worksheet.mergeCells(summaryRowIndex, startCol, summaryRowIndex, endCol);
 
-      // estilo da célula label (coluna 1)
       const labelCell = worksheet.getCell(summaryRowIndex, 1);
       labelCell.font = { bold: true };
       labelCell.alignment = { vertical: "top", horizontal: "left" };
@@ -137,7 +127,6 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
         fgColor: { argb: "FFEFEFEF" },
       };
 
-      // a célula mesclada (top-left é coluna 2)
       const mergedCell = worksheet.getCell(summaryRowIndex, startCol);
       mergedCell.value = finalSummary;
       mergedCell.alignment = {
@@ -146,7 +135,6 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
         horizontal: "left",
       };
       mergedCell.font = { italic: true };
-      // adiciona borda leve
       mergedCell.border = {
         top: { style: "thin" },
         left: { style: "thin" },
@@ -159,17 +147,15 @@ const exportToExcel = async (filename = "relatorio.xlsx") => {
     }
   }
 
-  // 7️⃣ Finalizar: escrever e salvar
+  // 7️⃣ Salvar
   const buf = await workbook.xlsx.writeBuffer();
   saveAs(new Blob([buf]), filename);
 };
 
 /**
- * Gera o prompt a partir dos dados agregados e chama a HF Inference API (client-side).
- * Retorna o texto do resumo (string) e atualiza a store Zustand.
+ * Gera o prompt e chama a API
  */
 const generateAiSummaryText = async (data) => {
-  // monta estatísticas principais
   const totalUsers = data.reduce((sum, d) => sum + (Number(d.users) || 0), 0);
   const totalMatches = data.reduce(
     (sum, d) => sum + (Number(d.matches) || 0),
@@ -180,13 +166,11 @@ const generateAiSummaryText = async (data) => {
     0
   );
 
-  // detecta top 3 períodos por diferença de inscrição (maior variação)
   const bySignUpDiff = data
     .map((d) => ({ period: d.period, diff: Number(d.signUpDifference) || 0 }))
     .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff))
     .slice(0, 3);
 
-  // constrói um resumo curto de contexto para enviar ao modelo
   const contextLines = [
     `Total de períodos: ${data.length}`,
     `Total usuários ativos (soma): ${totalUsers}`,
@@ -197,34 +181,12 @@ const generateAiSummaryText = async (data) => {
         .map((p) => `${p.period} (${p.diff >= 0 ? "+" : ""}${p.diff})`)
         .join(", ") || "nenhum"
     }`,
-    "",
-    "Dados por período (período: usuários | partidas | inscrições | meta | completadas | em espera | totalMatches | diffInscrições):",
   ];
 
-  // incluir linhas resumidas por período (limitado a 10 para não enviar payload gigante)
-  const perPeriodLines = data.slice(0, 10).map((d) => {
-    return `${d.period}: ${d.users} | ${d.matches} | ${d.signUps} | ${d.goal} | ${d.completed} | ${d.onHold} | ${d.totalMatches} | ${d.signUpDifference}`;
-  });
-
-  const promptInstruction = [
-    "Você é um assistente que escreve um resumo executivo curto e claro.",
-    "Gere um resumo executivo em 3 frases destacando tendências, problemas e recomendações curtas.",
-    "Se não houver dados suficientes, diga isso claramente em 1 frase.",
-    "",
-    "Contexto:",
-    ...contextLines,
-    ...perPeriodLines,
-    "",
-    "Resumo:",
-  ].join("\n");
-
-  // Chama o servidor proxy local
   try {
     const res = await fetch("http://localhost:3001/api/ai-summary", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ data }),
     });
 
@@ -236,31 +198,33 @@ const generateAiSummaryText = async (data) => {
     const response = await res.json();
     console.log("Resposta do proxy:", response);
 
-    const { summary, fallback } = response;
-    console.log("Resumo recebido:", summary);
+    let outputText = String(response.summary || "").trim();
 
-    // O proxy já retorna o texto processado, não precisa mais fazer parsing
-    const outputText = String(summary).trim();
-    console.log("Texto final:", outputText);
+    // 🔹 Remove "(local fallback)" ou qualquer variação
+    outputText = outputText
+      .replace(/\(?\s*local\s*fallback\s*\)?/gi, "")
+      .trim();
+    outputText = outputText
+      .replace(/\s{2,}/g, " ")
+      .replace(/:\s*$/, ":")
+      .trim();
 
     if (!outputText) {
-      throw new Error("IA retornou texto vazio");
+      outputText = generateLocalFallbackSummary(data);
     }
 
-    // salva no Zustand e retorna
     useAiASummary.setState({ aiSummary: outputText });
     return outputText;
   } catch (err) {
     console.warn("generateAiSummaryText error:", err);
-    // fallback local
-    const fallback = generateLocalFallbackSummary(data);
-    useAiASummary.setState({ aiSummary: fallback });
-    return fallback;
+    const fallbackText = generateLocalFallbackSummary(data);
+    useAiASummary.setState({ aiSummary: fallbackText });
+    return fallbackText;
   }
 };
 
 /**
- * Fallback local: gera um sumário simples sem chamar IA.
+ * Fallback local (sem nunca mostrar "(local fallback)")
  */
 const generateLocalFallbackSummary = (data) => {
   if (!data || data.length === 0)
@@ -276,7 +240,6 @@ const generateLocalFallbackSummary = (data) => {
     0
   );
 
-  // tendência de inscrições: comparar primeiro vs last
   const first = data[0];
   const last = data[data.length - 1];
   const signUpTrend =
@@ -312,7 +275,9 @@ const generateLocalFallbackSummary = (data) => {
     topPeriodText || "Sem variações importantes por período identificadas.",
   ]
     .filter(Boolean)
-    .join(" ");
+    .join(" ")
+    .replace(/\(?\s*local\s*fallback\s*\)?/gi, "") // 🚫 remove qualquer “local fallback”
+    .trim();
 
   return summary;
 };
