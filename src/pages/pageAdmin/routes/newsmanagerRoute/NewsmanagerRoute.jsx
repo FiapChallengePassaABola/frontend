@@ -1,4 +1,3 @@
-// src/pages/pageAdmin/routes/newsmanagerRoute/NewsManagerRoute.jsx
 import React, { useState } from "react";
 import {
   Container,
@@ -23,6 +22,8 @@ import YouTubeIcon from "@mui/icons-material/YouTube";
 import FormularioNoticias from "./components/AddNoticia";
 import Botao from "./components/Botao";
 import CloseIcon from "@mui/icons-material/Close";
+import AddNewsDialog from "./components/AddNewsDialog";
+import AllNewsModal from "./components/AllNewsModel";
 
 function NewsManagerRoute() {
   const Card = styled(Paper)({
@@ -41,6 +42,8 @@ function NewsManagerRoute() {
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openAllModal, setOpenAllModal] = useState(false);
 
   const handleEdit = (index) => {
     setEditingIndex(index);
@@ -53,7 +56,6 @@ function NewsManagerRoute() {
   };
 
   const handleSave = (index, updated) => {
-    // updated already contains the fields we want (titulo, descricao, img, etc.)
     updateNoticia(index, updated);
     handleCloseEdit();
   };
@@ -81,12 +83,7 @@ function NewsManagerRoute() {
           }}
         >
           <Box>
-            <Typography
-              sx={{
-                fontSize: "1.5vmax",
-                color: "white",
-              }}
-            >
+            <Typography sx={{ fontSize: "1.5vmax", color: "white" }}>
               Ultimas Noticias
             </Typography>
             {lastnews ? (
@@ -101,15 +98,12 @@ function NewsManagerRoute() {
               />
             ) : null}
           </Box>
+
           <Box>
-            <Typography
-              sx={{
-                fontSize: "1.5vmax",
-                color: "white",
-              }}
-            >
+            <Typography sx={{ fontSize: "1.5vmax", color: "white" }}>
               Gerir Noticias
             </Typography>
+
             <NoticiasComponent
               text={randomNews.titulo}
               description={randomNews.descricao}
@@ -117,7 +111,7 @@ function NewsManagerRoute() {
               valueParam={randomNews.views}
               maxParam={110}
               nome={"Ver Todas"}
-              OnClickParams={() => {}}
+              OnClickParams={() => setOpenAllModal(true)}
             />
           </Box>
         </Box>
@@ -133,12 +127,8 @@ function NewsManagerRoute() {
           }}
         >
           <Box
-            sx={{
-              width: "40%",
-              height: "0.2px",
-              backgroundColor: "gray",
-            }}
-          ></Box>
+            sx={{ width: "40%", height: "0.2px", backgroundColor: "gray" }}
+          />
           <Typography
             sx={{
               fontSize: { xs: "1.5rem", sm: "2rem" },
@@ -151,12 +141,8 @@ function NewsManagerRoute() {
             Novo Post
           </Typography>
           <Box
-            sx={{
-              width: "40%",
-              height: "0.2px",
-              backgroundColor: "gray",
-            }}
-          ></Box>
+            sx={{ width: "40%", height: "0.2px", backgroundColor: "gray" }}
+          />
         </Box>
 
         <Box
@@ -182,7 +168,8 @@ function NewsManagerRoute() {
               />
             }
             text={"Post do Instagram"}
-          ></CustomButton>
+            onClick={() => {}}
+          />
           <CustomButton
             icon={
               <AddCircleOutlineIcon
@@ -193,7 +180,11 @@ function NewsManagerRoute() {
               />
             }
             text={"Nova Noticia"}
-          ></CustomButton>
+            onClick={() => {
+              console.log("clicou nova noticia");
+              setOpenAddDialog(true);
+            }}
+          />
           <CustomButton
             icon={
               <YouTubeIcon
@@ -204,11 +195,12 @@ function NewsManagerRoute() {
               />
             }
             text={"Video do Youtube"}
-          ></CustomButton>
+            onClick={() => {}}
+          />
         </Box>
       </Container>
 
-      {/* Dialog para edição */}
+      {/* Dialog para edição da última notícia (ou de qualquer índice) */}
       <Dialog
         open={openEditDialog}
         onClose={handleCloseEdit}
@@ -224,7 +216,7 @@ function NewsManagerRoute() {
             alignItems: "center",
           }}
         >
-          Editar Última Notícia
+          Editar Notícia
           <IconButton onClick={handleCloseEdit} sx={{ color: "white" }}>
             <CloseIcon />
           </IconButton>
@@ -245,6 +237,18 @@ function NewsManagerRoute() {
           <Botao onClick={handleCloseEdit}>Fechar</Botao>
         </DialogActions>
       </Dialog>
+
+      {/* Dialog para adicionar notícia */}
+      <AddNewsDialog
+        open={openAddDialog}
+        onClose={() => setOpenAddDialog(false)}
+      />
+
+      {/* Modal para listar todas as noticias e permitir edição */}
+      <AllNewsModal
+        open={openAllModal}
+        onClose={() => setOpenAllModal(false)}
+      />
     </>
   );
 }
