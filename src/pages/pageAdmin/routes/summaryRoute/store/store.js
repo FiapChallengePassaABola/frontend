@@ -9,11 +9,7 @@ import useAiASummary from "./state";
  *
  * AVISO: Esta versão usa a Hugging Face Inference API direto do cliente (MVP).
  * NÃO coloque este token em produção: qualquer pessoa que abrir o app pode ver e usar o token.
- * Substitua HF_TOKEN pelo seu token de testes.
  */
-
-const HF_TOKEN = "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"; // <-- coloque seu token temporário aqui (apenas para MVP)
-const MODEL = "google/flan-t5-small"; // modelo usado (troque se quiser)
 
 const exportToExcel = async (filename = "relatorio.xlsx") => {
   // 1️⃣ Consolidar dados por período

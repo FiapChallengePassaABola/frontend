@@ -6,18 +6,16 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" });
 
 // NOTE: kept inline token as in your file
-const HF_TOKEN = "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";
+const TOKEN = "UwzcHFUMNHoMRSQwHDsjQmCIAtOlWhATOY";
 const MODEL = "sshleifer/distilbart-cnn-12-6";
 
 const PORT = 3001;
 
-if (HF_TOKEN) {
-  console.log(
-    `[proxy] Using HF_TOKEN: ${String(HF_TOKEN).slice(0, 6)}... (hidden)`
-  );
+if (TOKEN) {
+  console.log(`[proxy] Using TOKEN: ${String(TOKEN).slice(0, 6)}... (hidden)`);
 } else {
   console.error(
-    "[proxy] ERROR: HF_TOKEN not found in .env! Define HF_TOKEN=your_token"
+    "[proxy] ERROR: TOKEN not found in .env! Define TOKEN=your_token"
   );
 }
 
@@ -120,7 +118,7 @@ app.post("/api/ai-summary", async (req, res) => {
         const r = await fetch(url, {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${HF_TOKEN}`,
+            Authorization: `Bearer ${TOKEN}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
