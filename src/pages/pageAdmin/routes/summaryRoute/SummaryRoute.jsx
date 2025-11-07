@@ -362,17 +362,47 @@ export default function SummaryPage() {
               sx={{
                 width: "100% !important",
                 height: "100% !important",
-                [`& .${chartsGridClasses.line}`]: {
-                  stroke: "#fff !important",
+
+                // legend (o texto dentro do SVG)
+                "& .MuiChartsLegend-root text": {
+                  fill: "#fff !important", // cor do texto da legenda
                 },
-                "& .MuiChartsAxis-line": {
-                  stroke: "#fff !important",
+
+                // legend item label (caso o texto esteja em um item específico)
+                "& .MuiChartsLegend-root .MuiChartsLegend-item text": {
+                  fill: "#fff !important",
                 },
+
+                // axis labels (texto do rótulo do eixo)
+                "& .MuiChartsAxis-label": {
+                  fill: "#fff !important",
+                },
+
+                // tick labels (números/nomes dos ticks)
                 "& .MuiChartsAxis-tickLabel": {
                   fill: "#fff !important",
                 },
+
+                // eixo principal (linha)
+                "& .MuiChartsAxis-line": {
+                  stroke: "#fff !important",
+                },
+
+                // marcações/ticks
                 "& .MuiChartsAxis-tick": {
                   stroke: "#fff !important",
+                },
+
+                // linhas do grid
+                "& .MuiChartsGrid-line": {
+                  stroke: "#fff !important",
+                  strokeOpacity: 0.5,
+                },
+
+                // se quiser atingir todos os <text> do SVG (cuidado)
+                "& .MuiChartsLegend-label, & .MuiChartsLegend-label text": {
+                  fill: "#fff",
+                  color: "#fff",
                 },
               }}
               xAxis={[
@@ -447,88 +477,20 @@ export default function SummaryPage() {
       {showAiSummary ? (
         <Box
           sx={{
-            backgroundColor: "#f3f3f3",
-            padding: "12px",
+            backgroundColor: "transparent",
+            border: "2px solid #ccc",
+            padding: "1rem",
             borderRadius: "8px",
             marginTop: "16px",
             width: "500px",
-            maxHeight: "60vh",
+            maxHeight: "50vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            gap: 10,
+            color: "white",
           }}
         >
-<<<<<<< HEAD
-          DashBoard
-        </Typography>
-        <Box
-          sx={{
-            width: "40%",
-            height: "0.2px",
-            backgroundColor: "gray",
-          }}
-        ></Box>
-      </Box>
-      <Box
-        ref={chartContainerRef}
-        sx={{
-          width: "95%",
-          backgroundColor: "#157259",
-          borderRadius: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
-        <LineChart
-          sx={{
-            width: "100% !important",
-            height: "100% !important",
-            [`& .${chartsGridClasses.line}`]: {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-line": {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-tickLabel": {
-              fill: "#fff !important",
-            },
-            "& .MuiChartsAxis-tick": {
-              stroke: "#fff !important",
-            },
-          }}
-          xAxis={[
-            {
-              data: activeUsers.map((item) => item.period),
-              scaleType: "band",
-            },
-          ]}
-          grid={{ vertical: true, horizontal: true }}
-          series={[
-            {
-              data: activeUsers.map((item) => item.users),
-              area: true,
-              color: "rgba(177, 108, 229, 0.63)",
-              label: "Usuários Ativos",
-            },
-          ]}
-          width={chartDimensions.width}
-          height={chartDimensions.height}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          minWidth: "80%",
-          minHeight: "5%",
-          gap: 4,
-        }}
-      >
-        <Botao children={"Export Data"}></Botao>
-        <Botao children={"AI Summary"}></Botao>
-      </Box>
-    </Box>
-=======
           <Box
             display={"flex"}
             flexDirection={"row"}
@@ -539,14 +501,20 @@ export default function SummaryPage() {
             <IconButton>
               <CloseIcon
                 onClick={() => setshowAiSummary(false)}
-                sx={{ color: "black" }}
+                sx={{ color: "white" }}
               />
             </IconButton>
           </Box>
-          <p style={{ marginTop: "4px" }}>{aiSummary}</p>
+          <Typography
+            style={{
+              marginTop: "4px",
+              fontSize: "1vmax",
+            }}
+          >
+            {aiSummary}
+          </Typography>
         </Box>
       ) : null}
     </Container>
->>>>>>> dev
   );
 }

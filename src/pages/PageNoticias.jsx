@@ -10,70 +10,14 @@ import HeaderBar from "../components/HeaderBar";
 import NewsCard from "../components/NewsCard";
 import NewsFilter from "../components/NewsFilter";
 import Titulos from "../components/Titulos";
+import { useNoticiasStore } from "./pageAdmin/routes/newsmanagerRoute/store/store";
 
 function PageNoticias() {
   const [activeFilter, setActiveFilter] = useState("todas");
   const [searchTerm, setSearchTerm] = useState("");
   const [timeFilter, setTimeFilter] = useState("todas");
 
-  const noticias = [
-    {
-      img: Foto1,
-      titulo:
-        "PABCAST CONVIDA: KETLEN WIGGERS - FALA, BEBÊ #40",
-      descricao:
-        "No episódio de hoje temos uma convidada especial: a maior artilheira das Sereias da Vila e a mamãe do Lucca. Conversamos muito sobre maternidade e o esporte de alto rendimento, e a evolução de mais atletas mulheres no futebol como um todo. Vem conversar e debater com a gente :)",
-      fonte: "PassaBola",
-      tempoAtras: "há 8 minutos",
-      temDescricao: true,
-      categoria: "Internacional",
-    },
-    {
-      img: VideoYT,
-      titulo:
-        "COMO TEM SIDO NOSSOS PRIMEIROS MESES? - FALA, BEBÊ #39",
-      descricao:
-        "Voltamos pra contar como tem sido nossos dias desde a chegada da Antonella. Foram muitos aprendizados e momentos especiais, e claro que viemos dividir aqui com vocês. Mais uma montanha russa de emoções. Vem conversar e debater com a gente :)",
-      fonte: "PassaBola",
-      tempoAtras: "há 3 horas",
-      temDescricao: true,
-      categoria: "Internacional",
-    },
-    {
-      img: Foto2,
-      titulo: "PABCAST CONVIDA: BIA MENEZES - FALA, BEBÊ #34",
-      fonte: "PassaABola",
-      tempoAtras: "há 50 min",
-      temDescricao: false,
-      categoria: "Mercado",
-    },
-    {
-      img: Foto3,
-      titulo:
-        "Amanda Gutierres é vendida por valor recorde no Brasil",
-      fonte: "PassaABola",
-      tempoAtras: "há 5 horas",
-      temDescricao: false,
-      categoria: "Seleções",
-    },
-    {
-      img: Foto4,
-      titulo:
-        "Vai começar a Libertadores Feminina 🔥",
-      fonte: "PassaBola",
-      tempoAtras: "há 9 horas",
-      temDescricao: false,
-      categoria: "Agenda",
-    },
-    {
-      img: Foto5,
-      titulo: "História da Libertadores Feminina",
-      fonte: "Gazeta Esportiva",
-      tempoAtras: "há 8 horas",
-      temDescricao: false,
-      categoria: "Brasileirão",
-    },
-  ];
+  const noticias = useNoticiasStore((s) => s.noticias); // componente re-renderiza automaticamente
 
   const categories = [
     "Internacional",
