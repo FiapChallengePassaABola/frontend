@@ -328,25 +328,10 @@ export default function SummaryPage() {
           }}
         ></Box>
       </Box>
-<<<<<<< HEAD
-      <Box
-        ref={chartContainerRef}
-        sx={{
-          width: "95%",
-          backgroundColor: "#157259",
-          borderRadius: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
-        <LineChart
-=======
+
       <Container>
         <Box
           ref={chartContainerRef}
->>>>>>> 5480f13f8d366aaffa7534731a3f932cbf3c01de
           sx={{
             backgroundColor: "#157259",
             width: "100%",
