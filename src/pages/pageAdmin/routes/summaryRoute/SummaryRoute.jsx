@@ -1,16 +1,27 @@
 import React from "react";
-import { Box, Paper, Typography, Button, styled } from "@mui/material";
+import {
+  Box,
+  Paper,
+  Typography,
+  Button,
+  styled,
+  Container,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { PieChart, pieClasses } from "@mui/x-charts/PieChart";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { chartsGridClasses } from "@mui/x-charts/ChartsGrid";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Botao from "./components/Botao";
 import {
   signUpsMocked,
   matchesMocked,
   activeUsers,
 } from "./store/dashboardData";
+import { exportToExcel } from "./store/store";
+import useAiASummary from "./store/state";
 
 const Card = styled(Paper)({
   backgroundColor: "#157259",
@@ -30,7 +41,12 @@ export default function SummaryPage() {
     height: 350,
   });
   const chartContainerRef = React.useRef(null);
+  const { addText, aiSummary } = useAiASummary();
+  const [showAiSummary, setshowAiSummary] = useState(false);
 
+  useEffect(() => {
+    console.log("Estado do aiSummary atualizado:", aiSummary);
+  }, [aiSummary]);
   useEffect(() => {
     const chartElement = document.querySelector(".MuiCharts-root");
     if (chartElement) {
@@ -59,328 +75,446 @@ export default function SummaryPage() {
     return () => window.removeEventListener("resize", updateDimensions);
   }, []);
   return (
-    <Box
+    <Container
+      maxWidth={false}
+      disableGutters
       sx={{
-        width: "100%",
-        minHeight: "80vh",
-        color: "#fff",
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: { xs: 2, md: 3 },
-        padding: { xs: 1, sm: 2, md: 3 },
+        flexDirection: "row",
       }}
     >
       <Box
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          justifyContent: "center",
           width: "100%",
-          maxWidth: "1200px",
+          minHeight: "80vh",
+          color: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
           gap: { xs: 2, md: 3 },
+          padding: { xs: 1, sm: 2, md: 3 },
         }}
       >
         <Box
           sx={{
             display: "flex",
-            flex: "1",
-            flexDirection: "column",
-            alignItems: "center",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "center",
+            width: "100%",
+            maxWidth: "1200px",
+            gap: { xs: 2, md: 3 },
           }}
         >
-          <Typography
+          <Box
             sx={{
-              fontSize: "1.4vmax",
-              fontWeight: "700",
-            }}
-          >
-            Contas Criadas: Por mês
-          </Typography>
-          <Card
-            sx={{
-              width: { xs: "95%", sm: "90%" },
-              height: { xs: "250px", sm: "300px", md: "350px" },
               display: "flex",
+              flex: "1",
               flexDirection: "column",
-              alignItems: "start",
-              position: "relative",
+              alignItems: "center",
             }}
           >
-            <Box
+            <Typography
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                width: "100%",
-                mb: 2,
+                fontSize: "1.4vmax",
+                fontWeight: "700",
               }}
             >
-              {isEditingGoal ? (
-                <>
-                  <input
-                    type="number"
-                    value={newGoal}
-                    onChange={(e) => setNewGoal(e.target.value)}
-                    style={{
-                      background: "rgba(255, 255, 255, 0.1)",
-                      border: "1px solid rgba(255, 255, 255, 0.3)",
-                      borderRadius: "4px",
-                      padding: "8px",
-                      color: "white",
-                      width: "80px",
-                    }}
-                  />
-                  <Button
-                    onClick={() => {
-                      if (newGoal && !isNaN(newGoal)) {
-                        setValueMax(Number(newGoal));
-                        setIsEditingGoal(false);
-                        setNewGoal("");
-                      }
-                    }}
-                    sx={{
-                      color: "white",
-                      borderColor: "white",
-                      "&:hover": {
-                        borderColor: "#8B5DE4",
-                        color: "#8B5DE4",
-                      },
-                    }}
-                    variant="outlined"
-                    size="small"
-                  >
-                    Salvar
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Typography>Meta: {valueMax}</Typography>
-                  <Button
-                    onClick={() => {
-                      setIsEditingGoal(true);
-                      setNewGoal(valueMax.toString());
-                    }}
-                    sx={{
-                      color: "white",
-                      borderColor: "white",
-                      minWidth: "30px",
-                      padding: "2px",
-                      "&:hover": {
-                        borderColor: "#8B5DE4",
-                        color: "#8B5DE4",
-                      },
-                    }}
-                    variant="outlined"
-                    size="small"
-                  >
-                    ✎
-                  </Button>
-                </>
-              )}
-            </Box>
-
-            <Gauge
-              value={value}
-              valueMax={valueMax}
-              startAngle={-90}
-              endAngle={90}
-              cornerRadius="50%"
+              Contas Criadas: Por mês
+            </Typography>
+            <Card
               sx={{
-                [`& .${gaugeClasses.valueArc}`]: {
-                  fill: "#8B5DE4",
-                },
-                [`& .${gaugeClasses.referenceArc}`]: {
-                  fill: "#FEFFFE",
-                },
-                [`& .${gaugeClasses.valueText}`]: {
-                  fontSize: { xs: "1.2vmax", sm: "2vmax" },
-                  fill: "#ffffff",
-                  transform: "translateY(-60px)",
-                },
-                [`& .${gaugeClasses.text}`]: {
-                  fill: "#ffffff",
-                  fontWeight: 600,
-                  fontSize: { xs: ".8vmax", sm: "1vmax" },
-                  transform: "translateY(40px)",
-                },
-                "& text": {
-                  fill: "#ffffff !important",
-                },
-                width: { xs: "100%", sm: "90%", md: "85%" },
-                height: { xs: "200px", sm: "250px", md: "300px" },
-                margin: "auto",
+                width: { xs: "95%", sm: "90%" },
+                height: { xs: "250px", sm: "300px", md: "350px" },
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "start",
+                position: "relative",
               }}
-              text={`Contas: ${value}`}
-              textDecoration={"white"}
-            />
-          </Card>
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  width: "100%",
+                  mb: 2,
+                }}
+              >
+                {isEditingGoal ? (
+                  <>
+                    <input
+                      type="number"
+                      value={newGoal}
+                      onChange={(e) => setNewGoal(e.target.value)}
+                      style={{
+                        background: "rgba(255, 255, 255, 0.1)",
+                        border: "1px solid rgba(255, 255, 255, 0.3)",
+                        borderRadius: "4px",
+                        padding: "8px",
+                        color: "white",
+                        width: "80px",
+                      }}
+                    />
+                    <Button
+                      onClick={() => {
+                        if (newGoal && !isNaN(newGoal)) {
+                          setValueMax(Number(newGoal));
+                          setIsEditingGoal(false);
+                          setNewGoal("");
+                        }
+                      }}
+                      sx={{
+                        color: "white",
+                        borderColor: "white",
+                        "&:hover": {
+                          borderColor: "#8B5DE4",
+                          color: "#8B5DE4",
+                        },
+                      }}
+                      variant="outlined"
+                      size="small"
+                    >
+                      Salvar
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Typography>Meta: {valueMax}</Typography>
+                    <Button
+                      onClick={() => {
+                        setIsEditingGoal(true);
+                        setNewGoal(valueMax.toString());
+                      }}
+                      sx={{
+                        color: "white",
+                        borderColor: "white",
+                        minWidth: "30px",
+                        padding: "2px",
+                        "&:hover": {
+                          borderColor: "#8B5DE4",
+                          color: "#8B5DE4",
+                        },
+                      }}
+                      variant="outlined"
+                      size="small"
+                    >
+                      ✎
+                    </Button>
+                  </>
+                )}
+              </Box>
+
+              <Gauge
+                value={value}
+                valueMax={valueMax}
+                startAngle={-90}
+                endAngle={90}
+                cornerRadius="50%"
+                sx={{
+                  [`& .${gaugeClasses.valueArc}`]: {
+                    fill: "#8B5DE4",
+                  },
+                  [`& .${gaugeClasses.referenceArc}`]: {
+                    fill: "#FEFFFE",
+                  },
+                  [`& .${gaugeClasses.valueText}`]: {
+                    fontSize: { xs: "1.2vmax", sm: "2vmax" },
+                    fill: "#ffffff",
+                    transform: "translateY(-60px)",
+                  },
+                  [`& .${gaugeClasses.text}`]: {
+                    fill: "#ffffff",
+                    fontWeight: 600,
+                    fontSize: { xs: ".8vmax", sm: "1vmax" },
+                    transform: "translateY(40px)",
+                  },
+                  "& text": {
+                    fill: "#ffffff !important",
+                  },
+                  width: { xs: "100%", sm: "90%", md: "85%" },
+                  height: { xs: "200px", sm: "250px", md: "300px" },
+                  margin: "auto",
+                }}
+                text={`Contas: ${value}`}
+                textDecoration={"white"}
+              />
+            </Card>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flex: "1",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: "1.4vmax",
+                fontWeight: "700",
+              }}
+            >
+              Partidas em Andamento
+            </Typography>
+
+            <Card
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                width: { xs: "95%", sm: "90%" },
+                height: { xs: "250px", sm: "300px", md: "350px" },
+                position: "relative",
+              }}
+            >
+              <PieChart
+                series={[
+                  {
+                    data: [
+                      {
+                        id: 0,
+                        value:
+                          matchesMocked[0].matches -
+                          matchesMocked[0].completed -
+                          matchesMocked[0].onHold,
+                        color: "#FFFF",
+                        label: "Ainda não feitos",
+                      },
+                      {
+                        id: 1,
+                        value: matchesMocked[0].completed,
+                        color: "#A17AED",
+                        label: "Concluídos",
+                      },
+                      {
+                        id: 2,
+                        value: matchesMocked[0].onHold,
+                        color: "#CEA3E6",
+                        label: "Em andamento",
+                      },
+                    ],
+                    innerRadius: 50,
+                    outerRadius: 100,
+                  },
+                ]}
+                width={300}
+                height={300}
+                sx={{
+                  [`& .MuiChartsLegend-label`]: {
+                    stroke: "white",
+                    color: "white",
+                  },
+                }}
+              />
+            </Card>
+          </Box>
         </Box>
         <Box
           sx={{
+            width: "80%",
             display: "flex",
-            flex: "1",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "center",
+            justifyContent: "center",
+            gap: 3,
+            padding: 0,
+            margin: 0,
           }}
         >
+          <Box
+            sx={{
+              width: "40%",
+              height: "0.2px",
+              backgroundColor: "gray",
+            }}
+          ></Box>
           <Typography
             sx={{
-              fontSize: "1.4vmax",
+              fontSize: "2vmax",
               fontWeight: "700",
             }}
           >
-            Partidas em Andamento
+            DashBoard
           </Typography>
-
-          <Card
+          <Box
             sx={{
+              width: "40%",
+              height: "0.2px",
+              backgroundColor: "gray",
+            }}
+          ></Box>
+        </Box>
+        <Container>
+          <Box
+            ref={chartContainerRef}
+            sx={{
+              backgroundColor: "#157259",
+              width: "100%",
+              borderRadius: 2,
               display: "flex",
-              justifyContent: "center",
               alignItems: "center",
-              width: { xs: "95%", sm: "90%" },
-              height: { xs: "250px", sm: "300px", md: "350px" },
-              position: "relative",
+              justifyContent: "center",
+              overflow: "hidden",
+              mb: 3,
             }}
           >
-            <PieChart
-              series={[
-                {
-                  data: [
-                    {
-                      id: 0,
-                      value:
-                        matchesMocked[0].matches -
-                        matchesMocked[0].completed -
-                        matchesMocked[0].onHold,
-                      color: "#FFFF",
-                      label: "Ainda não feitos",
-                    },
-                    {
-                      id: 1,
-                      value: matchesMocked[0].completed,
-                      color: "#A17AED",
-                      label: "Concluídos",
-                    },
-                    {
-                      id: 2,
-                      value: matchesMocked[0].onHold,
-                      color: "#CEA3E6",
-                      label: "Em andamento",
-                    },
-                  ],
-                  innerRadius: 50,
-                  outerRadius: 100,
-                },
-              ]}
-              width={300}
-              height={300}
+            <LineChart
               sx={{
-                [`& .MuiChartsLegend-label`]: {
-                  stroke: "white",
-                  color: "white",
+                width: "100% !important",
+                height: "100% !important",
+
+                // legend (o texto dentro do SVG)
+                "& .MuiChartsLegend-root text": {
+                  fill: "#fff !important", // cor do texto da legenda
+                },
+
+                // legend item label (caso o texto esteja em um item específico)
+                "& .MuiChartsLegend-root .MuiChartsLegend-item text": {
+                  fill: "#fff !important",
+                },
+
+                // axis labels (texto do rótulo do eixo)
+                "& .MuiChartsAxis-label": {
+                  fill: "#fff !important",
+                },
+
+                // tick labels (números/nomes dos ticks)
+                "& .MuiChartsAxis-tickLabel": {
+                  fill: "#fff !important",
+                },
+
+                // eixo principal (linha)
+                "& .MuiChartsAxis-line": {
+                  stroke: "#fff !important",
+                },
+
+                // marcações/ticks
+                "& .MuiChartsAxis-tick": {
+                  stroke: "#fff !important",
+                },
+
+                // linhas do grid
+                "& .MuiChartsGrid-line": {
+                  stroke: "#fff !important",
+                  strokeOpacity: 0.5,
+                },
+
+                // se quiser atingir todos os <text> do SVG (cuidado)
+                "& .MuiChartsLegend-label, & .MuiChartsLegend-label text": {
+                  fill: "#fff",
+                  color: "#fff",
                 },
               }}
+              xAxis={[
+                {
+                  data: activeUsers.map((item) => item.period),
+                  scaleType: "band",
+                },
+              ]}
+              grid={{ vertical: true, horizontal: true }}
+              series={[
+                {
+                  data: activeUsers.map((item) => item.users),
+                  area: true,
+                  color: "rgba(177, 108, 229, 0.63)",
+                  label: "Usuários Ativos",
+                },
+              ]}
+              width={chartDimensions.width}
+              height={chartDimensions.height}
             />
-          </Card>
-        </Box>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              minWidth: "80%",
+              minHeight: "5%",
+              gap: 4,
+            }}
+          >
+            <Botao children={"Export Data"} onClick={exportToExcel}></Botao>
+            <Botao
+              children={"AI Summary"}
+              onClick={async () => {
+                setshowAiSummary(true);
+                try {
+                  const res = await fetch(
+                    "http://localhost:3001/api/ai-summary",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        data: signUpsMocked.map((signup, index) => ({
+                          ...signup,
+                          users: activeUsers[index]?.users || 0,
+                          matches: matchesMocked[index]?.matches || 0,
+                          completed: matchesMocked[index]?.completed || 0,
+                          onHold: matchesMocked[index]?.onHold || 0,
+                        })),
+                      }),
+                    }
+                  );
+
+                  if (!res.ok) {
+                    throw new Error(`Erro na API: ${res.status}`);
+                  }
+
+                  const { summary } = await res.json();
+                  addText(summary);
+                } catch (error) {
+                  console.error("Erro ao gerar resumo:", error);
+                  addText("Erro ao gerar resumo. Por favor, tente novamente.");
+                }
+              }}
+            ></Botao>
+          </Box>
+        </Container>
       </Box>
-      <Box
-        sx={{
-          width: "80%",
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: 3,
-          padding: 0,
-          margin: 0,
-        }}
-      >
+      {showAiSummary ? (
         <Box
           sx={{
-            width: "40%",
-            height: "0.2px",
-            backgroundColor: "gray",
-          }}
-        ></Box>
-        <Typography
-          sx={{
-            fontSize: "2vmax",
-            fontWeight: "700",
+            backgroundColor: "transparent",
+            border: "2px solid #ccc",
+            padding: "1rem",
+            borderRadius: "8px",
+            marginTop: "16px",
+            width: "500px",
+            maxHeight: "50vh",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            gap: 10,
+            color: "white",
           }}
         >
-          DashBoard
-        </Typography>
-        <Box
-          sx={{
-            width: "40%",
-            height: "0.2px",
-            backgroundColor: "gray",
-          }}
-        ></Box>
-      </Box>
-      <Box
-        ref={chartContainerRef}
-        sx={{
-          width: "95%",
-          backgroundColor: "#157259",
-          borderRadius: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          overflow: "hidden",
-        }}
-      >
-        <LineChart
-          sx={{
-            width: "100% !important",
-            height: "100% !important",
-            [`& .${chartsGridClasses.line}`]: {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-line": {
-              stroke: "#fff !important",
-            },
-            "& .MuiChartsAxis-tickLabel": {
-              fill: "#fff !important",
-            },
-            "& .MuiChartsAxis-tick": {
-              stroke: "#fff !important",
-            },
-          }}
-          xAxis={[
-            {
-              data: activeUsers.map((item) => item.period),
-              scaleType: "band",
-            },
-          ]}
-          grid={{ vertical: true, horizontal: true }}
-          series={[
-            {
-              data: activeUsers.map((item) => item.users),
-              area: true,
-              color: "rgba(177, 108, 229, 0.63)",
-              label: "Usuários Ativos",
-            },
-          ]}
-          width={chartDimensions.width}
-          height={chartDimensions.height}
-        />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          minWidth: "80%",
-          minHeight: "5%",
-          gap: 4,
-        }}
-      >
-        <Botao children={"Export Data"}></Botao>
-        <Botao children={"AI Summary"}></Botao>
-      </Box>
-    </Box>
+          <Box
+            display={"flex"}
+            flexDirection={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+          >
+            <strong>Resumo IA:</strong>
+            <IconButton>
+              <CloseIcon
+                onClick={() => setshowAiSummary(false)}
+                sx={{ color: "white" }}
+              />
+            </IconButton>
+          </Box>
+          <Typography
+            style={{
+              marginTop: "4px",
+              fontSize: "1vmax",
+            }}
+          >
+            {aiSummary}
+          </Typography>
+        </Box>
+      ) : null}
+    </Container>
   );
 }

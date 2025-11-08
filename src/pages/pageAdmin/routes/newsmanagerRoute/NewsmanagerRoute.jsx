@@ -1,19 +1,29 @@
+import React, { useState } from "react";
 import {
   Container,
   Box,
   Paper,
   styled,
   Typography,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogActions,
   IconButton,
 } from "@mui/material";
 import src1 from "./assets/Foto1.jpg";
 import src2 from "./assets/Foto2.jpg";
-
+import { useNoticiasStore } from "./store/store";
 import CustomButton from "./components/CustomButton";
 import NoticiasComponent from "./components/Noticias";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import YouTubeIcon from "@mui/icons-material/YouTube";
+import FormularioNoticias from "./components/AddNoticia";
+import Botao from "./components/Botao";
+import CloseIcon from "@mui/icons-material/Close";
+import AddNewsDialog from "./components/AddNewsDialog";
+import AllNewsModal from "./components/AllNewsModel";
 
 function NewsManagerRoute() {
   const Card = styled(Paper)({
@@ -23,6 +33,32 @@ function NewsManagerRoute() {
     padding: 16,
     boxShadow: "none",
   });
+
+  const noticias = useNoticiasStore((state) => state.noticias);
+  const updateNoticia = useNoticiasStore((state) => state.updateNoticia);
+
+  const lastnews = noticias[0];
+  const randomNews = noticias[Math.floor(Math.random() * noticias.length)];
+
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [openAddDialog, setOpenAddDialog] = useState(false);
+  const [openAllModal, setOpenAllModal] = useState(false);
+
+  const handleEdit = (index) => {
+    setEditingIndex(index);
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEdit = () => {
+    setEditingIndex(null);
+    setOpenEditDialog(false);
+  };
+
+  const handleSave = (index, updated) => {
+    updateNoticia(index, updated);
+    handleCloseEdit();
+  };
 
   return (
     <>
@@ -38,7 +74,7 @@ function NewsManagerRoute() {
       >
         <Box
           sx={{
-            width: "100%",
+            width: "90%",
             display: "flex",
             flexDirection: { xs: "column", md: "row" },
             justifyContent: "space-between",
@@ -46,29 +82,40 @@ function NewsManagerRoute() {
             gap: { xs: 2, sm: 3 },
           }}
         >
-          <NoticiasComponent
-            text="Verdão Detona"
-            description='"A Seleção Brasileira de futebol feminino demonstrou força e
-            eficiência ao golear a Coreia do Sul por 5 a 0 em amistoso
-            preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
-            poderoso e um desempenho coletivo elevado..."'
-            imageSrc={src1}
-            valueParam={50}
-            maxParam={80}
-            OnClickParams={() => {}}
-          />
-          <NoticiasComponent
-            text="Verdão Detona"
-            description='"A Seleção Brasileira de futebol feminino demonstrou força e
-            eficiência ao golear a Coreia do Sul por 5 a 0 em amistoso
-            preparatório. Sob a batuta da nova técnica, o time mostrou um ataque
-            poderoso e um desempenho coletivo elevado..."'
-            imageSrc={src2}
-            valueParam={20}
-            maxParam={40}
-            OnClickParams={() => {}}
-          />
+          <Box>
+            <Typography sx={{ fontSize: "1.5vmax", color: "white" }}>
+              Ultimas Noticias
+            </Typography>
+            {lastnews ? (
+              <NoticiasComponent
+                text={lastnews.titulo}
+                description={lastnews.descricao}
+                imageSrc={lastnews.img}
+                valueParam={lastnews.views}
+                maxParam={80}
+                OnClickParams={() => handleEdit(0)}
+                nome={"Editar"}
+              />
+            ) : null}
+          </Box>
+
+          <Box>
+            <Typography sx={{ fontSize: "1.5vmax", color: "white" }}>
+              Gerir Noticias
+            </Typography>
+
+            <NoticiasComponent
+              text={randomNews.titulo}
+              description={randomNews.descricao}
+              imageSrc={randomNews.img}
+              valueParam={randomNews.views}
+              maxParam={110}
+              nome={"Ver Todas"}
+              OnClickParams={() => setOpenAllModal(true)}
+            />
+          </Box>
         </Box>
+
         <Box
           sx={{
             display: "flex",
@@ -80,12 +127,8 @@ function NewsManagerRoute() {
           }}
         >
           <Box
-            sx={{
-              width: "40%",
-              height: "0.2px",
-              backgroundColor: "gray",
-            }}
-          ></Box>
+            sx={{ width: "40%", height: "0.2px", backgroundColor: "gray" }}
+          />
           <Typography
             sx={{
               fontSize: { xs: "1.5rem", sm: "2rem" },
@@ -98,13 +141,10 @@ function NewsManagerRoute() {
             Novo Post
           </Typography>
           <Box
-            sx={{
-              width: "40%",
-              height: "0.2px",
-              backgroundColor: "gray",
-            }}
-          ></Box>
+            sx={{ width: "40%", height: "0.2px", backgroundColor: "gray" }}
+          />
         </Box>
+
         <Box
           sx={{
             width: { xs: "95%", sm: "90%", md: "80%" },
@@ -128,7 +168,8 @@ function NewsManagerRoute() {
               />
             }
             text={"Post do Instagram"}
-          ></CustomButton>
+            onClick={() => {}}
+          />
           <CustomButton
             icon={
               <AddCircleOutlineIcon
@@ -139,7 +180,11 @@ function NewsManagerRoute() {
               />
             }
             text={"Nova Noticia"}
-          ></CustomButton>
+            onClick={() => {
+              console.log("clicou nova noticia");
+              setOpenAddDialog(true);
+            }}
+          />
           <CustomButton
             icon={
               <YouTubeIcon
@@ -150,9 +195,60 @@ function NewsManagerRoute() {
               />
             }
             text={"Video do Youtube"}
-          ></CustomButton>
+            onClick={() => {}}
+          />
         </Box>
       </Container>
+
+      {/* Dialog para edição da última notícia (ou de qualquer índice) */}
+      <Dialog
+        open={openEditDialog}
+        onClose={handleCloseEdit}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle
+          sx={{
+            backgroundColor: "#13654F",
+            color: "white",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          Editar Notícia
+          <IconButton onClick={handleCloseEdit} sx={{ color: "white" }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ backgroundColor: "#13654F" }}>
+          {editingIndex !== null && (
+            <FormularioNoticias
+              noticia={noticias[editingIndex]}
+              index={editingIndex}
+              onSave={handleSave}
+              onCancel={handleCloseEdit}
+            />
+          )}
+        </DialogContent>
+
+        <DialogActions sx={{ backgroundColor: "#13654F" }}>
+          <Botao onClick={handleCloseEdit}>Fechar</Botao>
+        </DialogActions>
+      </Dialog>
+
+      {/* Dialog para adicionar notícia */}
+      <AddNewsDialog
+        open={openAddDialog}
+        onClose={() => setOpenAddDialog(false)}
+      />
+
+      {/* Modal para listar todas as noticias e permitir edição */}
+      <AllNewsModal
+        open={openAllModal}
+        onClose={() => setOpenAllModal(false)}
+      />
     </>
   );
 }

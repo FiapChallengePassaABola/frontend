@@ -1,52 +1,114 @@
-import React, { useState } from "react";
+// src/pages/pageAdmin/routes/newsmanagerRoute/components/AddNoticia.jsx
+import React, { useState, useEffect } from "react";
 import Botao from "./Botao";
 
-const FormularioNoticias = () => {
-<<<<<<< HEAD:src/components/AddNoticia.jsx
-  const [nomeVideo, setNomeVideo] = useState('');
-  const [descricaoVideo, setDescricaoVideo] = useState('');
-  const [materia, setMateria] = useState('');
-  const [imagem, setImagem] = useState(null);
-=======
-  // Estados para armazenar os valores do formulário
+/**
+ * Props:
+ * - noticia (opcional): objeto para editar
+ * - index (opcional): índice na store
+ * - onSave: function(updated) OR function(index, updated)
+ * - onCancel: function()
+ *
+ * Se noticia/index forem fornecidos, o form entra em modo "editar".
+ * A imagem será convertida para base64 se for escolhida (para persistir no localStorage).
+ */
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+const FormularioNoticias = ({
+  noticia = null,
+  index = null,
+  onSave,
+  onCancel,
+}) => {
   const [nomeVideo, setNomeVideo] = useState("");
   const [descricaoVideo, setDescricaoVideo] = useState("");
   const [materia, setMateria] = useState("");
-  const [imagem, setImagem] = useState(null); // Para armazenar o arquivo ou URL da imagem
->>>>>>> dev:src/pages/pageAdmin/routes/newsmanagerRoute/components/AddNoticia.jsx
+  const [imagemFile, setImagemFile] = useState(null);
+  const [imagemPreview, setImagemPreview] = useState(null);
 
-  const handleSubmit = (e, acao) => {
-    e.preventDefault();
-    const dadosNoticia = {
-      nomeVideo,
-      descricaoVideo,
-      materia,
-<<<<<<< HEAD:src/components/AddNoticia.jsx
-      imagem: imagem ? imagem.name : 'Nenhuma imagem selecionada',
-      acao
-=======
-      imagem: imagem ? imagem.name : "Nenhuma imagem selecionada", // Exemplo de como usar a informação
-      acao, // 'postar' ou 'agendar'
->>>>>>> dev:src/pages/pageAdmin/routes/newsmanagerRoute/components/AddNoticia.jsx
-    };
-
-    console.log(`Ação: ${acao}`, dadosNoticia);
-    alert(`Notícia pronta para ${acao}! Veja o console para os dados.`);
-  };
+  // preenche campos em modo edição
+  useEffect(() => {
+    if (noticia) {
+      setNomeVideo(noticia.titulo || "");
+      // usamos descricao curta para listagem e materia como conteúdo;
+      // se apenas descricao existir, usa ela como materia
+      setDescricaoVideo(noticia.descricao || "");
+      setMateria(noticia.materia || noticia.descricao || "");
+      setImagemPreview(noticia.img || null);
+      setImagemFile(null);
+    } else {
+      setNomeVideo("");
+      setDescricaoVideo("");
+      setMateria("");
+      setImagemFile(null);
+      setImagemPreview(null);
+    }
+  }, [noticia]);
 
   const handleImagemChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setImagem(e.target.files[0]);
+      const f = e.target.files[0];
+      setImagemFile(f);
+      setImagemPreview(URL.createObjectURL(f));
+    }
+  };
+
+  const handleSubmit = async (e, acao) => {
+    e && e.preventDefault && e.preventDefault();
+
+    let imgToSave = imagemPreview; // fallback: current preview or asset string
+    if (imagemFile) {
+      try {
+        imgToSave = await fileToBase64(imagemFile); // persistível
+      } catch (err) {
+        console.error("Erro ao converter imagem:", err);
+      }
+    }
+
+    // montamos o objeto com os campos mais usados pelo app
+    const updated = {
+      titulo: nomeVideo,
+      descricao: materia, // mantemos conteúdo principal em 'descricao'
+      materia, // opcional, se quiser manter campo separado
+      img: imgToSave,
+      fonte: noticia?.fonte ?? "PassaBola",
+      tempoAtras: noticia?.tempoAtras ?? "agora",
+      temDescricao: noticia?.temDescricao ?? true,
+      categoria: noticia?.categoria ?? "Geral",
+      views: noticia?.views ?? 0,
+    };
+
+    // suporte a duas assinaturas: onSave(updated) ou onSave(index, updated)
+    if (typeof onSave === "function") {
+      if (typeof index === "number") {
+        // preferirmos enviar (index, updated)
+        try {
+          onSave(index, updated);
+        } catch {
+          // fallback: call single-arg signature
+          onSave(updated);
+        }
+      } else {
+        onSave(updated);
+      }
     }
   };
 
   return (
     <div className="p-6 max-w-4xl mx-auto bg-gradient-to-b from-[#13654F] to-[#25896E] rounded-xl shadow-lg space-y-4">
       <h2 className="text-2xl font-bold text-white border-b pb-2 mb-4">
-        Adicionar Nova Notícia
+        {noticia ? "Editar Notícia" : "Adicionar Nova Notícia"}
       </h2>
 
-      <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+      <form onSubmit={(e) => handleSubmit(e, "salvar")} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 space-y-4">
             <div>
@@ -72,15 +134,14 @@ const FormularioNoticias = () => {
                 htmlFor="descricaoVideo"
                 className="block text-sm font-medium text-white"
               >
-                Descrição Curta
+                Descrição Curta (opcional)
               </label>
               <textarea
                 id="descricaoVideo"
                 value={descricaoVideo}
                 onChange={(e) => setDescricaoVideo(e.target.value)}
-                rows="3"
+                rows="2"
                 placeholder="Um breve resumo para a listagem."
-                required
                 className="mt-1 block w-full px-3 py-2 border border-white bg-white rounded-md focus:outline-none focus:ring-[#A259FF] focus:border-[#A259FF]  sm:text-sm"
               />
             </div>
@@ -100,12 +161,13 @@ const FormularioNoticias = () => {
               onChange={handleImagemChange}
               className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-[#A259FF] hover:file:bg-blue-100"
             />
-            {imagem && (
-              <p className="mt-2 text-xs text-gray-500">
-                Selecionado: {imagem.name}
-              </p>
-            )}
-            {!imagem && (
+            {imagemPreview ? (
+              <img
+                src={imagemPreview}
+                alt="preview"
+                className="mt-2 w-full h-24 object-cover rounded-md"
+              />
+            ) : (
               <div className="mt-2 w-full h-24 bg-gray-200 flex items-center justify-center rounded-md text-gray-400 text-sm">
                 Prévia da Imagem
               </div>
@@ -132,18 +194,38 @@ const FormularioNoticias = () => {
         </div>
 
         <div className="flex justify-end space-x-4 pt-4 border-t border-white">
-          <Botao
-            onClick={(e) => handleSubmit(e, "agendar")}
-            className="px-4 py-2 text-sm font-medium "
-          >
-            Agendar Publicação
-          </Botao>
-          <Botao
-            onClick={(e) => handleSubmit(e, "postar")}
-            className="px-4 py-2 text-sm font-medium"
-          >
-            Postar Agora
-          </Botao>
+          {noticia ? (
+            <>
+              <Botao
+                type="button"
+                onClick={(e) => handleSubmit(e, "salvar")}
+                className="px-4 py-2 text-sm font-medium"
+              >
+                Salvar Alterações
+              </Botao>
+              <Botao
+                onClick={onCancel}
+                className="px-4 py-2 text-sm font-medium"
+              >
+                Cancelar
+              </Botao>
+            </>
+          ) : (
+            <>
+              <Botao
+                onClick={(e) => handleSubmit(e, "agendar")}
+                className="px-4 py-2 text-sm font-medium"
+              >
+                Agendar Publicação
+              </Botao>
+              <Botao
+                onClick={(e) => handleSubmit(e, "postar")}
+                className="px-4 py-2 text-sm font-medium"
+              >
+                Postar Agora
+              </Botao>
+            </>
+          )}
         </div>
       </form>
     </div>
