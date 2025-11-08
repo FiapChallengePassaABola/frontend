@@ -825,6 +825,7 @@ export default function BracketPrototype() {
                   sx={{
                     color: "white",
                     "&.Mui-focused": { color: "white" },
+                    display: "flex",
                   }}
                 >
                   Selecionar Clube
