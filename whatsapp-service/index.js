@@ -209,7 +209,41 @@ const sendWhatsAppMessage = async (phoneNumber, message) => {
   }
 };
 
-const getClubeWhatsApp = async (nomeClube) => {
+const extractClubesFromCampeonato = (campeonato) => {
+  if (!campeonato) return [];
+
+  const rawClubes =
+    campeonato.clubes ??
+    campeonato.pontosCorridos?.clubes ??
+    campeonato.pontosCorridos ??
+    [];
+
+  const clubesArray = Array.isArray(rawClubes)
+    ? rawClubes
+    : Object.values(rawClubes || {});
+
+  return clubesArray.map((clube) => ({
+    nome: clube.nome,
+    points:
+      clube.points ??
+      clube.pontos ??
+      clube.pontuacao ??
+      0,
+    wins: clube.wins ?? clube.vitorias ?? 0,
+    goalDifference:
+      clube.goalDifference ??
+      clube.saldoGols ??
+      clube.gd ??
+      0,
+    goalsFor: clube.goalsFor ?? clube.golsPro ?? 0,
+    telefone: clube.telefone ?? clube.phone ?? null,
+    draws: clube.draws ?? clube.empates ?? 0,
+    losses: clube.losses ?? clube.derrotas ?? 0,
+    gamesPlayed: clube.gamesPlayed ?? clube.jogos ?? 0,
+  }));
+};
+
+const getClubeTelefoneFromDB = async (nomeClube) => {
   try {
     const { get, ref: dbRef } = await import("firebase/database");
     const clubesRef = dbRef(realtimeDb, "clubes");
@@ -233,6 +267,19 @@ const getClubeWhatsApp = async (nomeClube) => {
     console.error("❌ Erro ao buscar WhatsApp do clube:", error);
     return null;
   }
+};
+
+const resolveTelefone = async (nomeClube, fallbackInfo = null) => {
+  const telefone =
+    fallbackInfo?.telefone ??
+    fallbackInfo?.responsavelTelefone ??
+    null;
+
+  if (telefone) {
+    return telefone;
+  }
+
+  return await getClubeTelefoneFromDB(nomeClube);
 };
 
 const compareRankings = (oldRanking, newRanking) => {
@@ -275,6 +322,15 @@ const compareRankings = (oldRanking, newRanking) => {
   });
 
   return changes;
+};
+
+const filterTopThreeChanges = (changes) => {
+  return {
+    ...changes,
+    passedTeams: changes.passedTeams.filter(
+      (change) => change.newPosition <= 3
+    ),
+  };
 };
 
 const createLeaderMessage = (campeonatoNome, leader) => {
@@ -328,7 +384,7 @@ const monitorCampeonatos = () => {
         }
 
         const campeonato = campeonatoSnapshot.val();
-        const clubes = campeonato.clubes || [];
+        const clubes = extractClubesFromCampeonato(campeonato);
 
         const currentRanking = clubes
           .map((clube) => ({
@@ -337,6 +393,7 @@ const monitorCampeonatos = () => {
             wins: clube.wins || 0,
             goalDifference: clube.goalDifference || 0,
             goalsFor: clube.goalsFor || 0,
+            telefone: clube.telefone || null,
           }))
           .sort((a, b) => {
             if (b.points !== a.points) return b.points - a.points;
@@ -350,7 +407,8 @@ const monitorCampeonatos = () => {
         const oldRanking = previousRankings[key];
 
         if (oldRanking) {
-          const changes = compareRankings(oldRanking, currentRanking);
+          const allChanges = compareRankings(oldRanking, currentRanking);
+          const changes = filterTopThreeChanges(allChanges);
 
           if (changes.leaderChanged || changes.passedTeams.length > 0) {
             console.log(
@@ -359,20 +417,37 @@ const monitorCampeonatos = () => {
 
             if (changes.leaderChanged) {
               const leader = currentRanking[0];
-              const leaderWhatsApp = await getClubeWhatsApp(leader.nome);
+              const leaderWhatsApp = await resolveTelefone(
+                leader.nome,
+                leader
+              );
 
               if (leaderWhatsApp) {
                 const message = createLeaderMessage(campeonato.nome, leader);
                 await sendWhatsAppMessage(leaderWhatsApp, message);
+              } else {
+                console.log(
+                  `⚠️ Telefone não encontrado para líder: ${leader.nome}`
+                );
               }
             }
 
             for (const change of changes.passedTeams) {
-              const teamWhatsApp = await getClubeWhatsApp(change.team);
+              const rankingInfo = currentRanking.find(
+                (item) => item.nome === change.team
+              );
+              const teamWhatsApp = await resolveTelefone(
+                change.team,
+                rankingInfo
+              );
 
               if (teamWhatsApp) {
                 const message = createPassedMessage(campeonato.nome, change);
                 await sendWhatsAppMessage(teamWhatsApp, message);
+              } else {
+                console.log(
+                  `⚠️ Telefone não encontrado para time: ${change.team}`
+                );
               }
             }
           }

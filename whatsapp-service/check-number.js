@@ -79,7 +79,7 @@ const checkNumber = async (phoneNumber) => {
     const results = await socket.onWhatsApp([formattedNumber]);
     const result = results[0];
 
-    if (result?.exists) {
+    if (result?.exists) {node
       console.log("✅ NÚMERO ENCONTRADO NO WHATSAPP!");
       console.log(`📱 JID: ${result.jid}`);
       console.log(`👤 Nome: ${result.name || "Não disponível"}`);

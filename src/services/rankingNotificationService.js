@@ -7,6 +7,40 @@ import { clubeServiceRealtime } from "./clubeServiceRealtime";
  * @param {string} campeonatoId - ID do campeonato
  * @returns {Promise<Array>} - Array de times ordenados por pontos
  */
+const extractClubesFromCampeonato = (campeonato) => {
+  if (!campeonato) return [];
+
+  const rawClubes =
+    campeonato.clubes ??
+    campeonato.pontosCorridos?.clubes ??
+    campeonato.pontosCorridos ??
+    [];
+
+  const clubesArray = Array.isArray(rawClubes)
+    ? rawClubes
+    : Object.values(rawClubes || {});
+
+  return clubesArray.map((clube) => ({
+    nome: clube.nome,
+    points:
+      clube.points ??
+      clube.pontos ??
+      clube.pontuacao ??
+      0,
+    wins: clube.wins ?? clube.vitorias ?? 0,
+    goalDifference:
+      clube.goalDifference ??
+      clube.saldoGols ??
+      clube.gd ??
+      0,
+    goalsFor: clube.goalsFor ?? clube.golsPro ?? 0,
+    telefone: clube.telefone ?? clube.phone ?? null,
+    draws: clube.draws ?? clube.empates ?? 0,
+    losses: clube.losses ?? clube.derrotas ?? 0,
+    gamesPlayed: clube.gamesPlayed ?? clube.jogos ?? 0,
+  }));
+};
+
 const getCurrentRanking = async (campeonatoId) => {
   try {
     const campeonatoRef = ref(realtimeDb, `campeonatos/${campeonatoId}`);
@@ -17,7 +51,7 @@ const getCurrentRanking = async (campeonatoId) => {
     }
 
     const campeonato = snapshot.val();
-    const clubes = campeonato.clubes || [];
+    const clubes = extractClubesFromCampeonato(campeonato);
 
     // Ordena por pontos (maior para menor)
     const ranking = clubes
@@ -27,6 +61,7 @@ const getCurrentRanking = async (campeonatoId) => {
         wins: clube.wins || 0,
         goalDifference: clube.goalDifference || 0,
         goalsFor: clube.goalsFor || 0,
+        telefone: clube.telefone || null,
       }))
       .sort((a, b) => {
         // Ordena por: pontos -> vitórias -> saldo -> gols marcados
@@ -101,6 +136,15 @@ const compareRankings = (oldRanking, newRanking) => {
   return changes;
 };
 
+const filterTopThreeChanges = (changes) => {
+  return {
+    ...changes,
+    passedTeams: changes.passedTeams.filter(
+      (change) => change.newPosition <= 3
+    ),
+  };
+};
+
 // Funções de criação de mensagens foram movidas para o serviço Node.js
 // Mantidas aqui apenas para referência
 
@@ -134,7 +178,8 @@ export const sendRankingNotifications = async (
       return;
     }
 
-    const changes = compareRankings(oldRanking, newRanking);
+    const allChanges = compareRankings(oldRanking, newRanking);
+    const changes = filterTopThreeChanges(allChanges);
 
     if (changes.leaderChanged || changes.passedTeams.length > 0) {
       console.log(
@@ -176,7 +221,7 @@ export const monitorRankingChanges = (campeonatoId, callback) => {
     }
 
     const campeonato = snapshot.val();
-    const clubes = campeonato.clubes || [];
+    const clubes = extractClubesFromCampeonato(campeonato);
 
     const currentRanking = clubes
       .map((clube) => ({
@@ -185,6 +230,7 @@ export const monitorRankingChanges = (campeonatoId, callback) => {
         wins: clube.wins || 0,
         goalDifference: clube.goalDifference || 0,
         goalsFor: clube.goalsFor || 0,
+        telefone: clube.telefone || null,
       }))
       .sort((a, b) => {
         if (b.points !== a.points) return b.points - a.points;
