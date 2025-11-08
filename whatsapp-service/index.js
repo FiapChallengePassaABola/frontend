@@ -1,7 +1,7 @@
 import makeWASocket, {
   DisconnectReason,
   fetchLatestBaileysVersion,
-  useMultiFileAuthState,
+  useMultiFileAuthState as initAuthState,
 } from "@whiskeysockets/baileys";
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref } from "firebase/database";
@@ -10,6 +10,8 @@ import path, { dirname } from "path";
 import pino from "pino";
 import qrcode from "qrcode-terminal";
 import { fileURLToPath } from "url";
+
+/* global process */
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -33,6 +35,7 @@ const ADMIN_COMMANDERS = new Set([
   "5511951080850@s.whatsapp.net",
   "5511996723423@s.whatsapp.net",
 ]);
+const pendingFinalizationSelection = new Map();
 
 if (!existsSync(AUTH_DIR)) {
   mkdirSync(AUTH_DIR, { recursive: true });
@@ -70,7 +73,7 @@ const connectWhatsApp = async () => {
     console.log("📱 Iniciando conexão com WhatsApp...");
     console.log(`📁 Diretório de autenticação: ${AUTH_DIR}`);
 
-    const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
+    const { state, saveCreds } = await initAuthState(AUTH_DIR);
     const { version } = await fetchLatestBaileysVersion();
     
     console.log(`✅ Versão do Baileys: ${version.join(".")}`);
@@ -82,7 +85,7 @@ const connectWhatsApp = async () => {
       printQRInTerminal: true,
       auth: state,
       browser: ["PassaBola", "Chrome", "1.0.0"],
-      getMessage: async (key) => {
+      getMessage: async () => {
         return {
           conversation: "Mensagem não encontrada",
         };
@@ -92,7 +95,7 @@ const connectWhatsApp = async () => {
     socket.ev.on("creds.update", saveCreds);
 
     socket.ev.on("connection.update", (update) => {
-      const { connection, lastDisconnect, qr, isNewLogin } = update;
+      const { connection, lastDisconnect, qr } = update;
 
       if (qr) {
         console.log("\n" + "=".repeat(50));
@@ -146,7 +149,7 @@ const connectWhatsApp = async () => {
               try {
                 rmSync(AUTH_DIR, { recursive: true, force: true });
                 console.log("✅ Credenciais removidas. Execute novamente para gerar novo QR Code.");
-              } catch (e) {
+              } catch {
                 console.log("⚠️ Não foi possível remover credenciais automaticamente.");
               }
             }).catch(() => {
@@ -405,52 +408,103 @@ const sendMessageToJid = async (jid, message) => {
   }
 };
 
-const fetchCampeonatoData = async (campeonatoId = null) => {
+const fetchAllCampeonatos = async () => {
   const { get, ref: dbRef } = await import("firebase/database");
-
-  if (campeonatoId) {
-    const campeonatoRef = dbRef(realtimeDb, `campeonatos/${campeonatoId}`);
-    const snapshot = await get(campeonatoRef);
-    if (!snapshot.exists()) {
-      return null;
-    }
-    return { id: campeonatoId, dados: snapshot.val() };
-  }
 
   const campeonatosRef = dbRef(realtimeDb, "campeonatos");
   const snapshot = await get(campeonatosRef);
   if (!snapshot.exists()) {
-    return null;
+    return [];
   }
 
   const entries = Object.entries(snapshot.val());
   if (!entries.length) {
-    return null;
+    return [];
   }
 
-  const [firstId, firstDados] = entries[0];
-  return { id: firstId, dados: firstDados };
+  return entries.map(([id, dados]) => ({
+    id,
+    dados,
+  }));
 };
 
-const handleFinalizeCommand = async (senderJid, campeonatoIdArg = null) => {
+const handleFinalizeCommand = async (senderJid, rawArgument = null) => {
   const senderNumber = jidToPhone(senderJid);
-  const campeonatoId =
-    campeonatoIdArg && campeonatoIdArg.trim().length > 0
-      ? campeonatoIdArg.trim()
-      : null;
+  const trimmedArgument = rawArgument ? rawArgument.trim() : "";
 
   console.log(
-    `📬 Comando 'finalizado' recebido de ${senderNumber} (campeonatoId: ${
-      campeonatoId || "primeiro disponível"
+    `📬 Comando 'finalizado' recebido de ${senderNumber} (argumento: ${
+      trimmedArgument || "listar"
     })`
   );
+
+  const pendingList = pendingFinalizationSelection.get(senderJid);
+  const hasPending = Array.isArray(pendingList) && pendingList.length > 0;
+
+  if (!trimmedArgument) {
+    const campeonatos = await fetchAllCampeonatos();
+
+    if (!campeonatos.length) {
+      await sendMessageToJid(
+        senderJid,
+        "⚠️ Não encontrei campeonatos ativos no momento."
+      );
+      return;
+    }
+
+    pendingFinalizationSelection.set(senderJid, campeonatos);
+
+    const listMessage =
+      "📋 *Campeonatos disponíveis:*\n\n" +
+      campeonatos
+        .map((item, index) => {
+          const name = item.dados?.nome || `Campeonato ${item.id}`;
+          return `${index + 1}. ${name}\n   ID: ${item.id}`;
+        })
+        .join("\n\n") +
+      "\n\nEnvie *finalizado <número>* para escolher da lista acima ou *finalizado <nome>* para localizar por nome/ID.";
+
+    await sendMessageToJid(senderJid, listMessage);
+    return;
+  }
+
+  let target = null;
+
+  if (/^\d+$/.test(trimmedArgument) && hasPending) {
+    const index = Number(trimmedArgument) - 1;
+    if (pendingList[index]) {
+      target = pendingList[index];
+    }
+  }
+
+  if (!target) {
+    const searchPool = hasPending ? pendingList : await fetchAllCampeonatos();
+    const lowered = trimmedArgument.toLowerCase();
+    target =
+      searchPool.find((item) => item.id === trimmedArgument) ||
+      searchPool.find(
+        (item) =>
+          (item.dados?.nome || "").toLowerCase() === lowered ||
+          (item.dados?.nome || "").toLowerCase().includes(lowered)
+      ) ||
+      null;
+
+    if (!target) {
+      await sendMessageToJid(
+        senderJid,
+        "❌ Não encontrei o campeonato informado. Envie apenas `finalizado` para listar todos novamente."
+      );
+      return;
+    }
+  }
+
+  pendingFinalizationSelection.delete(senderJid);
 
   await sendMessageToJid(
     senderJid,
     "⏳ Recebi o comando *finalizado*. Vou gerar o pódio..."
   );
 
-  const target = await fetchCampeonatoData(campeonatoId);
   if (!target) {
     await sendMessageToJid(
       senderJid,
