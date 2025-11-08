@@ -459,7 +459,10 @@ function CreateChampionShip() {
             color: "white",
             fontWeight: "bold",
           }}
-          onClick={() => handleCreateChampionShip()}
+          onClick={async () => {
+            await handleCreateChampionShip();
+            componentChange(false);
+          }}
         >
           Adicionar Campeonato
         </Button>

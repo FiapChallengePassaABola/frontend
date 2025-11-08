@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { clubeServiceRealtime } from "../services/clubeServiceRealtime";
 import PlasmaBackground from "./PlasmaBackground";
@@ -10,15 +10,34 @@ import CloseIcon from "@mui/icons-material/Close";
 export default function InscricaoClube({ onClose, onSuccess }) {
   const [membrosList, setMembrosList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [nomesExistentes, setNomesExistentes] = useState([]); // ✅ lista dos nomes já existentes
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
-    membros: [], // adicionado
-    responsavelId: null, // ✅ evita undefined
+    membros: [],
+    responsavelId: null,
   });
   const [errors, setErrors] = useState({});
 
-  // --- 📌 Funções auxiliares ---
+  // ✅ Faz snap dos clubes atuais e guarda nomes
+  useEffect(() => {
+    const fetchClubes = async () => {
+      try {
+        const snapshot = await get(ref(realtimeDb, "clubes"));
+        if (snapshot.exists()) {
+          const clubes = snapshot.val();
+          const nomes = Object.values(clubes).map((c) =>
+            c.nome?.toLowerCase().trim()
+          );
+          setNomesExistentes(nomes);
+        }
+      } catch (err) {
+        console.error("Erro ao buscar clubes existentes:", err);
+      }
+    };
+    fetchClubes();
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -28,10 +47,16 @@ export default function InscricaoClube({ onClose, onSuccess }) {
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/\D/g, "");
     if (numbers.length <= 2) return numbers;
-    if (numbers.length <= 6) return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+    if (numbers.length <= 6)
+      return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
     if (numbers.length <= 10)
-      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(
+        6
+      )}`;
+    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(
+      7,
+      11
+    )}`;
   };
 
   const handlePhoneChange = (e) => {
@@ -58,10 +83,10 @@ export default function InscricaoClube({ onClose, onSuccess }) {
 
     setIsLoading(true);
     try {
-      // verifica se o nome já existe
-      const nomeExiste = await clubeServiceRealtime.verificarNomeExistente(formData.nome);
-      if (nomeExiste) {
-        setErrors({ nome: "Já existe um clube com este nome" });
+      // ✅ Verifica se já existe um clube com o mesmo nome direto do snapshot
+      const nomeLower = formData.nome.toLowerCase().trim();
+      if (nomesExistentes.includes(nomeLower)) {
+        setErrors({ nome: "Já existe um jogador com este nome" });
         setIsLoading(false);
         return;
       }
@@ -98,10 +123,13 @@ export default function InscricaoClube({ onClose, onSuccess }) {
         console.error("Erro ao atualizar jogadoras:", err);
       }
 
-      Swal.fire("Sucesso!", "Jogadora inscrita com sucesso!", "success").then(() => {
-        onSuccess?.(resultado.id);
-        onClose();
-      });
+      Swal.fire("Sucesso!", "Jogadora inscrita com sucesso!", "success").then(
+        () => {
+          onSuccess?.(resultado.id);
+          onClose();
+        }
+      );
+
     } catch (error) {
       console.error("Erro ao inscrever clube:", error);
       Swal.fire("Erro!", error.message || "Falha ao inscrever clube.", "error");
@@ -115,7 +143,6 @@ export default function InscricaoClube({ onClose, onSuccess }) {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 gap-5">
       <PlasmaBackground />
 
-      {/* Lista lateral */}
       {membrosList.length > 0 && (
         <Box
           sx={{
@@ -163,7 +190,6 @@ export default function InscricaoClube({ onClose, onSuccess }) {
         </Box>
       )}
 
-      {/* Formulário */}
       <div className="bg-white rounded-lg w-[60%] max-h-[90vh] overflow-y-auto relative z-10">
         <div className="p-6">
           <div className="relative mb-6 flex flex-col items-center">
@@ -174,7 +200,9 @@ export default function InscricaoClube({ onClose, onSuccess }) {
                 className="w-10 h-10 object-contain"
               />
             </div>
-            <h2 className="text-2xl font-bold text-[#521E2B]">Inscrição de Jogadoras</h2>
+            <h2 className="text-2xl font-bold text-[#521E2B]">
+              Inscrição de Jogadoras
+            </h2>
             <button
               onClick={onClose}
               className="absolute top-0 right-0 text-gray-500 hover:text-gray-700 text-2xl"
@@ -199,7 +227,9 @@ export default function InscricaoClube({ onClose, onSuccess }) {
                   }`}
                   placeholder="nome"
                 />
-                {errors.nome && <p className="text-red-500 text-xs mt-1">{errors.nome}</p>}
+                {errors.nome && (
+                  <p className="text-red-500 text-xs mt-1">{errors.nome}</p>
+                )}
               </div>
 
               <div>
@@ -237,7 +267,7 @@ export default function InscricaoClube({ onClose, onSuccess }) {
                 disabled={isLoading}
                 className="px-6 py-2 bg-[#521E2B] text-white rounded-md hover:bg-[#3a1520] transition-colors disabled:opacity-50"
               >
-                {isLoading ? "Enviando..." : "Inscrever jogadora"}
+                {isLoading ? "Enviando..." : "Inscrever Jogadora"}
               </button>
             </div>
           </form>
