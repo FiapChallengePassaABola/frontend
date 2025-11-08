@@ -26,12 +26,12 @@ function App() {
     <ErrorBoundary>
       <AuthProvider>
         <Router>
-          {/* <PlasmaBackground
+          <PlasmaBackground
             color1={"#2A052A"}
             color2={"#3F0A3F"}
             color3={"#1F051F"}
             color4={"#0F030F"}
-          /> */}
+          />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/campeonato" element={<PageCampeonato />} />
