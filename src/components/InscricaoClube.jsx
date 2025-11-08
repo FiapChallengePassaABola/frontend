@@ -98,7 +98,7 @@ export default function InscricaoClube({ onClose, onSuccess }) {
         console.error("Erro ao atualizar jogadoras:", err);
       }
 
-      Swal.fire("Sucesso!", "Clube inscrito com sucesso!", "success").then(() => {
+      Swal.fire("Sucesso!", "Jogadora inscrita com sucesso!", "success").then(() => {
         onSuccess?.(resultado.id);
         onClose();
       });
@@ -237,7 +237,7 @@ export default function InscricaoClube({ onClose, onSuccess }) {
                 disabled={isLoading}
                 className="px-6 py-2 bg-[#521E2B] text-white rounded-md hover:bg-[#3a1520] transition-colors disabled:opacity-50"
               >
-                {isLoading ? "Enviando..." : "Inscrever Clube"}
+                {isLoading ? "Enviando..." : "Inscrever jogadora"}
               </button>
             </div>
           </form>
