@@ -276,6 +276,7 @@ export default function BracketPrototype() {
   const fasesContainerRef = useRef(null);
   const [maxColHeight, setMaxColHeight] = useState(0);
   const [novoClubeNome, setNovoClubeNome] = useState("");
+  const [clubesFirebase, setClubesFirebase] = useState([]); // **ADICIONADO: lista de clubes do nó /clubes**
   const handleChange = (toEdit) => {
     componentChange(toEdit);
   };
@@ -291,6 +292,51 @@ export default function BracketPrototype() {
     });
     return () => unsub();
   }, [selectedId]);
+
+  // helper: build and save pontosCorridos JSON for current campeonato
+  const buildAndSavePontosCorridos = async (campData, clubesList) => {
+    if (!campData || !selectedId) return;
+    try {
+      const clubesOrig = campData.clubes || [];
+      // clubesList is array of objects from /clubes node with fields like nome and telefone (if present)
+      const phoneMap = {};
+      (clubesList || []).forEach((c) => {
+        if (c.nome)
+          phoneMap[c.nome.toLowerCase()] =
+            c.telefone || c.phone || c.telefone_celular || c.telefones || null;
+      });
+
+      // build clubes array with nome, points, telefone
+      const clubesData = (clubesOrig || []).map((c) => ({
+        nome: c.nome,
+        points: c.points || 0,
+        telefone: phoneMap[(c.nome || "").toLowerCase()] || null,
+      }));
+
+      // compute top3
+      const sorted = [...clubesData].sort(
+        (a, b) => (b.points || 0) - (a.points || 0)
+      );
+      const top3 = {};
+      for (let i = 0; i < 3; i++) {
+        if (sorted[i]) {
+          top3[i + 1] = { nome: sorted[i].nome, pontos: sorted[i].points || 0 };
+        }
+      }
+
+      const payload = {
+        clubes: clubesData,
+        top3,
+      };
+
+      await set(
+        ref(realtimeDb, `campeonatos/${selectedId}/pontosCorridos`),
+        payload
+      );
+    } catch (err) {
+      console.error("Erro ao salvar pontosCorridos:", err);
+    }
+  };
 
   useEffect(() => {
     if (!selectedId) {
@@ -310,25 +356,78 @@ export default function BracketPrototype() {
       }
       setCampeonato({ id: selectedId, ...data });
       setTitle(data.nome);
-      if (data.chaveamento) {
-        // sanitize loaded chaveamento (convert any undefined to null)
-        setChaveamento(sanitizeUndefinedToNull(data.chaveamento));
-      } else {
-        const generated = generateInitialBracket({
-          clubes: data.clubes || [],
-          id: selectedId,
-          nome: data.nome,
-        });
-        await set(
-          ref(realtimeDb, `campeonatos/${selectedId}/chaveamento`),
-          sanitizeUndefinedToNull(generated)
+
+      // If campeonato tipo is pontosCorridos, ensure pontosCorridos json exists (with nome, points, telefone)
+      if (data.tipo === "pontosCorridos") {
+        // don't create chaveamento for pontosCorridos; clear local chaveamento
+        setChaveamento(null);
+
+        const pontosSnap = await get(
+          ref(realtimeDb, `campeonatos/${selectedId}/pontosCorridos`)
         );
-        setChaveamento(generated);
+        if (!pontosSnap.exists()) {
+          // fetch clubes node to retrieve phone numbers
+          try {
+            const clubesSnap = await get(ref(realtimeDb, "clubes"));
+            const clubesList = clubesSnap.exists()
+              ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                  id: k,
+                  ...v,
+                }))
+              : [];
+            // save pontosCorridos based on campeonato.clubes and clubesList
+            await buildAndSavePontosCorridos(data, clubesList);
+          } catch (err) {
+            console.error("Erro ao construir pontosCorridos:", err);
+          }
+        }
+      } else {
+        // If not pontosCorridos: If chaveamento exists keep it, otherwise generate and save
+        if (data.chaveamento) {
+          // sanitize loaded chaveamento (convert any undefined to null)
+          setChaveamento(sanitizeUndefinedToNull(data.chaveamento));
+        } else {
+          const generated = generateInitialBracket({
+            clubes: data.clubes || [],
+            id: selectedId,
+            nome: data.nome,
+          });
+          await set(
+            ref(realtimeDb, `campeonatos/${selectedId}/chaveamento`),
+            sanitizeUndefinedToNull(generated)
+          );
+          setChaveamento(generated);
+        }
       }
+
       setLoading(false);
     };
     load();
   }, [selectedId]);
+
+  // **ADICIONADO**: Carrega os clubes diretamente do nó "clubes" do realtime DB para popular o Select
+  useEffect(() => {
+    const fetchClubes = async () => {
+      try {
+        const snap = await get(ref(realtimeDb, "clubes"));
+        if (snap.exists()) {
+          const val = snap.val() || {};
+          // transforma em array de objetos (preserva nome se existir)
+          const lista = Object.entries(val).map(([k, v]) => ({
+            id: k,
+            ...v,
+          }));
+          setClubesFirebase(lista);
+        } else {
+          setClubesFirebase([]);
+        }
+      } catch (err) {
+        console.error("Erro ao carregar clubes do Firebase:", err);
+        setClubesFirebase([]);
+      }
+    };
+    fetchClubes();
+  }, []); // roda uma vez
 
   // compute maximum column height whenever chaveamento changes or window resizes
   useEffect(() => {
@@ -356,7 +455,7 @@ export default function BracketPrototype() {
 
   const handleSaveChaveamento = async (newChaveamento) => {
     if (!selectedId || !campeonato) return;
-    
+
     // Salva o ranking anterior para comparação
     const oldRanking = campeonato.clubes
       ? campeonato.clubes
@@ -392,6 +491,29 @@ export default function BracketPrototype() {
 
     setChaveamento(sanitizedAdvanced);
     setCampeonato((prev) => ({ ...prev, clubes: newClubesArray }));
+
+    // If this championship is pontosCorridos, also update pontosCorridos JSON
+    if (campeonato?.tipo === "pontosCorridos") {
+      // use clubesFirebase already loaded if possible; fallback to fetching
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: newClubesArray },
+        clubesList
+      );
+    }
 
     // Calcula o novo ranking para notificações
     const newRanking = newClubesArray
@@ -467,6 +589,28 @@ export default function BracketPrototype() {
 
     // atualiza local
     setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
+
+    // se for pontosCorridos, atualiza pontosCorridos JSON também
+    if (campeonato?.tipo === "pontosCorridos") {
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: clubesCopy },
+        clubesList
+      );
+    }
   };
 
   const handleAddNewClub = async () => {
@@ -494,6 +638,29 @@ export default function BracketPrototype() {
 
     setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
     setNovoClubeNome("");
+
+    // se for pontosCorridos, atualiza pontosCorridos JSON também (usa clubesFirebase para buscar telefone)
+    if (campeonato?.tipo === "pontosCorridos") {
+      // build updated pontosCorridos based on new clubesCopy
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: clubesCopy },
+        clubesList
+      );
+    }
   };
 
   if (loading) {
@@ -621,19 +788,23 @@ export default function BracketPrototype() {
         >
           (Re)Gerar Chaveamento
         </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleSaveAll}
-          sx={{
-            background: "#5b2c68",
-            borderColor: "white",
-            border: ".125rem solid",
-            padding: ".5rem 1rem",
-          }}
-        >
-          Salvar Placar e Atualizar Campeonato
-        </Button>
+
+        {/* ===== Condicional: não mostrar esse botão para pontosCorridos ===== */}
+        {campeonato?.tipo !== "pontosCorridos" && (
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleSaveAll}
+            sx={{
+              background: "#5b2c68",
+              borderColor: "white",
+              border: ".125rem solid",
+              padding: ".5rem 1rem",
+            }}
+          >
+            Salvar Placar e Atualizar Campeonato
+          </Button>
+        )}
       </Box>
 
       {/* ======== NOVA RENDERIZAÇÃO: pontosCorridos ======== */}
@@ -648,17 +819,61 @@ export default function BracketPrototype() {
 
           <Paper sx={{ p: 2, mb: 2, background: "#1e7259" }}>
             <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
-              <TextField
-                label="Novo clube"
-                value={novoClubeNome}
-                onChange={(e) => setNovoClubeNome(e.target.value)}
-                size="small"
-                sx={{
-                  background: "transparent",
-                  input: { color: "white" },
-                  border: "2px solid white",
-                }}
-              />
+              {/* ---------- AQUI: TextField foi substituído por Select que carrega /clubes e filtra os já adicionados ---------- */}
+              <FormControl sx={{ minWidth: 300 }}>
+                <InputLabel
+                  sx={{
+                    color: "white",
+                    "&.Mui-focused": { color: "white" },
+                  }}
+                >
+                  Selecionar Clube
+                </InputLabel>
+                <Select
+                  value={novoClubeNome}
+                  label="Selecionar Clube"
+                  onChange={(e) => setNovoClubeNome(e.target.value)}
+                  size="small"
+                  sx={{
+                    background: "transparent",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                      borderWidth: 2,
+                    },
+                    "& .MuiSelect-select": {
+                      color: "white",
+                      padding: ".625rem .875rem",
+                    },
+                  }}
+                >
+                  {clubesFirebase.length > 0 ? (
+                    // filtra clubes já presentes no campeonato, não mostrando-os
+                    clubesFirebase
+                      .filter(
+                        (c) =>
+                          !campeonato?.clubes?.some(
+                            (clube) =>
+                              clube.nome?.toLowerCase() ===
+                              (c.nome || "").toLowerCase()
+                          )
+                      )
+                      .map((c) => (
+                        <MenuItem key={c.id || c.nome} value={c.nome}>
+                          {c.nome}
+                        </MenuItem>
+                      ))
+                  ) : (
+                    <MenuItem disabled>Nenhum clube encontrado</MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+
               <Button
                 variant="contained"
                 onClick={handleAddNewClub}
