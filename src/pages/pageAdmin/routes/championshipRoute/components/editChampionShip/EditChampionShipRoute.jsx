@@ -16,6 +16,7 @@ import { ref, onValue, get, set } from "firebase/database";
 import { realtimeDb } from "../../../../../../config/firebase"; // ajuste conforme seu projeto
 import useButton from "../../store/state";
 import TabelaPontos from "../../../../../../components/campeonato/TabelaPontos";
+import { sendRankingNotifications } from "../../../../../../services/rankingNotificationService";
 
 /* ---------- Helpers ---------- */
 
@@ -354,6 +355,26 @@ export default function BracketPrototype() {
 
   const handleSaveChaveamento = async (newChaveamento) => {
     if (!selectedId || !campeonato) return;
+    
+    // Salva o ranking anterior para comparação
+    const oldRanking = campeonato.clubes
+      ? campeonato.clubes
+          .map((clube) => ({
+            nome: clube.nome,
+            points: clube.points || 0,
+            wins: clube.wins || 0,
+            goalDifference: clube.goalDifference || 0,
+            goalsFor: clube.goalsFor || 0,
+          }))
+          .sort((a, b) => {
+            if (b.points !== a.points) return b.points - a.points;
+            if (b.wins !== a.wins) return b.wins - a.wins;
+            if (b.goalDifference !== a.goalDifference)
+              return b.goalDifference - a.goalDifference;
+            return b.goalsFor - a.goalsFor;
+          })
+      : null;
+
     const advanced = computeWinnersAndAdvance(newChaveamento);
     const sanitizedAdvanced = sanitizeUndefinedToNull(advanced);
     const newClubesArray = recomputeClubStats(campeonato, sanitizedAdvanced);
@@ -370,6 +391,36 @@ export default function BracketPrototype() {
 
     setChaveamento(sanitizedAdvanced);
     setCampeonato((prev) => ({ ...prev, clubes: newClubesArray }));
+
+    // Calcula o novo ranking para notificações
+    const newRanking = newClubesArray
+      .map((clube) => ({
+        nome: clube.nome,
+        points: clube.points || 0,
+        wins: clube.wins || 0,
+        goalDifference: clube.goalDifference || 0,
+        goalsFor: clube.goalsFor || 0,
+      }))
+      .sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.wins !== a.wins) return b.wins - a.wins;
+        if (b.goalDifference !== a.goalDifference)
+          return b.goalDifference - a.goalDifference;
+        return b.goalsFor - a.goalsFor;
+      });
+
+    // Envia notificações via WhatsApp
+    try {
+      await sendRankingNotifications(
+        selectedId,
+        campeonato.nome || "Campeonato",
+        oldRanking,
+        newRanking
+      );
+    } catch (error) {
+      console.error("Erro ao enviar notificações:", error);
+      // Não bloqueia o salvamento se houver erro nas notificações
+    }
   };
 
   const handleGenerateAgain = async () => {
