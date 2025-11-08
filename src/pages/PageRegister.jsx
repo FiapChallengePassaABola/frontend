@@ -136,7 +136,7 @@ const PageRegister = () => {
 
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6">
         <div className="w-full max-w-sm sm:max-w-md">
-          <div className="bg-[#521E2B] rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-[#6B2A3A]">
+          <div className="bg-[#c39ee5] rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl border border-[#6B2A3A]">
             <div className="flex justify-center mb-6 sm:mb-8">
               <img
                 src={Logo}
@@ -156,7 +156,7 @@ const PageRegister = () => {
 
             <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
               {errors.general && (
-                <div className="bg-red-100 border border-red-400 text-red-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm">
+                <div className="bg-red-100 border border-pink-400 text-pink-700 px-3 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl text-sm">
                   {errors.general}
                 </div>
               )}
@@ -170,12 +170,12 @@ const PageRegister = () => {
                   placeholder="Nome completo"
                   className={`w-full px-3 sm:px-4 py-2 sm:py-3 bg-gray-200 rounded-lg sm:rounded-xl text-gray-800 placeholder-gray-600 focus:outline-none focus:ring-2 focus:bg-white transition-all duration-200 text-sm sm:text-base ${
                     errors.name
-                      ? "border-2 border-red-500 focus:ring-red-500"
-                      : "focus:ring-red-500"
+                      ? "border-2 border-pink-500 focus:ring-pink-300"
+                      : "focus:ring-pink-500"
                   }`}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-xs sm:text-sm mt-1">
+                  <p className="text-pink-500 text-xs sm:text-sm mt-1">
                     {errors.name}
                   </p>
                 )}
@@ -288,7 +288,7 @@ const PageRegister = () => {
                   <button
                     type="button"
                     onClick={() => navigate("/login")}
-                    className="text-red-400 hover:text-red-300 underline font-medium transition-colors duration-200"
+                    className="text-black hover:gray-300 underline font-medium transition-colors duration-200"
                   >
                     Faça login aqui
                   </button>

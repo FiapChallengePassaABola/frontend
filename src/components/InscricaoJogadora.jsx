@@ -280,75 +280,65 @@ const InscricaoJogadora = ({ onClose, onSuccess }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (isLoading) {
-      console.log("Formulário já está sendo enviado, ignorando...");
-      return;
-    }
+  if (isLoading) return;
+  if (!validateForm()) return;
 
-    if (!validateForm()) {
-      return;
-    }
+  setIsLoading(true);
 
-    console.log("Iniciando envio do formulário de jogadora...");
-    setIsLoading(true);
+  try {
+    // Cria um ID único caso o usuário não esteja logado
+    const userId = user?.uid || `anon_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
 
-    try {
-      if (!user?.uid) {
-        throw new Error("Usuária não autenticada");
-      }
+    const jogadoraProfile = {
+      nome: formData.nome,
+      email: formData.email,
+      telefone: formData.telefone,
+      tipoDocumento: formData.tipoDocumento,
+      documento: formData.documento,
+      dataNascimento: formData.dataNascimento,
+      altura: formData.altura,
+      peso: formData.peso,
+      posicao: formData.posicao,
+      cidade: formData.cidade,
+      estado: formData.estado,
+      experiencia: formData.experiencia,
+      clubeAtual: formData.clubeAtual,
+      observacoes: formData.observacoes,
+      isJogadora: true,
+      userId, // usa uid real ou ID anônimo
+    };
 
-      // Verifica se já existe jogadora com este UID
-      // Se quiser evitar duplicidade, pode usar getJogadoraById do jogadoraServiceRealtime
-      // const jaTemPerfil = await jogadoraServiceRealtime.getJogadoraById(user.uid).catch(() => null);
-      // if (jaTemPerfil) { ... }
+    await jogadoraServiceRealtime.createJogadora(jogadoraProfile);
 
-      const jogadoraProfile = {
-        nome: formData.nome,
-        email: formData.email,
-        telefone: formData.telefone,
-        tipoDocumento: formData.tipoDocumento,
-        documento: formData.documento,
-        dataNascimento: formData.dataNascimento,
-        altura: formData.altura,
-        peso: formData.peso,
-        posicao: formData.posicao,
-        cidade: formData.cidade,
-        estado: formData.estado,
-        experiencia: formData.experiencia,
-        clubeAtual: formData.clubeAtual,
-        observacoes: formData.observacoes,
-        isJogadora: true,
-        userId: user.uid,
-      };
-
-      // Envia para o Realtime Database
-      await jogadoraServiceRealtime.createJogadora(jogadoraProfile);
-
+    // Se estiver logado, atualiza o perfil
+    if (user) {
       updateUserProfile(jogadoraProfile);
-
-      Swal.fire({
-        title: "Sucesso!",
-        text: "Inscrição da jogadora realizada com sucesso!",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(() => {
-        onSuccess?.();
-        window.location.href = "/jogos";
-      });
-    } catch (error) {
-      console.error("Erro ao inscrever jogadora:", error);
-      Swal.fire({
-        title: "Erro!",
-        text: `Erro ao realizar inscrição: ${error.message}`,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } finally {
-      setIsLoading(false);
     }
-  };
+
+    Swal.fire({
+      title: "Sucesso!",
+      text: "Inscrição da jogadora realizada com sucesso!",
+      icon: "success",
+      confirmButtonText: "OK",
+    }).then(() => {
+      onSuccess?.();
+      window.location.href = "/jogos";
+    });
+  } catch (error) {
+    console.error("Erro ao inscrever jogadora:", error);
+    Swal.fire({
+      title: "Erro!",
+      text: `Erro ao realizar inscrição: ${error.message}`,
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">

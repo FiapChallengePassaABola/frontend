@@ -275,6 +275,8 @@ export default function BracketPrototype() {
   const [title, setTitle] = useState("Chaveamento");
   const fasesContainerRef = useRef(null);
   const [maxColHeight, setMaxColHeight] = useState(0);
+  const [novoClubeNome, setNovoClubeNome] = useState("");
+  const [clubesFirebase, setClubesFirebase] = useState([]); // **ADICIONADO: lista de clubes do nó /clubes**
   const handleChange = (toEdit) => {
     componentChange(toEdit);
   };
@@ -290,6 +292,51 @@ export default function BracketPrototype() {
     });
     return () => unsub();
   }, [selectedId]);
+
+  // helper: build and save pontosCorridos JSON for current campeonato
+  const buildAndSavePontosCorridos = async (campData, clubesList) => {
+    if (!campData || !selectedId) return;
+    try {
+      const clubesOrig = campData.clubes || [];
+      // clubesList is array of objects from /clubes node with fields like nome and telefone (if present)
+      const phoneMap = {};
+      (clubesList || []).forEach((c) => {
+        if (c.nome)
+          phoneMap[c.nome.toLowerCase()] =
+            c.telefone || c.phone || c.telefone_celular || c.telefones || null;
+      });
+
+      // build clubes array with nome, points, telefone
+      const clubesData = (clubesOrig || []).map((c) => ({
+        nome: c.nome,
+        points: c.points || 0,
+        telefone: phoneMap[(c.nome || "").toLowerCase()] || null,
+      }));
+
+      // compute top3
+      const sorted = [...clubesData].sort(
+        (a, b) => (b.points || 0) - (a.points || 0)
+      );
+      const top3 = {};
+      for (let i = 0; i < 3; i++) {
+        if (sorted[i]) {
+          top3[i + 1] = { nome: sorted[i].nome, pontos: sorted[i].points || 0 };
+        }
+      }
+
+      const payload = {
+        clubes: clubesData,
+        top3,
+      };
+
+      await set(
+        ref(realtimeDb, `campeonatos/${selectedId}/pontosCorridos`),
+        payload
+      );
+    } catch (err) {
+      console.error("Erro ao salvar pontosCorridos:", err);
+    }
+  };
 
   useEffect(() => {
     if (!selectedId) {
@@ -309,25 +356,78 @@ export default function BracketPrototype() {
       }
       setCampeonato({ id: selectedId, ...data });
       setTitle(data.nome);
-      if (data.chaveamento) {
-        // sanitize loaded chaveamento (convert any undefined to null)
-        setChaveamento(sanitizeUndefinedToNull(data.chaveamento));
-      } else {
-        const generated = generateInitialBracket({
-          clubes: data.clubes || [],
-          id: selectedId,
-          nome: data.nome,
-        });
-        await set(
-          ref(realtimeDb, `campeonatos/${selectedId}/chaveamento`),
-          sanitizeUndefinedToNull(generated)
+
+      // If campeonato tipo is pontosCorridos, ensure pontosCorridos json exists (with nome, points, telefone)
+      if (data.tipo === "pontosCorridos") {
+        // don't create chaveamento for pontosCorridos; clear local chaveamento
+        setChaveamento(null);
+
+        const pontosSnap = await get(
+          ref(realtimeDb, `campeonatos/${selectedId}/pontosCorridos`)
         );
-        setChaveamento(generated);
+        if (!pontosSnap.exists()) {
+          // fetch clubes node to retrieve phone numbers
+          try {
+            const clubesSnap = await get(ref(realtimeDb, "clubes"));
+            const clubesList = clubesSnap.exists()
+              ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                  id: k,
+                  ...v,
+                }))
+              : [];
+            // save pontosCorridos based on campeonato.clubes and clubesList
+            await buildAndSavePontosCorridos(data, clubesList);
+          } catch (err) {
+            console.error("Erro ao construir pontosCorridos:", err);
+          }
+        }
+      } else {
+        // If not pontosCorridos: If chaveamento exists keep it, otherwise generate and save
+        if (data.chaveamento) {
+          // sanitize loaded chaveamento (convert any undefined to null)
+          setChaveamento(sanitizeUndefinedToNull(data.chaveamento));
+        } else {
+          const generated = generateInitialBracket({
+            clubes: data.clubes || [],
+            id: selectedId,
+            nome: data.nome,
+          });
+          await set(
+            ref(realtimeDb, `campeonatos/${selectedId}/chaveamento`),
+            sanitizeUndefinedToNull(generated)
+          );
+          setChaveamento(generated);
+        }
       }
+
       setLoading(false);
     };
     load();
   }, [selectedId]);
+
+  // **ADICIONADO**: Carrega os clubes diretamente do nó "clubes" do realtime DB para popular o Select
+  useEffect(() => {
+    const fetchClubes = async () => {
+      try {
+        const snap = await get(ref(realtimeDb, "clubes"));
+        if (snap.exists()) {
+          const val = snap.val() || {};
+          // transforma em array de objetos (preserva nome se existir)
+          const lista = Object.entries(val).map(([k, v]) => ({
+            id: k,
+            ...v,
+          }));
+          setClubesFirebase(lista);
+        } else {
+          setClubesFirebase([]);
+        }
+      } catch (err) {
+        console.error("Erro ao carregar clubes do Firebase:", err);
+        setClubesFirebase([]);
+      }
+    };
+    fetchClubes();
+  }, []); // roda uma vez
 
   // compute maximum column height whenever chaveamento changes or window resizes
   useEffect(() => {
@@ -355,7 +455,7 @@ export default function BracketPrototype() {
 
   const handleSaveChaveamento = async (newChaveamento) => {
     if (!selectedId || !campeonato) return;
-    
+
     // Salva o ranking anterior para comparação
     const oldRanking = campeonato.clubes
       ? campeonato.clubes
@@ -391,6 +491,29 @@ export default function BracketPrototype() {
 
     setChaveamento(sanitizedAdvanced);
     setCampeonato((prev) => ({ ...prev, clubes: newClubesArray }));
+
+    // If this championship is pontosCorridos, also update pontosCorridos JSON
+    if (campeonato?.tipo === "pontosCorridos") {
+      // use clubesFirebase already loaded if possible; fallback to fetching
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: newClubesArray },
+        clubesList
+      );
+    }
 
     // Calcula o novo ranking para notificações
     const newRanking = newClubesArray
@@ -451,6 +574,93 @@ export default function BracketPrototype() {
   const handleSaveAll = async () => {
     if (!chaveamento) return;
     await handleSaveChaveamento(chaveamento);
+  };
+
+  // *** NOVAS FUNÇÕES: pontosCorridos (mantive fluxo principal intacto) ***
+
+  const handleUpdateClubPoints = async (clubIndex, newPoints) => {
+    if (!campeonato || !Array.isArray(campeonato.clubes)) return;
+    const clubesCopy = JSON.parse(JSON.stringify(campeonato.clubes));
+    const parsed = Number(newPoints);
+    clubesCopy[clubIndex].points = Number.isFinite(parsed) ? parsed : 0;
+
+    // salva no firebase mantendo o restante do objeto do campeonato
+    await set(ref(realtimeDb, `campeonatos/${selectedId}/clubes`), clubesCopy);
+
+    // atualiza local
+    setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
+
+    // se for pontosCorridos, atualiza pontosCorridos JSON também
+    if (campeonato?.tipo === "pontosCorridos") {
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: clubesCopy },
+        clubesList
+      );
+    }
+  };
+
+  const handleAddNewClub = async () => {
+    const nome = (novoClubeNome || "").trim();
+    if (!nome) return;
+
+    const clubesCopy = Array.isArray(campeonato?.clubes)
+      ? [...campeonato.clubes]
+      : [];
+    // default minimal club object (mantém compatibilidade com seu JSON)
+    const novo = {
+      nome,
+      points: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      goalDifference: 0,
+      gamesPlayed: 0,
+    };
+    clubesCopy.push(novo);
+
+    await set(ref(realtimeDb, `campeonatos/${selectedId}/clubes`), clubesCopy);
+
+    setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
+    setNovoClubeNome("");
+
+    // se for pontosCorridos, atualiza pontosCorridos JSON também (usa clubesFirebase para buscar telefone)
+    if (campeonato?.tipo === "pontosCorridos") {
+      // build updated pontosCorridos based on new clubesCopy
+      let clubesList = clubesFirebase;
+      if (!clubesList || clubesList.length === 0) {
+        try {
+          const clubesSnap = await get(ref(realtimeDb, "clubes"));
+          clubesList = clubesSnap.exists()
+            ? Object.entries(clubesSnap.val() || {}).map(([k, v]) => ({
+                id: k,
+                ...v,
+              }))
+            : [];
+        } catch (err) {
+          clubesList = [];
+        }
+      }
+      await buildAndSavePontosCorridos(
+        { ...campeonato, clubes: clubesCopy },
+        clubesList
+      );
+    }
   };
 
   if (loading) {
@@ -521,23 +731,11 @@ export default function BracketPrototype() {
           marginBottom: "5%",
         }}
       >
-        <FormControl sx={{ minWidth: 300 }}>
-          <InputLabel
-            sx={{
-              color: "white",
-              "&.Mui-focused": {
-                color: "white",
-              },
-            }}
-          >
-            Campeonato
-          </InputLabel>
+        <FormControl sx={{ minWidth: 300, position: "relative" }}>
           <Select
             value={selectedId}
-            label="Campeonato"
-            onChange={(e) => {
-              setSelectedId(e.target.value);
-            }}
+            onChange={(e) => setSelectedId(e.target.value)}
+            displayEmpty
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "white",
@@ -550,14 +748,18 @@ export default function BracketPrototype() {
                 borderWidth: 2,
               },
               "& .MuiSelect-select": {
-                color: "white",
+                color: selectedId ? "white" : "rgba(255,255,255,0.7)",
                 padding: ".625rem .875rem",
+                textAlign: "center",
               },
               "& .MuiSvgIcon-root": {
                 color: "white",
               },
             }}
           >
+            <MenuItem value="">
+              <em>Selecione um campeonato</em>
+            </MenuItem>
             {campeonatos.map((c) => (
               <MenuItem key={c.id} value={c.id}>
                 {c.nome || c.id}
@@ -578,21 +780,166 @@ export default function BracketPrototype() {
         >
           (Re)Gerar Chaveamento
         </Button>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleSaveAll}
-          sx={{
-            background: "#5b2c68",
-            borderColor: "white",
-            border: ".125rem solid",
-            padding: ".5rem 1rem",
-          }}
-        >
-          Salvar Placar e Atualizar Campeonato
-        </Button>
+
+        {/* ===== Condicional: não mostrar esse botão para pontosCorridos ===== */}
+        {campeonato?.tipo !== "pontosCorridos" && (
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleSaveAll}
+            sx={{
+              background: "#5b2c68",
+              borderColor: "white",
+              border: ".125rem solid",
+              padding: ".5rem 1rem",
+            }}
+          >
+            Salvar Placar e Atualizar Campeonato
+          </Button>
+        )}
       </Box>
-      {!chaveamento ? (
+
+      {/* ======== NOVA RENDERIZAÇÃO: pontosCorridos ======== */}
+      {campeonato?.tipo === "pontosCorridos" ? (
+        <Box sx={{ width: "100%", mt: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{ color: "white", mb: 2, textAlign: "center" }}
+          >
+            {campeonato.nome} — Pontos Corridos
+          </Typography>
+
+          <Paper sx={{ p: 2, mb: 2, background: "#1e7259" }}>
+            <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+              {/* ---------- AQUI: TextField foi substituído por Select que carrega /clubes e filtra os já adicionados ---------- */}
+              <FormControl sx={{ minWidth: 300 }}>
+                <InputLabel
+                  sx={{
+                    color: "white",
+                    "&.Mui-focused": { color: "white" },
+                  }}
+                >
+                  Selecionar Clube
+                </InputLabel>
+                <Select
+                  value={novoClubeNome}
+                  label="Selecionar Clube"
+                  onChange={(e) => setNovoClubeNome(e.target.value)}
+                  size="small"
+                  sx={{
+                    background: "transparent",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                    },
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                    },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                      borderColor: "white",
+                      borderWidth: 2,
+                    },
+                    "& .MuiSelect-select": {
+                      color: "white",
+                      padding: ".625rem .875rem",
+                    },
+                  }}
+                >
+                  {clubesFirebase.length > 0 ? (
+                    // filtra clubes já presentes no campeonato, não mostrando-os
+                    clubesFirebase
+                      .filter(
+                        (c) =>
+                          !campeonato?.clubes?.some(
+                            (clube) =>
+                              clube.nome?.toLowerCase() ===
+                              (c.nome || "").toLowerCase()
+                          )
+                      )
+                      .map((c) => (
+                        <MenuItem key={c.id || c.nome} value={c.nome}>
+                          {c.nome}
+                        </MenuItem>
+                      ))
+                  ) : (
+                    <MenuItem disabled>Nenhum clube encontrado</MenuItem>
+                  )}
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                onClick={handleAddNewClub}
+                sx={{
+                  background: "#5b2c68",
+                  color: "white",
+                  border: "2px solid white",
+                }}
+              >
+                Adicionar Clube
+              </Button>
+            </Box>
+
+            {/* Lista ordenada por pontos (desc) */}
+            <Box>
+              {(Array.isArray(campeonato.clubes) ? [...campeonato.clubes] : [])
+                .sort((a, b) => (b.points || 0) - (a.points || 0))
+                .map((clube, idx) => (
+                  <Paper
+                    key={`${clube.nome}-${idx}`}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      p: 2,
+                      mb: 1,
+                      background: "#1f1f1f",
+                      color: "white",
+                    }}
+                  >
+                    <Box>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {idx + 1}. {clube.nome}
+                      </Typography>
+                      <Typography variant="caption">
+                        Jogos: {clube.gamesPlayed ?? 0} • Vitórias:{" "}
+                        {clube.wins ?? 0} • Empates: {clube.draws ?? 0} •
+                        Derrotas: {clube.losses ?? 0}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <TextField
+                        size="small"
+                        type="number"
+                        inputProps={{ min: 0 }}
+                        value={clube.points ?? 0}
+                        onChange={(e) => {
+                          // encontramos o índice original no array para atualizar corretamente
+                          const originalIndex = (
+                            campeonato.clubes || []
+                          ).findIndex((c) => c.nome === clube.nome);
+                          if (originalIndex !== -1)
+                            handleUpdateClubPoints(
+                              originalIndex,
+                              e.target.value
+                            );
+                        }}
+                        sx={{ width: 90, input: { color: "white" } }}
+                      />
+                      <Typography>pts</Typography>
+                    </Box>
+                  </Paper>
+                ))}
+            </Box>
+          </Paper>
+
+          {/* Mantém a TabelaPontos caso queira visual adicional */}
+          <Box margin={"5%"}>
+            <TabelaPontos selectedChampId={selectedId} />
+          </Box>
+        </Box>
+      ) : /* ======== RENDERIZAÇÃO ORIGINAL: chaveamento ======== */
+      !chaveamento ? (
         <Paper sx={{ p: 2 }}>Sem chaveamento</Paper>
       ) : (
         // container ref used to measure children heights
@@ -747,10 +1094,6 @@ export default function BracketPrototype() {
           ))}
         </Box>
       )}
-
-      <Box margin={"5%"}>
-        <TabelaPontos selectedChampId={selectedId} />
-      </Box>
     </Box>
   );
 }

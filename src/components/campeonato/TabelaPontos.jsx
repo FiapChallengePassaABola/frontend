@@ -55,7 +55,6 @@ function TabelaPontos(props) {
 
         setChampionships(lista);
 
-        // Define o primeiro campeonato como padrão
         if (lista.length > 0 && !selectedChamp && !selectedChampId) {
           setSelectedChamp(lista[0].id);
         }
@@ -67,7 +66,6 @@ function TabelaPontos(props) {
 
   // 🔹 Atualiza os times conforme o campeonato selecionado
   useEffect(() => {
-    // if parent passed selectedChampId, use it
     const effectiveSelected = selectedChampId || selectedChamp;
     if (!effectiveSelected) return;
     const campeonato = championships.find((c) => c.id === effectiveSelected);
@@ -86,10 +84,9 @@ function TabelaPontos(props) {
         points: clube.points,
       }));
 
-      // 🔸 Ordena por vitórias → pontos → saldo → gols marcados
       clubes.sort((a, b) => {
-        if (b.wins !== a.wins) return b.wins - a.wins;
         if (b.points !== a.points) return b.points - a.points;
+        if (b.wins !== a.wins) return b.wins - a.wins;
         if (b.gd !== a.gd) return b.gd - a.gd;
         return b.gf - a.gf;
       });
@@ -99,14 +96,7 @@ function TabelaPontos(props) {
   }, [selectedChamp, championships, selectedChampId]);
 
   return (
-    <Box
-      className="w-full mx-auto"
-      sx={{
-        ...props,
-      }}
-    >
-      {/* SELECTOR DE CAMPEONATOS */}
-      {/* show selector only when parent doesn't force a championship */}
+    <Box className="w-full mx-auto" sx={{ ...props }}>
       {!selectedChampId && (
         <Box
           display="flex"
@@ -125,24 +115,16 @@ function TabelaPontos(props) {
               onChange={(e) => setSelectedChamp(e.target.value)}
               sx={{
                 color: "white",
-                ".MuiOutlinedInput-notchedOutline": {
-                  borderColor: "white",
-                },
+                ".MuiOutlinedInput-notchedOutline": { borderColor: "white" },
                 "&:hover .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#8B5DE4",
                 },
                 "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#8B5DE4",
                 },
-                "& .MuiSvgIcon-root": {
-                  color: "white",
-                },
-                "&.Mui-focused": {
-                  color: "#8B5DE4",
-                },
-                "&.Mui-focused .MuiSelect-select": {
-                  color: "#8B5DE4",
-                },
+                "& .MuiSvgIcon-root": { color: "white" },
+                "&.Mui-focused": { color: "#8B5DE4" },
+                "&.Mui-focused .MuiSelect-select": { color: "#8B5DE4" },
               }}
             >
               {championships.map((c) => (
@@ -155,7 +137,6 @@ function TabelaPontos(props) {
         </Box>
       )}
 
-      {/* SE NÃO TIVER SELECIONADO NENHUM */}
       {!selectedChamp ? (
         <Typography variant="h6" align="center" sx={{ color: "white", mt: 3 }}>
           Selecione um campeonato para ver a tabela
@@ -179,13 +160,12 @@ function TabelaPontos(props) {
                   <th className="px-3 py-3 text-left font-semibold">Pos</th>
                   <th className="px-3 py-3 text-left font-semibold">Clube</th>
                   <th className="px-3 py-3 text-center font-semibold">J</th>
-                  <th className="px-3 py-3 text-center font-semibold">V</th>
+                  <th className="px-3 py-3 text-center font-semibold">Pts</th>
                   <th className="px-3 py-3 text-center font-semibold">E</th>
                   <th className="px-3 py-3 text-center font-semibold">D</th>
                   <th className="px-3 py-3 text-center font-semibold">GP</th>
                   <th className="px-3 py-3 text-center font-semibold">GC</th>
                   <th className="px-3 py-3 text-center font-semibold">SG</th>
-                  <th className="px-3 py-3 text-center font-semibold">Pts</th>
                 </tr>
               </thead>
 
@@ -219,8 +199,8 @@ function TabelaPontos(props) {
                     </td>
 
                     <td className="px-3 py-3 text-center">{t.played}</td>
-                    <td className="px-3 py-3 text-center font-bold text-green-400">
-                      {t.wins}
+                    <td className="px-3 py-3 text-center font-bold text-yellow-400">
+                      {t.points}
                     </td>
                     <td className="px-3 py-3 text-center">{t.draws}</td>
                     <td className="px-3 py-3 text-center">{t.losses}</td>
@@ -228,9 +208,6 @@ function TabelaPontos(props) {
                     <td className="px-3 py-3 text-center">{t.ga}</td>
                     <td className="px-3 py-3 text-center font-semibold">
                       {t.gd}
-                    </td>
-                    <td className="px-3 py-3 text-center font-bold">
-                      {t.points}
                     </td>
                   </tr>
                 ))}
@@ -242,4 +219,5 @@ function TabelaPontos(props) {
     </Box>
   );
 }
+
 export default TabelaPontos;

@@ -75,54 +75,50 @@ export const clubeServiceRealtime = {
   },
 
   async createClube(clubeData) {
-    try {
-      console.log(
-        "Iniciando criação do clube no Realtime Database:",
-        clubeData
-      );
+  try {
+    console.log("Iniciando criação do clube no Realtime Database:", clubeData);
 
-      if (!realtimeDb) {
-        throw new Error("Firebase Realtime Database não está configurado");
-      }
-
-      const clubesRef = ref(realtimeDb, COLLECTION_NAME);
-      const novoClubeRef = push(clubesRef);
-
-      const novoClube = {
-        ...clubeData,
-        responsavelId: clubeData.responsavelId || clubeData.email, // Usar email como fallback se não tiver responsavelId
-        dataInscricao: new Date().toISOString(),
-        status: "pendente",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        csId: "none",
-      };
-
-      console.log('Dados do clube a serem salvos:', novoClube);
-      console.log('ResponsavelId sendo salvo:', novoClube.responsavelId);
-
-      await set(novoClubeRef, novoClube);
-
-      const clubeId = novoClubeRef.key;
-      console.log(
-        "Clube criado com sucesso no Realtime Database, ID:",
-        clubeId
-      );
-
-      return {
-        id: clubeId,
-        ...novoClube,
-      };
-    } catch (error) {
-      console.error(
-        "Erro detalhado ao criar clube no Realtime Database:",
-        error
-      );
-      console.error("Código do erro:", error.code);
-      console.error("Mensagem do erro:", error.message);
-      throw new Error(`Erro ao criar clube: ${error.message}`);
+    if (!realtimeDb) {
+      throw new Error("Firebase Realtime Database não está configurado");
     }
-  },
+
+    const clubesRef = ref(realtimeDb, COLLECTION_NAME);
+    const novoClubeRef = push(clubesRef);
+
+    // 🔧 Limpa o objeto removendo valores undefined
+    const cleanData = Object.fromEntries(
+      Object.entries(clubeData).filter(([_, v]) => v !== undefined)
+    );
+
+    const novoClube = {
+      ...cleanData,
+      responsavelId: cleanData.responsavelId ?? cleanData.email ?? null, // 🔥 garante que nunca será undefined
+      dataInscricao: new Date().toISOString(),
+      status: "pendente",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      csId: "none",
+    };
+
+    console.log("Dados do clube a serem salvos:", novoClube);
+
+    await set(novoClubeRef, novoClube);
+
+    const clubeId = novoClubeRef.key;
+    console.log("Clube criado com sucesso no Realtime Database, ID:", clubeId);
+
+    return {
+      id: clubeId,
+      ...novoClube,
+    };
+  } catch (error) {
+    console.error("Erro detalhado ao criar clube no Realtime Database:", error);
+    console.error("Código do erro:", error.code);
+    console.error("Mensagem do erro:", error.message);
+    throw new Error(`Erro ao criar clube: ${error.message}`);
+  }
+},
+
 
   async updateClube(id, clubeData) {
     try {
