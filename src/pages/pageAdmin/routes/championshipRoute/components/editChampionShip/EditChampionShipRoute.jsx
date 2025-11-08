@@ -731,23 +731,11 @@ export default function BracketPrototype() {
           marginBottom: "5%",
         }}
       >
-        <FormControl sx={{ minWidth: 300 }}>
-          <InputLabel
-            sx={{
-              color: "white",
-              "&.Mui-focused": {
-                color: "white",
-              },
-            }}
-          >
-            Campeonato
-          </InputLabel>
+        <FormControl sx={{ minWidth: 300, position: "relative" }}>
           <Select
             value={selectedId}
-            label="Campeonato"
-            onChange={(e) => {
-              setSelectedId(e.target.value);
-            }}
+            onChange={(e) => setSelectedId(e.target.value)}
+            displayEmpty
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "white",
@@ -760,14 +748,18 @@ export default function BracketPrototype() {
                 borderWidth: 2,
               },
               "& .MuiSelect-select": {
-                color: "white",
+                color: selectedId ? "white" : "rgba(255,255,255,0.7)",
                 padding: ".625rem .875rem",
+                textAlign: "center",
               },
               "& .MuiSvgIcon-root": {
                 color: "white",
               },
             }}
           >
+            <MenuItem value="">
+              <em>Selecione um campeonato</em>
+            </MenuItem>
             {campeonatos.map((c) => (
               <MenuItem key={c.id} value={c.id}>
                 {c.nome || c.id}
@@ -825,7 +817,6 @@ export default function BracketPrototype() {
                   sx={{
                     color: "white",
                     "&.Mui-focused": { color: "white" },
-                    display: "flex",
                   }}
                 >
                   Selecionar Clube
