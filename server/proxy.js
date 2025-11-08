@@ -61,10 +61,10 @@ app.post("/api/ai-summary", async (req, res) => {
 
   // concise context sentences
   const contextSentences = [
-    `Total periods: ${data.length}.`,
-    `Total active users (sum): ${totalUsers}.`,
-    `Total matches (sum): ${totalMatches}.`,
-    `Total sign-ups (sum): ${totalSignUps}.`,
+    `Total Periodos: ${data.length}.`,
+    `Total Contas Ativas (sum): ${totalUsers}.`,
+    `Total partidas (sum): ${totalMatches}.`,
+    `Total contas Criadas (sum): ${totalSignUps}.`,
     `Top periods with largest sign-up variation: ${
       bySignUpDiff
         .map((p) => `${p.period} (${p.diff >= 0 ? "+" : ""}${p.diff})`)
