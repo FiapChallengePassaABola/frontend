@@ -257,7 +257,7 @@ function generateLocalFallbackSummary(data) {
       ? `Sign-ups decreased by ${Math.abs(signUpTrend)} since the first period.`
       : `Sign-ups remained stable compared to the first period.`;
 
-  return `Quick summary: ${data.length} periods analyzed — total of ${totalUsers} active users, ${totalMatches} matches, and ${totalSignUps} sign-ups. ${trendText}`;
+  return `Resumo rápido: ${data.length} períodos analisados — total de ${totalUsers} usuários ativos, ${totalMatches} partidas e ${totalSignUps} novos cadastros. ${trendText}`;
 }
 
 app.listen(PORT, () =>
