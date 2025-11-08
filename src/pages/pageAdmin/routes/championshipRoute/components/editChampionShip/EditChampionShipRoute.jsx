@@ -274,6 +274,7 @@ export default function BracketPrototype() {
   const [title, setTitle] = useState("Chaveamento");
   const fasesContainerRef = useRef(null);
   const [maxColHeight, setMaxColHeight] = useState(0);
+  const [novoClubeNome, setNovoClubeNome] = useState("");
   const handleChange = (toEdit) => {
     componentChange(toEdit);
   };
@@ -400,6 +401,48 @@ export default function BracketPrototype() {
   const handleSaveAll = async () => {
     if (!chaveamento) return;
     await handleSaveChaveamento(chaveamento);
+  };
+
+  // *** NOVAS FUNÇÕES: pontosCorridos (mantive fluxo principal intacto) ***
+
+  const handleUpdateClubPoints = async (clubIndex, newPoints) => {
+    if (!campeonato || !Array.isArray(campeonato.clubes)) return;
+    const clubesCopy = JSON.parse(JSON.stringify(campeonato.clubes));
+    const parsed = Number(newPoints);
+    clubesCopy[clubIndex].points = Number.isFinite(parsed) ? parsed : 0;
+
+    // salva no firebase mantendo o restante do objeto do campeonato
+    await set(ref(realtimeDb, `campeonatos/${selectedId}/clubes`), clubesCopy);
+
+    // atualiza local
+    setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
+  };
+
+  const handleAddNewClub = async () => {
+    const nome = (novoClubeNome || "").trim();
+    if (!nome) return;
+
+    const clubesCopy = Array.isArray(campeonato?.clubes)
+      ? [...campeonato.clubes]
+      : [];
+    // default minimal club object (mantém compatibilidade com seu JSON)
+    const novo = {
+      nome,
+      points: 0,
+      wins: 0,
+      draws: 0,
+      losses: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      goalDifference: 0,
+      gamesPlayed: 0,
+    };
+    clubesCopy.push(novo);
+
+    await set(ref(realtimeDb, `campeonatos/${selectedId}/clubes`), clubesCopy);
+
+    setCampeonato((prev) => ({ ...prev, clubes: clubesCopy }));
+    setNovoClubeNome("");
   };
 
   if (loading) {
@@ -541,7 +584,104 @@ export default function BracketPrototype() {
           Salvar Placar e Atualizar Campeonato
         </Button>
       </Box>
-      {!chaveamento ? (
+
+      {/* ======== NOVA RENDERIZAÇÃO: pontosCorridos ======== */}
+      {campeonato?.tipo === "pontosCorridos" ? (
+        <Box sx={{ width: "100%", mt: 2 }}>
+          <Typography
+            variant="h6"
+            sx={{ color: "white", mb: 2, textAlign: "center" }}
+          >
+            {campeonato.nome} — Pontos Corridos
+          </Typography>
+
+          <Paper sx={{ p: 2, mb: 2, background: "#1e7259" }}>
+            <Box sx={{ display: "flex", gap: 2, alignItems: "center", mb: 2 }}>
+              <TextField
+                label="Novo clube"
+                value={novoClubeNome}
+                onChange={(e) => setNovoClubeNome(e.target.value)}
+                size="small"
+                sx={{
+                  background: "transparent",
+                  input: { color: "white" },
+                  border: "2px solid white",
+                }}
+              />
+              <Button
+                variant="contained"
+                onClick={handleAddNewClub}
+                sx={{
+                  background: "#5b2c68",
+                  color: "white",
+                  border: "2px solid white",
+                }}
+              >
+                Adicionar Clube
+              </Button>
+            </Box>
+
+            {/* Lista ordenada por pontos (desc) */}
+            <Box>
+              {(Array.isArray(campeonato.clubes) ? [...campeonato.clubes] : [])
+                .sort((a, b) => (b.points || 0) - (a.points || 0))
+                .map((clube, idx) => (
+                  <Paper
+                    key={`${clube.nome}-${idx}`}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      p: 2,
+                      mb: 1,
+                      background: "#1f1f1f",
+                      color: "white",
+                    }}
+                  >
+                    <Box>
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {idx + 1}. {clube.nome}
+                      </Typography>
+                      <Typography variant="caption">
+                        Jogos: {clube.gamesPlayed ?? 0} • Vitórias:{" "}
+                        {clube.wins ?? 0} • Empates: {clube.draws ?? 0} •
+                        Derrotas: {clube.losses ?? 0}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+                      <TextField
+                        size="small"
+                        type="number"
+                        inputProps={{ min: 0 }}
+                        value={clube.points ?? 0}
+                        onChange={(e) => {
+                          // encontramos o índice original no array para atualizar corretamente
+                          const originalIndex = (
+                            campeonato.clubes || []
+                          ).findIndex((c) => c.nome === clube.nome);
+                          if (originalIndex !== -1)
+                            handleUpdateClubPoints(
+                              originalIndex,
+                              e.target.value
+                            );
+                        }}
+                        sx={{ width: 90, input: { color: "white" } }}
+                      />
+                      <Typography>pts</Typography>
+                    </Box>
+                  </Paper>
+                ))}
+            </Box>
+          </Paper>
+
+          {/* Mantém a TabelaPontos caso queira visual adicional */}
+          <Box margin={"5%"}>
+            <TabelaPontos selectedChampId={selectedId} />
+          </Box>
+        </Box>
+      ) : /* ======== RENDERIZAÇÃO ORIGINAL: chaveamento ======== */
+      !chaveamento ? (
         <Paper sx={{ p: 2 }}>Sem chaveamento</Paper>
       ) : (
         // container ref used to measure children heights
@@ -696,10 +836,6 @@ export default function BracketPrototype() {
           ))}
         </Box>
       )}
-
-      <Box margin={"5%"}>
-        <TabelaPontos selectedChampId={selectedId} />
-      </Box>
     </Box>
   );
 }
