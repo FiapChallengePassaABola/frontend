@@ -1,17 +1,15 @@
-import { ref, onValue } from "firebase/database";
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
 import makeWASocket, {
   DisconnectReason,
-  useMultiFileAuthState,
   fetchLatestBaileysVersion,
+  useMultiFileAuthState,
 } from "@whiskeysockets/baileys";
+import { initializeApp } from "firebase/app";
+import { getDatabase, onValue, ref } from "firebase/database";
+import { existsSync, mkdirSync } from "fs";
+import path, { dirname } from "path";
 import pino from "pino";
 import qrcode from "qrcode-terminal";
-import path from "path";
-import { existsSync, mkdirSync } from "fs";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,6 +28,11 @@ const app = initializeApp(firebaseConfig);
 const realtimeDb = getDatabase(app);
 
 const AUTH_DIR = path.join(__dirname, ".wwebjs_auth");
+const ADMIN_COMMANDERS = new Set([
+  "5511955556138@s.whatsapp.net",
+  "5511951080850@s.whatsapp.net",
+  "5511996723423@s.whatsapp.net",
+]);
 
 if (!existsSync(AUTH_DIR)) {
   mkdirSync(AUTH_DIR, { recursive: true });
@@ -164,6 +167,17 @@ const connectWhatsApp = async () => {
       }
     });
 
+    socket.ev.on("messages.upsert", async (msg) => {
+      try {
+        if (msg?.type !== "notify" || !msg.messages?.length) {
+          return;
+        }
+        await handleIncomingMessages(msg.messages);
+      } catch (error) {
+        console.error("❌ Erro ao processar mensagens recebidas:", error);
+      }
+    });
+
     return socket;
   } catch (error) {
     console.error("\n❌ ERRO AO CONECTAR WHATSAPP:");
@@ -282,6 +296,51 @@ const resolveTelefone = async (nomeClube, fallbackInfo = null) => {
   return await getClubeTelefoneFromDB(nomeClube);
 };
 
+const createPodiumSummaryMessage = (campeonatoNome, top3) => {
+  const medals = ["🥇", "🥈", "🥉"];
+  const lines = top3.map((clube, index) => {
+    const medal = medals[index] || `${index + 1}º`;
+    return `${medal} ${clube.nome} — ${clube.points} pts`;
+  });
+
+  return (
+    `🏁 *Campeonato finalizado!*\n\n` +
+    `📛 *${campeonatoNome}*\n\n` +
+    `${lines.join("\n")}\n\n` +
+    `Parabéns aos vencedores e obrigado a todos que participaram!`
+  );
+};
+
+const createWinnerPodiumMessage = (position, clube, campeonatoNome) => {
+  const medals = ["🥇", "🥈", "🥉"];
+  const positionLabel =
+    position === 1
+      ? "Primeiro Lugar"
+      : position === 2
+      ? "Segundo Lugar"
+      : position === 3
+      ? "Terceiro Lugar"
+      : `${position}º Lugar`;
+  const medal = medals[position - 1] || "🏆";
+
+  return (
+    `${medal} *${positionLabel}*\n` +
+    `*${campeonatoNome}*\n\n` +
+    `🏟️ Time: ${clube.nome}\n` +
+    `📊 Pontos: ${clube.points}\n` +
+    (clube.wins !== undefined ? `✅ Vitórias: ${clube.wins}\n` : "") +
+    (clube.goalDifference !== undefined
+      ? `⚖️ Saldo de gols: ${clube.goalDifference}\n`
+      : "") +
+    `\nParabéns pela campanha! 🏆⚽`
+  );
+};
+
+const jidToPhone = (jid) => {
+  if (!jid) return null;
+  return jid.split("@")[0] || null;
+};
+
 const compareRankings = (oldRanking, newRanking) => {
   const changes = {
     newLeader: null,
@@ -331,6 +390,171 @@ const filterTopThreeChanges = (changes) => {
       (change) => change.newPosition <= 3
     ),
   };
+};
+
+const sendMessageToJid = async (jid, message) => {
+  if (!jid || !message) return;
+  if (!socket || !socket.user) {
+    await connectWhatsApp();
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  try {
+    await socket.sendMessage(jid, { text: message });
+  } catch (error) {
+    console.error(`❌ Erro ao enviar mensagem para ${jid}:`, error);
+  }
+};
+
+const fetchCampeonatoData = async (campeonatoId = null) => {
+  const { get, ref: dbRef } = await import("firebase/database");
+
+  if (campeonatoId) {
+    const campeonatoRef = dbRef(realtimeDb, `campeonatos/${campeonatoId}`);
+    const snapshot = await get(campeonatoRef);
+    if (!snapshot.exists()) {
+      return null;
+    }
+    return { id: campeonatoId, dados: snapshot.val() };
+  }
+
+  const campeonatosRef = dbRef(realtimeDb, "campeonatos");
+  const snapshot = await get(campeonatosRef);
+  if (!snapshot.exists()) {
+    return null;
+  }
+
+  const entries = Object.entries(snapshot.val());
+  if (!entries.length) {
+    return null;
+  }
+
+  const [firstId, firstDados] = entries[0];
+  return { id: firstId, dados: firstDados };
+};
+
+const handleFinalizeCommand = async (senderJid, campeonatoIdArg = null) => {
+  const senderNumber = jidToPhone(senderJid);
+  const campeonatoId =
+    campeonatoIdArg && campeonatoIdArg.trim().length > 0
+      ? campeonatoIdArg.trim()
+      : null;
+
+  console.log(
+    `📬 Comando 'finalizado' recebido de ${senderNumber} (campeonatoId: ${
+      campeonatoId || "primeiro disponível"
+    })`
+  );
+
+  await sendMessageToJid(
+    senderJid,
+    "⏳ Recebi o comando *finalizado*. Vou gerar o pódio..."
+  );
+
+  const target = await fetchCampeonatoData(campeonatoId);
+  if (!target) {
+    await sendMessageToJid(
+      senderJid,
+      "❌ Não encontrei nenhum campeonato para finalizar."
+    );
+    return;
+  }
+
+  const campeonatoNome = target.dados.nome || target.id;
+  const clubes = extractClubesFromCampeonato(target.dados).sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    if (b.wins !== a.wins) return b.wins - a.wins;
+    if (b.goalDifference !== a.goalDifference)
+      return b.goalDifference - a.goalDifference;
+    return b.goalsFor - a.goalsFor;
+  });
+
+  if (!clubes.length) {
+    await sendMessageToJid(
+      senderJid,
+      `⚠️ O campeonato *${campeonatoNome}* não possui clubes para gerar o pódio.`
+    );
+    return;
+  }
+
+  const top3 = clubes.slice(0, 3);
+  const summaryMessage = createPodiumSummaryMessage(campeonatoNome, top3);
+
+  await sendMessageToJid(senderJid, summaryMessage);
+
+  const missingPhones = [];
+
+  for (let index = 0; index < top3.length; index++) {
+    const clube = top3[index];
+    const telefone = await resolveTelefone(clube.nome, clube);
+
+    if (!telefone) {
+      missingPhones.push(clube.nome);
+      console.log(
+        `⚠️ Telefone indisponível para ${clube.nome}. Não foi enviada mensagem de pódio.`
+      );
+      continue;
+    }
+
+    const winnerMessage = createWinnerPodiumMessage(
+      index + 1,
+      clube,
+      campeonatoNome
+    );
+    await sendWhatsAppMessage(telefone, winnerMessage);
+  }
+
+  if (missingPhones.length) {
+    await sendMessageToJid(
+      senderJid,
+      `⚠️ Não encontrei telefone para: ${missingPhones.join(
+        ", "
+      )}. Mensagem individual não enviada para esses clubes.`
+    );
+  }
+
+  await sendMessageToJid(
+    senderJid,
+    `✅ Processo concluído! Pódio comunicado para o campeonato *${campeonatoNome}*.`
+  );
+};
+
+const extractIncomingText = (message) => {
+  if (!message) return "";
+  const msg = message.message || {};
+
+  if (msg.conversation) return msg.conversation;
+  if (msg.extendedTextMessage?.text) return msg.extendedTextMessage.text;
+  if (msg.imageMessage?.caption) return msg.imageMessage.caption;
+  if (msg.videoMessage?.caption) return msg.videoMessage.caption;
+  if (msg.ephemeralMessage?.message) {
+    return extractIncomingText({ message: msg.ephemeralMessage.message });
+  }
+  return "";
+};
+
+const handleIncomingMessages = async (messages) => {
+  for (const msg of messages) {
+    if (!msg || msg.key?.fromMe) {
+      continue;
+    }
+
+    const senderJid = msg.key.remoteJid;
+    if (!ADMIN_COMMANDERS.has(senderJid)) {
+      continue;
+    }
+
+    const text = extractIncomingText(msg)?.trim();
+    if (!text) {
+      continue;
+    }
+
+    const lower = text.toLowerCase();
+    if (lower.startsWith("finalizado")) {
+      const parts = text.split(/\s+/);
+      const maybeId = parts.length > 1 ? parts[1] : null;
+      await handleFinalizeCommand(senderJid, maybeId);
+    }
+  }
 };
 
 const createLeaderMessage = (campeonatoNome, leader) => {
